@@ -1,0 +1,8 @@
+{
+  "name": "Panzarotto Street Food Pompei Argon",
+  "description": "Sito web per ordinare online autentici panzerotti, arancini e sfizi fritti a Pompei con asporto e consegna rapida a domicilio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
