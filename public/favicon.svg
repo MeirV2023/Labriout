@@ -1,0 +1,34 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="topBun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFB347"/>
+      <stop offset="100%" stop-color="#E67E22"/>
+    </linearGradient>
+    <linearGradient id="botBun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F39C12"/>
+      <stop offset="100%" stop-color="#D35400"/>
+    </linearGradient>
+    <linearGradient id="meat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6E2C00"/>
+      <stop offset="100%" stop-color="#4A1D00"/>
+    </linearGradient>
+  </defs>
+  <!-- Top Bun -->
+  <path d="M16 54 C16 24, 112 24, 112 54 Z" fill="url(#topBun)" stroke="#2C1810" stroke-width="5" stroke-linejoin="round"/>
+  <!-- Sesame Seeds -->
+  <ellipse cx="46" cy="36" rx="5" ry="2.6" transform="rotate(-18 46 36)" fill="#FFF8E7"/>
+  <ellipse cx="64" cy="31" rx="5" ry="2.6" fill="#FFF8E7"/>
+  <ellipse cx="82" cy="36" rx="5" ry="2.6" transform="rotate(18 82 36)" fill="#FFF8E7"/>
+  <ellipse cx="55" cy="43" rx="4.5" ry="2.3" transform="rotate(10 55 43)" fill="#FFF8E7"/>
+  <ellipse cx="73" cy="43" rx="4.5" ry="2.3" transform="rotate(-10 73 43)" fill="#FFF8E7"/>
+  <!-- Lettuce wave -->
+  <path d="M12 56 Q22 64, 32 56 T52 56 T72 56 T92 56 T116 56 L114 64 Q102 70, 90 64 T64 64 T38 64 T14 64 Z" fill="#2ECC71" stroke="#2C1810" stroke-width="4" stroke-linejoin="round"/>
+  <!-- Tomato slice -->
+  <rect x="20" y="61" width="88" height="10" rx="5" fill="#E74C3C" stroke="#2C1810" stroke-width="4"/>
+  <!-- Melted Cheese -->
+  <path d="M16 69 L112 69 L106 77 L90 73 L76 85 L62 73 L44 83 L32 73 L16 76 Z" fill="#FFD32A" stroke="#2C1810" stroke-width="4" stroke-linejoin="round"/>
+  <!-- Burger Meat Patty -->
+  <rect x="12" y="74" width="104" height="20" rx="10" fill="url(#meat)" stroke="#2C1810" stroke-width="5"/>
+  <!-- Bottom Bun -->
+  <path d="M18 94 L110 94 C110 110, 98 114, 64 114 C30 114, 18 110, 18 94 Z" fill="url(#botBun)" stroke="#2C1810" stroke-width="5" stroke-linejoin="round"/>
+</svg>

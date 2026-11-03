@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
                 type="button"
                 onClick={() => {
                   if (currentView === 'home') {
-                    const el = document.getElementById('menu-categories-nav') || document.getElementById('cat-friggitoria');
+                    const el = document.getElementById('menu-categories-nav') || document.getElementById('cat-panini');
                     if (el) {
                       const header = document.querySelector('header');
                       const navHeight = header ? header.getBoundingClientRect().height : 80;
@@ -139,7 +139,7 @@ export const Footer: React.FC = () => {
               </button>
               <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-2 text-neutral-300">
                 {CATEGORY_CONFIGS.map((cat) => {
-                  const label = language === 'it' ? cat.label : (t(cat.id) || cat.label);
+                  const label = t(cat.id) || cat.label;
                   return (
                     <li key={cat.id}>
                       <button

@@ -60,8 +60,8 @@ export const MenuPage: React.FC = () => {
   };
 
   // Signature item from the main page MENU_PRODUCTS for the featured hero card
-  const panzarottoProduct = useMemo(
-    () => MENU_PRODUCTS.find((p) => p.id === 'frig-panzarotto') || MENU_PRODUCTS[0],
+  const signatureProduct = useMemo(
+    () => MENU_PRODUCTS.find((p) => p.id === 'lab-burger-double-smash') || MENU_PRODUCTS[0],
     []
   );
 
@@ -94,16 +94,13 @@ export const MenuPage: React.FC = () => {
     );
   };
 
-  // Two-column layout split:
-  // Left column: Friggitoria (16), I Panini (15), Panini Special (8) = 39 products + Featured card
-  // Right column: Le Patate (8), Girarrosto (6), Gastronomia (5), Pranzo da Lavoro (1), Rosticceria & Focacce (2), Bibite & Birre (19) = 41 products + CTA card
-  const LEFT_CATEGORIES: CategoryId[] = ['friggitoria', 'panini', 'panini_special'];
+  // Two-column layout split for Labriout Kosher Menu:
+  const LEFT_CATEGORIES: CategoryId[] = ['panini', 'panini_special', 'girarrosto'];
   const RIGHT_CATEGORIES: CategoryId[] = [
-    'patate',
-    'girarrosto',
     'gastronomia',
+    'friggitoria',
     'pranzo',
-    'rosticceria',
+    'patate',
     'bevande',
   ];
 
@@ -322,10 +319,10 @@ export const MenuPage: React.FC = () => {
         {selectedFilter === 'all' && totalFilteredCount > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-14 relative z-10">
             {/* ======================================================== */}
-            {/* LEFT COLUMN: Featured Star Dish + Friggitoria + Panini + Panini Special */}
+            {/* LEFT COLUMN: Featured Star Dish + Burgers + Pitas/Laffas + Assiettes */}
             {/* ======================================================== */}
             <div className="space-y-8 sm:space-y-10">
-              {/* 1. HIGHLIGHTED SIGNATURE DISH: PANZAROTTO */}
+              {/* 1. HIGHLIGHTED SIGNATURE DISH: DOUBLE SMASH BURGER */}
               {!searchQuery && (
                 <div className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 bg-gradient-to-br from-[#cb683c] to-[#af4d26] text-white shadow-md shadow-neutral-900/10 overflow-hidden group">
                   <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/5 rounded-full blur-xl pointer-events-none" />
@@ -333,33 +330,41 @@ export const MenuPage: React.FC = () => {
                   <div className="relative z-10">
                     <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/20 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-2">
                       <Sparkles className="w-3 h-3 text-amber-200" />
-                      {isRu ? 'ФИРМЕННОЕ БЛЮДО ДОМА' : isEn ? 'HOUSE SPECIALTY' : 'SPECIALITÀ DELLA CASA'}
+                      {isRu
+                        ? 'ФИРМЕННОЕ БЛЮДО LABRIOUT • 100% КОШЕР'
+                        : isEn
+                        ? 'HOUSE SPECIALTY • 100% KOSHER'
+                        : 'SPÉCIALITÉ DE LA MAISON • 100% CASHER'}
                     </span>
 
                     <h3 className="font-heading font-black text-xl sm:text-2xl text-white tracking-wide uppercase mt-1 mb-2">
-                      {isRu ? 'ПАНЗАРОТТО НАПОЛЕТАНО' : isEn ? 'PANZAROTTO NAPOLETANO' : 'PANZAROTTO NAPOLETANO'}
+                      {isRu
+                        ? 'ДВОЙНОЙ СМЭШ БУРГЕР (DOUBLE SMASH)'
+                        : isEn
+                        ? 'DOUBLE SMASH BURGER'
+                        : 'DOUBLE SMASH BURGER MAISON'}
                     </h3>
 
                     <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-medium mb-4">
                       {isRu
-                        ? 'Золотистый хрустящий картофельный крокет в панировке из кукурузных хлопьев с неаполитанской салями, копченой проволой и горячим соусом чеддер.'
+                        ? 'Двойная сочная смэш-котлета из отборной кошерной говядины с хрустящей карамелизированной корочкой на раскаленной плите, домашний секретный бургер-соус, свежие томаты, хрустящий салат, корнишоны и красный лук в мягкой булочке.'
                         : isEn
-                        ? 'Golden crunchy potato croquette coated in corn flakes, filled with Napoli salami, smoked Agerola provola, and a drizzle of hot cheddar.'
-                        : 'Crocchè gigante di patate a pasta gialla con impanatura croccante ai corn flakes, salame Napoli a dadini, cuore filante di provola affumicata di Agerola e caldo formaggio cheddar.'}
+                        ? 'Double smashed kosher beef patties seared on a hot griddle with crispy caramelized edges, house secret burger sauce, fresh tomato, crisp lettuce, pickles and red onion in a soft toasted bun.'
+                        : 'Double steak haché de bœuf casher smashé minute sur la plaque brûlante aux bords croustillants et caramélisés, sauce burger secrète maison, salade croquante, tomates fraîches, cornichons et oignons rouges dans un bun moelleux.'}
                     </p>
 
                     <div className="flex items-center justify-between">
                       <button
                         type="button"
-                        onClick={() => openProductDetail(panzarottoProduct, undefined, undefined, 'menu')}
+                        onClick={() => openProductDetail(signatureProduct, undefined, undefined, 'menu')}
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-bold text-[16px] tracking-tight shadow-md transition-transform transform active:scale-95 cursor-pointer bg-white text-[#af4d26] hover:bg-neutral-100"
-                        title={isRu ? `Подробнее: ${panzarottoProduct.name}` : `Dettagli: ${panzarottoProduct.name}`}
+                        title={isRu ? `Подробнее: ${signatureProduct.name}` : `Détails: ${signatureProduct.name}`}
                       >
-                        <span>{formatPrice(panzarottoProduct.price)}</span>
+                        <span>{formatPrice(signatureProduct.price)}</span>
                       </button>
 
                       <span className="text-[11px] text-white/80 font-medium">
-                        {isRu ? 'Нажмите, чтобы посмотреть' : isEn ? 'Click to view details' : 'Clicca per scoprire'}
+                        {isRu ? 'Нажмите, чтобы посмотреть' : isEn ? 'Click to view details' : 'Cliquez pour découvrir'}
                       </span>
                     </div>
                   </div>
@@ -371,24 +376,24 @@ export const MenuPage: React.FC = () => {
             </div>
 
             {/* ======================================================== */}
-            {/* RIGHT COLUMN: Le Patate + Girarrosto + Gastronomia + Pranzo da Lavoro + Rosticceria & Focacce + Bibite & Birre */}
+            {/* RIGHT COLUMN: Salades + Entrées + Menu Enfants + Extras + Boissons */}
             {/* ======================================================== */}
             <div className="space-y-8 sm:space-y-10">
               {/* Render right column categories */}
               {RIGHT_CATEGORIES.map(renderCategorySection)}
 
-              {/* BOTTOM CALL-TO-ACTION CARD (Matching Screenshot 2) */}
+              {/* BOTTOM CALL-TO-ACTION CARD */}
               <div className="mt-8 pt-6 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-orange-50/40 p-5 rounded-2xl border border-orange-100/80">
                 <div className="text-left">
                   <h4 className="font-bold text-xs sm:text-sm text-[#1f2024] uppercase tracking-wide">
-                    {isRu ? 'УЖЕ ПРОГОЛОДАЛИСЬ?' : isEn ? 'ALREADY HUNGRY?' : 'HAI GIÀ FAME?'}
+                    {isRu ? 'УЖЕ ПРОГОЛОДАЛИСЬ?' : isEn ? 'ALREADY HUNGRY?' : 'DÉJÀ FAIM ?'}
                   </h4>
                   <p className="text-[11px] sm:text-xs text-neutral-500 leading-snug mt-0.5">
                     {isRu
-                      ? 'Заходите к нам в Помпеи или заказывайте доставку прямо на дом!'
+                      ? 'Заходите к нам в Бонёй-сюр-Марн (64 av. Simone Veil) или заказывайте онлайн прямо сейчас!'
                       : isEn
-                      ? 'Visit our street food kitchen in Pompei or order online right now!'
-                      : 'Passa a trovarci a Pompei o ordina subito online con consegna calda a domicilio!'}
+                      ? 'Visit us in Bonneuil-sur-Marne (64 av. Simone Veil) or order online right now!'
+                      : 'Passez nous voir à Bonneuil-sur-Marne (64 av. Simone Veil) ou commandez en ligne dès maintenant !'}
                   </p>
                 </div>
 

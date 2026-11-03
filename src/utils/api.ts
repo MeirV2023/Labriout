@@ -35,7 +35,7 @@ const IS_LOCALHOST =
   (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
 const GATEWAY_ORIGIN = 'http://localhost:4000';
-const LOCAL_DB_STORAGE_KEY = 'streetfood_saas_cloud_db_v2';
+const LOCAL_DB_STORAGE_KEY = 'labriout_saas_cloud_db_v3';
 const REALTIME_CHANNEL_NAME = 'streetfood_saas_realtime_bus';
 
 interface RealtimeEventPayload {

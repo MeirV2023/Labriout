@@ -6,29 +6,29 @@ export const InstagramSection: React.FC = () => {
   const instagramPosts = [
     {
       id: 1,
-      image: 'https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=600&q=80',
-      caption: 'Il momento esatto in cui apri un vero Panzarotto Pompei... 🧀🔥 Filante e dorato!',
+      image: 'https://ik.imagekit.io/3l9prqiky/eatview/migrated/labriout/bd8dcf58db7e-double-smash-burger.webp',
+      caption: 'Double Smash Burger maison saisi minute sur la plancha... 🍔🔥 100% Casher Badatz de Brunoy !',
       likes: '1.4k',
       comments: '84',
     },
     {
       id: 2,
-      image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=600&q=80',
-      caption: 'Diavolo lovers! Salamino piccante campano e mozzarella filante. Pronto da mordere! 🌶️',
-      likes: '980',
-      comments: '52',
+      image: 'https://ik.imagekit.io/3l9prqiky/eatview/migrated/labriout/d3b33d1f5265-laffa-shawarma.webp',
+      caption: 'Laffa Shawarma bien chaude garnie de houmous, tahina et viandes rôties à la broche ! 🥙✨',
+      likes: '1.2k',
+      comments: '68',
     },
     {
       id: 3,
-      image: 'https://images.unsplash.com/photo-1595295333158-4742f28fbd85?auto=format&fit=crop&w=600&q=80',
-      caption: 'Arancino napoletano con cuore di provola affumicata e speck. Uno tira l’altro! 🍚✨',
+      image: 'https://ik.imagekit.io/3l9prqiky/eatview/migrated/labriout/4a334603274e-assiette-duo-2-viandes.webp',
+      caption: 'Assiette Duo Parguit & Schnitzel croustillant aux graines de sésame avec frites de patates douces ! 🍽️🔥',
       likes: '1.8k',
       comments: '112',
     },
     {
       id: 4,
-      image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=80',
-      caption: 'Gran fritto misto per la serata di sabato. Chi taggheresti per finirlo tutto? 🍟',
+      image: 'https://ik.imagekit.io/3l9prqiky/eatview/migrated/labriout/0fe48647b6ed-houmous-bassar.webp',
+      caption: 'Houmous Bassar crémeux préparé chaque matin avec émincé de viande grillée et huile d’olive. 🫒🥩',
       likes: '2.1k',
       comments: '143',
     },
@@ -48,7 +48,7 @@ export const InstagramSection: React.FC = () => {
               {STORE_DETAILS.instagramHandle}
             </h3>
             <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-              Tagga le tue foto con <span className="text-[#ff7722] font-semibold">#PanzarottoPompei</span> per essere ripostato nelle nostre storie!
+              Identifiez vos photos avec <span className="text-[#ff7722] font-semibold">#Labriout94</span> pour être partagé dans nos stories !
             </p>
           </div>
 

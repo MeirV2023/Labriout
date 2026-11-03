@@ -65,72 +65,72 @@ export const ContactPage: React.FC = () => {
         ? 'Can I order online?'
         : isRu
         ? 'Можно ли сделать заказ онлайн?'
-        : 'Posso ordinare online?',
+        : 'Puis-je commander en ligne ?',
       a: isEn
-        ? 'Yes, absolutely! You can browse our entire menu right here on the website, customize your panzerotti and sfizi, and choose between direct takeaway pickup or home delivery.'
+        ? 'Yes, absolutely! You can browse our entire kosher menu right here on the website, customize your Smash Burgers, Pitas, Laffas and Assiettes, and choose between store pickup or home delivery.'
         : isRu
-        ? 'Да, конечно! Вы можете выбрать любые панцеротти и закуски на нашем сайте и оформить доставку на дом или самовывоз.'
-        : 'Assolutamente sì! Puoi consultare l’intero menù direttamente sul sito, personalizzare i tuoi panzerotti e scegliere comodamente tra asporto in negozio o consegna rapida a domicilio.',
+        ? 'Да, конечно! Вы можете выбрать любые кошерные бургеры, шаурму в лаффе, питы и сытные тарелки на сайте и оформить доставку на дом или самовывоз.'
+        : 'Oui, absolument ! Vous pouvez consulter toute notre carte casher sur le site, personnaliser vos Smash Burgers, Pitas, Laffas et Assiettes, et choisir entre le retrait sur place ou la livraison à domicile.',
     },
     {
       q: isEn
         ? 'Do you offer delivery?'
         : isRu
         ? 'Есть ли у вас доставка?'
-        : 'Effettuate consegne a domicilio?',
+        : 'Proposez-vous la livraison à domicile ?',
       a: isEn
-        ? 'Yes! We deliver hot, freshly fried panzerotti across Pompei, Scafati, Torre Annunziata, Castellammare, and surrounding areas. Delivery is free for orders over €20!'
+        ? 'Yes! We deliver hot, freshly grilled orders across Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort and surrounding areas in 94. Delivery is free for orders over €30!'
         : isRu
-        ? 'Да! Мы доставляем горячие и хрустящие панцеротти по Помпеям, Скафати, Торре-Аннунциата, Кастелламмаре и окрестностям. Бесплатная доставка от 20€!'
-        : 'Certamente! Consegniamo caldi e fragranti a Pompei, Scafati, Torre Annunziata, Castellammare e comuni limitrofi. La consegna è gratuita per ordini superiori a 20€.',
+        ? 'Да! Мы доставляем горячие блюда с огня по Бонёй-сюр-Марн, Кретею, Сен-Мор-де-Фоссе и соседним городам департамента 94. Бесплатная доставка от 30€!'
+        : 'Oui ! Nous livrons vos commandes bien chaudes à Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort et dans les villes voisines du 94. Livraison offerte dès 30€ de commande !',
     },
     {
       q: isEn
-        ? 'Are your ingredients fresh?'
+        ? 'What is your Kosher certification?'
         : isRu
-        ? 'Свежие ли у вас ингредиенты?'
-        : 'I vostri ingredienti sono freschi?',
+        ? 'Какой у вас сертификат кашрута?'
+        : 'Quelle est votre certification Casher ?',
       a: isEn
-        ? '100% fresh every single day! We naturally leaven our dough for over 24 hours, and use only authentic Campania fior di latte mozzarella, San Marzano tomatoes, and prime Italian cured meats.'
+        ? 'LABRIOUT is 100% Kosher meat (Bassar) under the strict rabbinical supervision of Badatz de Brunoy, with daily fresh meat and house-prepared recipes.'
         : isRu
-        ? 'На 100% свежие каждый день! Тесто созревает более 24 часов, используем отборную моцареллу Кампании, томаты Сан-Марцано и свежайшие итальянские начинки.'
-        : 'Al 100% freschi ogni giorno! Il nostro impasto a lunga lievitazione naturale di 24 ore è preparato quotidianamente con fior di latte campano, pomodoro San Marzano e salumi di prima scelta.',
+        ? 'Ресторан LABRIOUT на 100% кошерный мясной (Басар) под строгим раввинским контролем Бадац де Брюнуа (Badatz de Brunoy).'
+        : 'LABRIOUT est un restaurant 100% Casher Bassar sous la stricte surveillance rabbinique du Badatz de Brunoy, avec des viandes fraîches sélectionnées et une cuisine faite maison.',
     },
     {
       q: isEn
-        ? 'What is a Panzerotto exactly?'
+        ? 'What are your house specialties?'
         : isRu
-        ? 'Что такое панцеротто?'
-        : 'Cos’è esattamente un Panzerotto?',
+        ? 'Какие ваши фирменные блюда?'
+        : 'Quelles sont vos spécialités maison ?',
       a: isEn
-        ? 'A panzerotto is a beloved traditional Italian crescent-shaped pocket of dough, stuffed with gourmet savory fillings and fried to golden, bubbling perfection (or oven-baked upon request).'
+        ? 'Our guests love our juicy Smash Burgers (with Parve melted cheddar or pressed veal), warm Laffa & Pita Shawarma, flame-grilled Parguit, sesame Schnitzel, and creamy homemade Houmous Bassar.'
         : isRu
-        ? 'Панцеротто — это знаменитый итальянский полумесяц из нежного теста с богатой начинкой из сыра и соусов, обжаренный до золотистой хрустящей корочки.'
-        : 'Il panzerotto è una specialità street food a mezzaluna, farcita generosamente con ingredienti genuini e fritta al momento fino a raggiungere una doratura croccante e un cuore filante irresistibile.',
+        ? 'Гости особенно любят наши сочные Смэш-бургеры (с чеддером Парве и прессованной телятиной), шаурму в теплой лаффе и пите, паргит на углях, хрустящий шницель в кунжуте и домашний Хумус Басар.'
+        : 'Nos clients adorent nos Smash Burgers juteux (avec cheddar fondant Parvé ou veau pressé), nos Laffas & Pitas Shawarma, notre Parguit mariné grillé, le Schnitzel au sésame et notre Houmous Bassar maison.',
     },
     {
       q: isEn
-        ? 'Do you have vegetarian or vegan options?'
+        ? 'Do you have vegetarian options?'
         : isRu
-        ? 'Есть ли вегетарианские варианты?'
-        : 'Avete opzioni vegetariane o vegane?',
+        ? 'Есть ли вегетарианские блюда?'
+        : 'Avez-vous des options végétariennes ?',
       a: isEn
-        ? 'Yes, we have delicious vegetarian favorites like the 4 Formaggi, Ricotta & Spinach, and our Vegetariano packed with grilled zucchini, aubergines, and mozzarella.'
+        ? 'Yes! Try our crispy herb Falafel in Pita, Laffa or Platter, our Israeli Sabich with fried eggplant and hard-boiled egg, classic Hummus, and fresh salads.'
         : isRu
-        ? 'Да, у нас есть вкуснейшие вегетарианские позиции: 4 сыра, Рикотта со шпинатом, а также Овощной панцеротто с цукини и баклажанами.'
-        : 'Certamente! Abbiamo opzioni vegetariane sfiziose come il 4 Formaggi, Ricotta & Spinaci, e il Vegetariano ricco di verdure grigliate e mozzarella campana.',
+        ? 'Да! Попробуйте наш хрустящий фалафель с зеленью в пите, лаффе или на тарелке, традиционный израильский Сабих с баклажанами и яйцом, классический хумус и свежие салаты.'
+        : 'Oui ! Découvrez nos Falafels croustillants aux herbes fraîches (en pita, laffa ou assiette), notre Sabich israélien aux aubergines fondantes, notre Houmous classique et nos salades fraîcheur.',
     },
     {
       q: isEn
-        ? 'Can I bring a big group or order for parties?'
+        ? 'Can I order for groups, family events or Simchas?'
         : isRu
-        ? 'Можно ли заказать на большую компанию или праздник?'
-        : 'Posso ordinare per feste o grandi comitive?',
+        ? 'Можно ли заказать на большую компанию или Симху?'
+        : 'Puis-je commander pour un groupe ou un événement (Simcha) ?',
       a: isEn
-        ? 'Yes! We love catering birthdays, private parties, and office events. We offer assorted party boxes and mini-panzerotti. Reach out in advance via form or WhatsApp to coordinate your order!'
+        ? 'Yes! We gladly prepare large platters, burger & shawarma assortments, and mezzes for birthdays, family gatherings, and office lunches. Contact us via WhatsApp or the form!'
         : isRu
-        ? 'Конечно! Мы с радостью готовим боксы с мини-панцеротти и комбо для дней рождения, вечеринок и мероприятий. Напишите нам в WhatsApp или через форму.'
-        : 'Certamente! Prepariamo box speciali con mini-panzerotti e fritture miste per feste di compleanno, eventi e cene con amici. Contattaci in anticipo su WhatsApp o tramite il modulo!',
+        ? 'Конечно! Мы с радостью готовим большие сеты бургеров, пит, шаурмы и мезе для семейных праздников, дней рождения и корпоративов. Напишите нам в WhatsApp или через форму!'
+        : 'Avec plaisir ! Nous préparons des plateaux conviviaux pour vos repas de famille, anniversaires et déjeuners d’entreprise. Contactez-nous sur WhatsApp ou via le formulaire !',
     },
     {
       q: isEn

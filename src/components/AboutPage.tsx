@@ -77,21 +77,23 @@ export const AboutPage: React.FC = () => {
         />
       ),
       title: isEn
-        ? 'FLAVOR WITH A PURPOSE'
+        ? '✡️ 100% KOSHER • BADATZ DE BRUNOY'
         : isRu
-        ? 'ВКУС СО СМЫСЛОМ'
+        ? '✡️ 100% КОШЕР • BADATZ DE BRUNOY'
         : isDe
-        ? 'GESCHMACK MIT HERZ'
+        ? '✡️ 100% KOSCHER • BADATZ DE BRUNOY'
         : isFr
-        ? 'LA SAVEUR AVEC DU SENS'
-        : 'SAPORE CON UN’ANIMA',
+        ? '✡️ 100% CASHER • BADATZ DE BRUNOY'
+        : '✡️ 100% CASHER • BADATZ DE BRUNOY',
       content: (
         <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium max-w-sm">
           {isEn
-            ? 'We’re not just here to fill plates, we’re here to fire up taste buds and connect people to the real flavors of Campania, right here in Pompei. Every bite is a celebration of culture, crafted with love, tradition, and a little attitude.'
+            ? 'Uncompromising Kashrut standards under the strict rabbinical supervision of Badatz de Brunoy (Glatt Kosher / Beth Yosef). Every meat cut, poultry fillet, and Parve ingredient is inspected daily on-site by our Mashgiach (Chomer).'
             : isRu
-            ? 'Мы здесь не просто для того, чтобы наполнить тарелки — мы дарим яркие эмоции и знакомим с настоящими вкусами региона Кампания. Каждый кусочек — это праздник традиций, приготовленный с душой и любовью.'
-            : 'Non siamo qui solo per riempire i piatti, siamo qui per accendere i palati e far vivere il vero sapore autentico della Campania a Pompei. Ogni morso è una festa per il palato, preparata con passione, tradizione e la giusta dose di grinta.'}
+            ? 'Безупречный стандарт кашрута под строгим раввинским надзором Badatz de Brunoy (Халак Бейт Йосеф). Отборная говядина, птица, свежая зелень и ингредиенты Parvé ежедневно проверяются машгиахом (шомером) прямо на нашей кухне.'
+            : isDe
+            ? 'Kompromisslose Kaschrut unter der strengen rabbinischen Aufsicht des Badatz de Brunoy. Unser gesamtes Fleisch, Geflügel und alle Parve-Zutaten werden täglich vor Ort von unserem Maschgiach kontrolliert.'
+            : 'Une cacherout irréprochable sous la surveillance stricte du Badatz de Brunoy (Halak Beth Yossef). Nos viandes, volailles et ingrédients Parvé sont rigoureusement sélectionnés et contrôlés chaque jour sur place par notre Chomer.'}
         </p>
       ),
     },
@@ -104,21 +106,23 @@ export const AboutPage: React.FC = () => {
         />
       ),
       title: isEn
-        ? 'BIG DREAMS, NO EGO'
+        ? 'JEWISH HOSPITALITY ("LABRIOUT")'
         : isRu
-        ? 'БОЛЬШИЕ МЕЧТЫ БЕЗ ЭГО'
+        ? 'ЕВРЕЙСКОЕ ГОСТЕПРИИМСТВО («ЛАБРИЮТ»)'
         : isDe
-        ? 'GROSSE TRÄUME, KEIN EGO'
+        ? 'JÜDISCHE GASTFREUNDSCHAFT („LABRIOUT“)'
         : isFr
-        ? 'GRANDS RÊVES, SANS EGO'
-        : 'GRANDI SOGNI, NESSUN EGO',
+        ? 'HOSPITALITÉ & GÉNÉROSITÉ (« LABRIOUT »)'
+        : 'OSPITALITÀ & GENEROSITÀ («LABRIOUT»)',
       content: (
         <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium max-w-sm">
           {isEn
-            ? 'We’re building more than a street food spot, we’re building the go-to spot for good food, good vibes, and genuine community in Pompei. Whether it’s your lunch break, a late-night craving, or your Sunday family ritual, we’re here to make it count.'
+            ? 'In Hebrew, "Labriout" (לבריאות) means "To your health!". We welcome every guest like family around a generous table in Bonneuil-sur-Marne — whether for a quick lunch, a festive family dinner, or pre-Shabbat gatherings.'
             : isRu
-            ? 'Мы создаем больше, чем просто стритфуд: мы строим место душевных встреч, отличного настроения и искреннего общения в Помпеях. Будь то быстрый обед, поздний перекус или семейный воскресный ужин — мы всегда рядом.'
-            : 'Stiamo costruendo molto più di una tavola calda: un punto di ritrovo per il buon cibo, il buon umore e la vera comunità di Pompei. Che sia una pausa pranzo, uno sfizio notturno o il rito della domenica in famiglia, siamo qui per renderlo speciale.'}
+            ? 'На иврите «Лабриют» (לבריאות) означает «На здоровье!». В Бонёй-сюр-Марн мы встречаем каждого гостя как близкого друга семьи: щедрые порции, пышные питы и лаффы, атмосфера радости, уважения к традициям и домашнего уюта.'
+            : isDe
+            ? 'Auf Hebräisch bedeutet „Labriout“ (לבריאות) „Auf Ihre Gesundheit!“. In Bonneuil-sur-Marne empfangen wir jeden Gast wie Familie mit großzügigen Portionen, warmen Pitas und echter Herzlichkeit.'
+            : 'En hébreu, « Labriout » (לבריאות) signifie « À votre santé ! ». À Bonneuil-sur-Marne, nous recevons chaque client comme un invité de marque : des assiettes copieuses, des pains pitas et laffas généreux et une ambiance familiale chaleureuse.'}
         </p>
       ),
     },
@@ -131,55 +135,55 @@ export const AboutPage: React.FC = () => {
         />
       ),
       title: isEn
-        ? 'OUR SECRET SAUCE'
+        ? 'OUR KOSHER CRAFTSMANSHIP'
         : isRu
-        ? 'НАШ СЕКРЕТНЫЙ РЕЦЕПТ'
+        ? 'СЕКРЕТЫ НАШЕЙ КОШЕРНОЙ КУХНИ'
         : isDe
-        ? 'UNSER GEHEIMREZEPT'
+        ? 'UNSERE KOSCHERE HAUSKÜCHE'
         : isFr
-        ? 'NOTRE RECETTE SECRÈTE'
-        : 'IL NOSTRO SEGRETO',
+        ? 'NOTRE SAVOIR-FAIRE MAISON'
+        : 'IL NOSTRO SAPERE ARTIGIANALE',
       content: (
         <div className="text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium text-left space-y-1.5 max-w-sm">
           <p>
             <strong className="text-neutral-900 font-bold">
-              {isEn ? 'Authenticity: ' : isRu ? 'Аутентичность: ' : 'Autenticità: '}
+              {isEn ? 'Strict Kashrut: ' : isRu ? 'Строгий Кашрут: ' : 'Cacherout Certifiée : '}
             </strong>
             {isEn
-              ? 'Rooted in Neapolitan tradition, served with passion.'
+              ? '100% Kosher meat & Parve under Badatz de Brunoy supervision.'
               : isRu
-              ? 'Верность неаполитанским корням и рецептам.'
-              : 'Radicata nella tradizione partenopea, servita con passione.'}
+              ? '100% кошерное мясо (Басар) и чеддер Parvé под контролем Badatz de Brunoy.'
+              : '100% Casher Bassar & Parvé sous le contrôle du Badatz de Brunoy.'}
           </p>
           <p>
             <strong className="text-neutral-900 font-bold">
-              {isEn ? 'Innovation: ' : isRu ? 'Инновации: ' : 'Innovazione: '}
+              {isEn ? 'Flame & Plancha: ' : isRu ? 'Огонь и Планча: ' : 'Grillades & Smash : '}
             </strong>
             {isEn
-              ? 'We don’t follow food trends — we fry them.'
+              ? 'Crispy Smash Burgers, spiced Shawarma, tender Parguit & artisanal Merguez.'
               : isRu
-              ? 'Мы не следуем трендам — мы создаем их.'
-              : 'Non seguiamo le mode: le trasformiamo in gusto croccante.'}
+              ? 'Сочные Смэш-бургеры, пряная шаурма, нежный паргит и домашние мергез.'
+              : 'Smash burgers croustillants, shawarma mariné, parguit tendre et merguez.'}
           </p>
           <p>
             <strong className="text-neutral-900 font-bold">
-              {isEn ? 'Quality & Care: ' : isRu ? 'Качество: ' : 'Qualità e Cura: '}
+              {isEn ? 'Homemade Tradition: ' : isRu ? 'Домашние рецепты: ' : 'Fait Maison : '}
             </strong>
             {isEn
-              ? 'No shortcuts on fresh dough, mozzarella & local meats.'
+              ? 'Creamy Hummus Bassar, golden Falafels, fresh fries & sweet potato fries.'
               : isRu
-              ? 'Никаких компромиссов: только фермерские продукты и свежее тесто.'
-              : 'Nessuna scorciatoia su impasto a lenta lievitazione e fior di latte.'}
+              ? 'Кремовый хумус басар, золотистый фалафель, тхина и домашний картофель фри.'
+              : 'Houmous bassar onctueux, falafels dorés aux herbes, thina et frites fraîches.'}
           </p>
           <p>
             <strong className="text-neutral-900 font-bold">
-              {isEn ? 'Team Energy: ' : isRu ? 'Энергия команды: ' : 'Energia del Team: '}
+              {isEn ? 'Warm Service: ' : isRu ? 'Сервис с душой: ' : 'Esprit Famille : '}
             </strong>
             {isEn
-              ? 'A dedicated crew that brings the heat every single day.'
+              ? 'Dine-in, takeaway & hot delivery at 64 av. Simone Veil, Bonneuil-sur-Marne.'
               : isRu
-              ? 'Команда профессионалов, влюбленная в свое дело.'
-              : 'Una squadra affiatata che mette il cuore in ogni ordine.'}
+              ? 'В зале, навынос и быстрая доставка: 64 av. Simone Veil, Bonneuil-sur-Marne.'
+              : 'Sur place, à emporter et livraison au 64 av. Simone Veil, Bonneuil-sur-Marne.'}
           </p>
         </div>
       ),
@@ -316,19 +320,16 @@ export const AboutPage: React.FC = () => {
           <div className="lg:col-span-5 flex justify-center lg:justify-start">
             <div className="relative max-w-sm sm:max-w-md w-[90%] translate-y-[20px]">
               <img
-                src="/about-us.png"
+                src="/about-us.png?v=labriout2"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   const target = e.currentTarget;
-                  if (!target.dataset.triedIbb) {
-                    target.dataset.triedIbb = 'true';
-                    target.src = 'https://i.ibb.co/JWJ4Nwfq/About-us1.png';
-                  } else if (!target.dataset.triedSecond) {
-                    target.dataset.triedSecond = 'true';
-                    target.src = 'https://i.ibb.co/GfSLX4K9/About-us1.png';
+                  if (!target.dataset.triedFallback) {
+                    target.dataset.triedFallback = 'true';
+                    target.src = 'https://ik.imagekit.io/3l9prqiky/eatview/uploads/2026-10-19/f751f8e4-3f3a-4d10-a3e4-a496157a9b08-img_8355.jpg';
                   }
                 }}
-                alt="Panzarotto Street Food Pompei"
+                alt="LABRIOUT Burger Casher Badatz de Brunoy"
                 className="w-full h-auto drop-shadow-[0_16px_36px_rgba(0,0,0,0.12)]"
                 loading="eager"
               />
@@ -338,59 +339,63 @@ export const AboutPage: React.FC = () => {
           {/* Right Column: Two Narrative Story Blocks */}
           <div className="lg:col-span-7 flex flex-col justify-center space-y-8 sm:space-y-12 pt-4 sm:pt-6 lg:pt-8">
             
-            {/* Story Block 1: "IT ALL STARTED WITH A TRUCK / PASSION" (Single-line heading + compact paragraph) */}
+            {/* Story Block 1: Kosher Tradition & Passion */}
             <div className="space-y-2 sm:space-y-3">
               <h2
                 style={{
                   fontFamily: '"Bebas Neue", "Barlow Condensed", "Oswald", sans-serif',
                   letterSpacing: '0.02em',
                 }}
-                className="text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] text-[#FF5500] uppercase leading-none tracking-tight select-none font-bold whitespace-nowrap"
+                className="text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] text-[#FF5500] uppercase leading-none tracking-tight select-none font-bold"
               >
                 {isEn
-                  ? 'IT ALL STARTED WITH A PASSION.'
+                  ? 'THE ART OF AUTHENTIC KOSHER STREET FOOD'
                   : isRu
-                  ? 'ВСЁ НАЧАЛОСЬ С МЕЧТЫ И СТРАСТИ.'
+                  ? 'ИСКУССТВО НАСТОЯЩЕЙ КОШЕРНОЙ КУХНИ'
                   : isDe
-                  ? 'ALLES BEGANN MIT EINER PASSION.'
+                  ? 'DIE KUNST AUTHENTISCHER KOSCHERER KÜCHE'
                   : isFr
-                  ? 'TOUT A COMMENCÉ AVEC UNE PASSION.'
-                  : 'TUTTO È INIZIATO CON UNA PASSIONE.'}
+                  ? 'LA PASSION DU VRAI GOÛT CASHER'
+                  : 'LA PASSIONE DEL VERO GUSTO KASHER'}
               </h2>
-              <p className="max-w-[420px] text-sm sm:text-[15px] lg:text-base text-neutral-800 leading-snug font-medium">
+              <p className="max-w-[460px] text-sm sm:text-[15px] lg:text-base text-neutral-800 leading-snug font-medium">
                 {isEn
-                  ? 'Back in the heart of Pompei, Panzarotto was born from a dream, a deep family heritage, and a fire to serve real-deal Neapolitan street food right beside the world-famous ruins. We rolled out with piping-hot panzerotti, fresh local ingredients, and authentic flavors that made people do double takes.'
+                  ? 'In the heart of Bonneuil-sur-Marne (64 av. Simone Veil), LABRIOUT was born from a family calling: uniting the warmth of Jewish and Israeli culinary tradition with modern gourmet street food. Under the strict rabbinical supervision of Badatz de Brunoy (100% Kosher / Beth Yosef), we flame-grill prime kosher meats daily and serve every guest with genuine hospitality.'
                   : isRu
-                  ? 'В самом сердце Помпей проект Panzarotto начался с мечты, семейных традиций и страсти готовить настоящий неаполитанский стритфуд прямо у древних раскопок. Мы начинали со свежайших горячих панцеротти, отборных местных продуктов и вкуса, который покоряет с первого кусочка.'
-                  : 'Nel cuore pulsante di Pompei, Panzarotto nasce da un sogno, da un’antica tradizione di famiglia e dal fuoco sacro di servire il vero street food campano a due passi dagli scavi archeologici. Siamo partiti con panzerotti caldi fritti al momento, materie prime d’eccellenza e sapori veraci capaci di conquistare chiunque al primo morso.'}
+                  ? 'В самом сердце Бонёй-сюр-Марн (64 av. Simone Veil) ресторан LABRIOUT родился из семейного призвания: объединить щедрость еврейской и израильской гастрономии с культурой современного гурмэ-стритфуда. Под строгим раввинским контролем кашрута Badatz de Brunoy (100% Casher • Бе-ашгахат Бадац Брюнуа) мы ежедневно готовим отборное кошерное мясо на открытом огне с теплом настоящего еврейского гостеприимства.'
+                  : isDe
+                  ? 'Im Herzen von Bonneuil-sur-Marne (64 av. Simone Veil) entstand LABRIOUT aus einer Familientradition: die Großzügigkeit der jüdisch-israelischen Küche mit modernem Gourmet-Streetfood zu verbinden. Unter der strengen rabbinischen Aufsicht des Badatz de Brunoy (100 % Koscher) grillen wir täglich bestes koscheres Fleisch frisch über der Flamme.'
+                  : 'Au cœur de Bonneuil-sur-Marne (64 av. Simone Veil), LABRIOUT est né d’une vocation familiale : réunir la générosité de la cuisine juive et israélienne avec l’excellence du street food moderne. Sous la stricte surveillance rabbinique du Badatz de Brunoy (100% Casher Bassar / Halak Beth Yossef), nous préparons chaque jour des viandes sélectionnées avec soin et grillées à la flamme.'}
               </p>
             </div>
 
-            {/* Story Block 2: "LINES GOT LONGER, SO DID THE MENU" (Single-line heading + compact paragraph) */}
+            {/* Story Block 2: Shawarma, Parguit, Smash Burgers & Hummus Bassar */}
             <div className="space-y-2 sm:space-y-3">
               <h2
                 style={{
                   fontFamily: '"Bebas Neue", "Barlow Condensed", "Oswald", sans-serif',
                   letterSpacing: '0.02em',
                 }}
-                className="text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] text-[#FF5500] uppercase leading-none tracking-tight select-none font-bold whitespace-nowrap"
+                className="text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] text-[#FF5500] uppercase leading-none tracking-tight select-none font-bold"
               >
                 {isEn
-                  ? 'LINES GOT LONGER, SO DID THE MENU'
+                  ? 'FROM SPICED SHAWARMA TO SMASH BURGERS'
                   : isRu
-                  ? 'ОЧЕРЕДИ РОСЛИ, И МЕНЮ РАСШИРЯЛОСЬ'
+                  ? 'ОТ СОЧНОЙ ШАУРМЫ И ПАРГИТА ДО СМЭШ-БУРГЕРОВ'
                   : isDe
-                  ? 'DIE SCHLANGEN WURDEN LÄNGER, DIE KARTE GRÖSSER'
+                  ? 'VON WÜRZIGEM SHAWARMA BIS SMASH BURGERN'
                   : isFr
-                  ? 'LES FILES S’ALLONGEAIENT, LA CARTE AUSSI'
-                  : 'LE FILE CRESCEVANO, E COSÌ IL NOSTRO MENÙ'}
+                  ? 'DU SHAWARMA AUX SMASH BURGERS GOURMETS'
+                  : 'DALLO SHAWARMA AI NOSTRI SMASH BURGER'}
               </h2>
-              <p className="max-w-[420px] text-sm sm:text-[15px] lg:text-base text-neutral-800 leading-snug font-medium">
+              <p className="max-w-[460px] text-sm sm:text-[15px] lg:text-base text-neutral-800 leading-snug font-medium">
                 {isEn
-                  ? 'Turns out, golden street panzerotti were just the beginning. With every single order, we listened, experimented, and added more of what Pompei craved: generous maxi-sandwiches, golden crocchè with melting hearts, tender rotisserie meats, and sweet specialties. The menu grew because the people asked for it.'
+                  ? 'From our crispy Smash Burgers topped with melted Parve cheddar and kosher pressed veal bacon, to warm pitas and laffas loaded with spiced shawarma, tender parguit, golden schnitzel, artisanal merguez, and creamy hummus bassar with tahini — every recipe strictly honors the laws of Kashrut with zero compromise on flavor.'
                   : isRu
-                  ? 'Оказалось, золотистые панцеротти были только началом. С каждым заказом мы слушали гостей, экспериментировали и добавляли то, чего так хотелось: сочные сытные панини, хрустящие крокке с тающей моцареллой, нежное мясо на гриле и сладкие десерты. Меню росло благодаря любви наших гостей.'
-                  : 'I nostri panzerotti dorati erano solo il punto di partenza. Ordine dopo ordine, abbiamo ascoltato i nostri clienti, sperimentato e arricchito la proposta con maxi panini farciti, crocchè fumanti dal cuore filante, pollo allo spiedo succoso e dolci irresistibili. Il menù è cresciuto perché la nostra gente lo ha chiesto.'}
+                  ? 'От наших фирменных Смэш-бургеров с тающим чеддером Parvé и хрустящей прессованной телятиной до горячих пит и лафф с пряной шаурмой, сочным шашлыком паргит, золотистым шницелем, домашними колбасками мергез и кремовым хумусом басар с кунжутной тхиной — каждый рецепт бережно хранит законы кашрута и дарит незабываемый вкус.'
+                  : isDe
+                  ? 'Von unseren knusprigen Smash Burgern mit geschmolzenem Parve-Cheddar und koscherem Kalbs-Bacon bis hin zu warmen Pitas und Laffas mit würzigem Shawarma, zartem Parguit, goldenem Schnitzel, Merguez und hausgemachtem Hummus Bassar – jedes Gericht folgt streng den Kaschrut-Gesetzen.'
+                  : 'De nos Smash Burgers croustillants garnis de cheddar fondant Parvé et de veau pressé façon bacon casher, jusqu’à nos laffas et pitas chaudes au shawarma mariné aux épices orientales, parguit tendre, schnitzel doré, merguez artisanales et houmous bassar maison — chaque recette respecte scrupuleusement les lois de la Cacherout.'}
               </p>
             </div>
 
@@ -400,35 +405,32 @@ export const AboutPage: React.FC = () => {
 
       </section>
 
-      {/* SECTION 3: "MORE FLAVOURS, MORE FAMILIA" with Layout matching Screenshot 2 */}
+      {/* SECTION 3: "LABRIOUT : LA GÉNÉROSITÉ & LE PARTAGE" with 3 Food Polaroids */}
       <section className="py-12 sm:py-16 lg:py-24 max-w-[1000px] lg:max-w-[1060px] mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-0 items-start relative">
           
-          {/* LEFT COLUMN: Polaroid 1 (Top, under right Polaroid) + Heading & Narrative Text (Bottom) */}
+          {/* LEFT COLUMN: Polaroid 1 (Laffa Shawarma & Fries) + Heading & Narrative Text */}
           <div className="flex flex-col items-center md:items-start z-10">
             
-            {/* Polaroid 1: Top-Left Chef Tossing Chips (positioned under right Polaroid) */}
+            {/* Polaroid 1: Top-Left Laffa Shawarma & House Fries */}
             <div className="relative w-[285px] sm:w-[345px] md:w-[385px] max-w-full transform -rotate-[1deg] md:translate-x-20 lg:translate-x-28 hover:rotate-0 hover:scale-[1.02] transition-all duration-300 z-10">
               <img
-                src="/about-chips.png"
+                src="/about-chips.png?v=labriout2"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   const target = e.currentTarget;
-                  if (!target.dataset.triedIbb) {
-                    target.dataset.triedIbb = 'true';
-                    target.src = 'https://i.ibb.co/PvBjWRmq/23.png';
-                  } else if (!target.dataset.triedSecond) {
-                    target.dataset.triedSecond = 'true';
-                    target.src = 'https://i.ibb.co/dwnMpSW8/23.png';
+                  if (!target.dataset.triedFallback) {
+                    target.dataset.triedFallback = 'true';
+                    target.src = 'https://ik.imagekit.io/3l9prqiky/eatview/migrated/labriout/d3b33d1f5265-laffa-shawarma.webp';
                   }
                 }}
-                alt="Panzarotto Chef Tossing Chips"
+                alt="LABRIOUT Laffa Shawarma & Frites Maison"
                 className="w-full h-auto drop-shadow-[0_16px_36px_rgba(0,0,0,0.16)]"
                 loading="lazy"
               />
             </div>
 
-            {/* Narrative Story Block Underneath Polaroid 1 (positioned below the pictures) */}
+            {/* Narrative Story Block Underneath Polaroid 1 */}
             <div className="mt-8 sm:mt-10 md:mt-10 lg:mt-12 max-w-[440px] md:translate-x-16 lg:translate-x-24 xl:translate-x-28 space-y-3 sm:space-y-4">
               <h2
                 style={{
@@ -438,62 +440,61 @@ export const AboutPage: React.FC = () => {
                 className="text-2xl sm:text-3xl md:text-[38px] text-[#FF5500] uppercase leading-[0.95] tracking-tight select-none font-bold"
               >
                 {isEn
-                  ? 'MORE FLAVOURS, MORE FAMILIA'
+                  ? 'LABRIOUT (לבריאות): TO YOUR HEALTH & JOY'
                   : isRu
-                  ? 'БОЛЬШЕ ВКУСА, БОЛЬШЕ СЕМЬИ'
+                  ? 'ЛАБРИЮТ (לבריאות) — НА ЗДОРОВЬЕ И В РАДОСТЬ!'
                   : isDe
-                  ? 'MEHR GESCHMACK, MEHR FAMILIE'
+                  ? 'LABRIOUT (לבריאות): AUF IHRE GESUNDHEIT!'
                   : isFr
-                  ? 'PLUS DE SAVEURS, PLUS DE FAMILLE'
-                  : 'PIÙ SAPORE, PIÙ FAMIGLIA'}
+                  ? 'LABRIOUT (לבריאות) : LA GÉNÉROSITÉ & LE PARTAGE'
+                  : 'LABRIOUT (לבריאות): SALUTE, GIOIA & CONDIVISIONE'}
               </h2>
               <p className="text-sm sm:text-[15px] lg:text-base text-neutral-800 leading-snug font-medium">
                 {isEn
-                  ? 'From locals walking in every evening to travelers discovering the Roman ruins of Pompei, our culinary family continued to grow. Every kitchen we open and every panzarotto we fry carries the exact same love, craft, and crispy crunch from day one. Good food, genuine energy, and unforgettable street food moments.'
+                  ? 'In Hebrew, "Labriout" (לבריאות) means "To your good health!". That blessing inspires every dish we serve: welcoming families, friends, and the community around a generous kosher table where everything is cooked fresh to order with house-cut fries, warm fluffy pitas, and homemade sauces. Every meal is a moment of Simcha (joy) and togetherness.'
                   : isRu
-                  ? 'От постоянных жителей Помпей до путешественников со всего мира, посещающих базилику и древний город, наша большая семья продолжает расти. Каждый замес теста и каждое обжаренное блюдо несут в себе ту же искреннюю заботу и тепло первого дня. Отличная еда, душевная атмосфера и незабываемые моменты.'
-                  : 'Dai residenti affezionati che passano ogni sera ai viaggiatori che scoprono le meraviglie archeologiche di Pompei, la nostra famiglia gastronomica continua a espandersi. Ogni cucina che accendiamo e ogni panzarotto che friggiamo racchiude lo stesso amore, la stessa maestria e la medesima croccantezza del primo giorno: buon cibo, energia positiva e momenti indimenticabili.'}
+                  ? 'На иврите «Лабриют» (לבריאות — «На здоровье!») — это тёплое благословение за богатым семейным столом. Именно эту душу и атмосферу Симхи (радости) мы вкладываем в каждое блюдо: щедрые мясные тарелки, свежие салаты, горячий фалафель, домашний фри и искреннее гостеприимство для всей еврейской общины и наших дорогих гостей.'
+                  : isDe
+                  ? 'Auf Hebräisch bedeutet „Labriout“ (לבריאות) „Auf Ihre Gesundheit!“. Genau diese Herzlichkeit steckt in jedem unserer Gerichte: großzügige Teller, hausgemachte Pommes, frische Salate und warme Pitas für die ganze Familie und Gemeinschaft.'
+                  : 'En hébreu, « Labriout » (לבריאות) signifie « À votre santé ! ». C’est toute l’âme de notre maison : réunir les familles, les amis et la communauté autour d’une table casher abondante et joyeuse, où chaque viande grillée, chaque pita chaude et chaque barquette de frites maison est préparée à la minute avec amour et générosité.'}
               </p>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Polaroid 2 (Top, overlapping on top of left Polaroid, tilted +7°) + Polaroid 3 */}
+          {/* RIGHT COLUMN: Polaroid 2 (Assiette Duo) + Polaroid 3 (Houmous Bassar) */}
           <div className="flex flex-col items-center md:items-start relative mt-8 md:mt-4 z-20">
             
-            {/* Polaroid 2: Top-Right Kitchen Team / Rotisserie (overlapping on top of left Polaroid) */}
+            {/* Polaroid 2: Top-Right Assiette Gourmande Duo */}
             <div className="relative w-[300px] sm:w-[370px] md:w-[415px] max-w-full transform rotate-[7deg] hover:rotate-0 hover:scale-[1.02] transition-all duration-300 md:-ml-16 lg:-ml-24 z-20">
               <img
-                src="/about-polaroid2.png"
+                src="/about-polaroid2.png?v=labriout2"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   const target = e.currentTarget;
-                  if (!target.dataset.triedIbb) {
-                    target.dataset.triedIbb = 'true';
-                    target.src = 'https://i.ibb.co/SDjvB1D7/25.png';
-                  } else if (!target.dataset.triedSecond) {
-                    target.dataset.triedSecond = 'true';
-                    target.src = 'https://i.ibb.co/mrjz4YrF/25.png';
+                  if (!target.dataset.triedFallback) {
+                    target.dataset.triedFallback = 'true';
+                    target.src = 'https://ik.imagekit.io/3l9prqiky/eatview/migrated/labriout/91587948ff65-assiette-duo.webp';
                   }
                 }}
-                alt="Panzarotto Team"
+                alt="LABRIOUT Assiette Gourmande Casher"
                 className="w-full h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.20)]"
                 loading="lazy"
               />
             </div>
 
-            {/* Polaroid 3: Bottom-Right Food / Panino (reduced by 25%, tilted counter-clockwise ~ -5°, shifted 20px right) */}
+            {/* Polaroid 3: Bottom-Right Houmous Bassar & Pita */}
             <div className="relative w-[160px] sm:w-[190px] md:w-[210px] max-w-full transform -rotate-[5deg] translate-x-[20px] hover:rotate-0 hover:scale-[1.02] transition-all duration-300 z-30 -mt-8 sm:-mt-12 md:-mt-16 ml-10 sm:ml-16 md:ml-20">
               <img
-                src="/about-polaroid3.png"
+                src="/about-polaroid3.png?v=labriout2"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
                   const target = e.currentTarget;
-                  if (!target.dataset.triedIbb) {
-                    target.dataset.triedIbb = 'true';
-                    target.src = 'https://i.ibb.co/VY7rspFJ/image3.png';
+                  if (!target.dataset.triedFallback) {
+                    target.dataset.triedFallback = 'true';
+                    target.src = 'https://ik.imagekit.io/3l9prqiky/eatview/migrated/labriout/0fe48647b6ed-houmous-bassar.webp';
                   }
                 }}
-                alt="Panzarotto Specialità"
+                alt="LABRIOUT Houmous Bassar & Pita Chaude"
                 className="w-full h-auto drop-shadow-[0_18px_36px_rgba(0,0,0,0.18)]"
                 loading="lazy"
               />

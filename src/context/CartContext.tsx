@@ -108,9 +108,9 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const CART_STORAGE_KEY = 'panzarotto_cart_v2';
-const LANG_STORAGE_KEY = 'panzarotto_lang_v1';
-const FULFILLMENT_STORAGE_KEY = 'panzarotto_fulfillment_v3';
+const CART_STORAGE_KEY = 'labriout_cart_v3';
+const LANG_STORAGE_KEY = 'labriout_lang_v1';
+const FULFILLMENT_STORAGE_KEY = 'labriout_fulfillment_v3';
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Helper to parse initial view and product from window.location.pathname

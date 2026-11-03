@@ -226,20 +226,33 @@ export const Testimonials: React.FC = () => {
             ))}
           </div>
 
-          {/* Right: Signature Pompei Street Food Badge on the same level */}
+          {/* Right: Signature Labriout Kosher Street Food Badge on the same level */}
           <div className="lg:col-span-4 bg-gradient-to-br from-[#1c1512] to-[#14161f] border border-[#ff5500]/30 rounded-3xl p-5 sm:p-6 text-center relative overflow-hidden flex flex-col justify-center h-full">
             <div className="relative z-10 space-y-2.5">
               <span className="text-[11px] font-black tracking-widest text-[#ff7722] uppercase">
-                Street Food Autentico
+                ✡️ 100% Casher • Badatz de Brunoy
               </span>
               <h4 className="font-heading font-black text-xl lg:text-2xl text-white uppercase tracking-tight leading-tight">
-                IL GUSTO DI POMPEI A PORTATA DI MANO
+                {language === 'ru'
+                  ? 'НАСТОЯЩИЙ КОШЕРНЫЙ ВКУС LABRIOUT'
+                  : language === 'en'
+                  ? 'AUTHENTIC KOSHER TASTE AT LABRIOUT'
+                  : 'LE GOÛT AUTHENTIQUE DE LABRIOUT'}
               </h4>
               <p className="font-handwriting text-xl text-[#ff8833] flex items-center justify-center gap-1">
-                Fatto con passione campana <Heart className="w-4 h-4 text-red-500 fill-red-500 inline" />
+                {language === 'ru'
+                  ? 'Готовим с душой — Лабриут! '
+                  : language === 'en'
+                  ? 'Homemade with passion — Labriout! '
+                  : 'Fait maison avec générosité '}
+                <Heart className="w-4 h-4 text-red-500 fill-red-500 inline" />
               </p>
               <div className="pt-1 text-[11px] text-neutral-400">
-                Lievitazione naturale • Mozzarella campana DOP • Olio sempre pulito
+                {language === 'ru'
+                  ? 'Мясо Халак на гриле • Горячие Лаффы и Питы • Смэш Бургеры'
+                  : language === 'en'
+                  ? 'Flame-grilled Halak meats • Warm Laffas & Pitas • Smash Burgers'
+                  : 'Viandes grillées à la flamme • Pitas & Laffas maison • Smash Burgers'}
               </div>
             </div>
           </div>
