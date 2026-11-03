@@ -89,7 +89,7 @@ export const Footer: React.FC = () => {
         <div className="relative z-10 max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-start">
             {/* Col 1: Brand & Address */}
-            <div className="lg:col-span-4 xl:col-span-3 space-y-3">
+            <div className="lg:col-span-4 xl:col-span-3 space-y-4">
               <div className="flex items-center">
                 <img
                   src="/logo-labriur-dark.png"
@@ -102,27 +102,17 @@ export const Footer: React.FC = () => {
                 />
               </div>
 
-              <div className="space-y-1 text-xs text-neutral-300 leading-relaxed">
-                <p className="font-extrabold text-white text-sm tracking-wide">LABRIOUT</p>
-                <p>🥩 Street food &amp; spécialités maison</p>
-                <p>✡️ 100% Casher • Badatz de Brunoy</p>
+              <div className="space-y-1.5 pt-1 text-xs">
                 <button
                   onClick={() => setIsStoreInfoOpen(true)}
-                  className="block text-left text-neutral-300 hover:text-white transition cursor-pointer"
+                  className="flex items-start gap-2.5 text-left text-neutral-300 hover:text-white transition cursor-pointer group"
                 >
-                  📍 64 av. Simone Veil, Bonneuil-sur-Marne
+                  <MapPin className="w-5 h-5 text-[#ff5500] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <div className="leading-snug">
+                    <p className="font-semibold text-white">64 av. Simone Veil</p>
+                    <p className="text-neutral-400">Bonneuil-sur-Marne</p>
+                  </div>
                 </button>
-                <p>
-                  <a href="tel:0769774086" className="hover:text-white transition">
-                    📞 0769774086
-                  </a>
-                </p>
-                <p>
-                  <a href="mailto:labriout@eat-view.local" className="hover:text-white transition">
-                    labriout@eat-view.local.
-                  </a>
-                </p>
-                <p>⏰ 12h-15h 18h-22h15</p>
               </div>
             </div>
 
