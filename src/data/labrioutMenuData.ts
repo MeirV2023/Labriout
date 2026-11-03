@@ -16,7 +16,7 @@ export const LABRIOUT_STORE_DETAILS = {
   hours: 'Dim–Jeu: 11:30–23:00 | Ven: 11:30–15:00',
   city: 'Bonneuil-sur-Marne (94)',
   country: 'France',
-  heroImage: 'https://i.imgur.com/tdcSw9D.jpeg',
+  heroImage: 'https://ik.imagekit.io/3l9prqiky/eatview/migrated/labriout/2fd64ff72756-hero.webp',
   freeDeliveryThreshold: 30,
   deliveryFee: 3.5,
   minOrderDelivery: 15.0,

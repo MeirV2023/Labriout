@@ -76,7 +76,7 @@ export const Footer: React.FC = () => {
         <div
           className="absolute top-0 bottom-0 right-0 w-full sm:w-[520px] md:w-[600px] lg:w-[680px] xl:w-[760px] 2xl:w-[820px] pointer-events-none select-none z-0"
           style={{
-            backgroundImage: 'url(/footer-bg.png), url(https://i.imgur.com/cwPrNSM.png)',
+            backgroundImage: 'url(https://i.imgur.com/tdcSw9D.jpeg), url(/footer-bg.png)',
             backgroundSize: 'auto 100%',
             backgroundPosition: 'right bottom',
             backgroundRepeat: 'no-repeat',
