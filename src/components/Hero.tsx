@@ -32,26 +32,26 @@ export const Hero: React.FC = () => {
     ? [
         {
           id: 1,
-          image: LABRIOUT_STORE_DETAILS.heroImage,
-          mobileImage: LABRIOUT_STORE_DETAILS.heroImage,
-          mobileImage2x: LABRIOUT_STORE_DETAILS.heroImage,
-          mobileImage3x: LABRIOUT_STORE_DETAILS.heroImage,
-          fallbackImage: LABRIOUT_STORE_DETAILS.heroImage,
-          mobileFallbackImage: LABRIOUT_STORE_DETAILS.heroImage,
-          alt: 'Labriout Street Food — Bonneuil-sur-Marne',
+          image: 'https://i.imgur.com/tdcSw9D.jpeg',
+          mobileImage: 'https://i.imgur.com/tdcSw9D.jpeg',
+          mobileImage2x: 'https://i.imgur.com/tdcSw9D.jpeg',
+          mobileImage3x: 'https://i.imgur.com/tdcSw9D.jpeg',
+          fallbackImage: bannerImg,
+          mobileFallbackImage: bannerImg,
+          alt: 'La Briout Ristorante — Bonneuil-sur-Marne',
           showButtons: true,
         },
       ]
     : [
         {
           id: 1,
-          image: bannerImg,
-          mobileImage: bannerMobileImg,
-          mobileImage2x: bannerMobileImg2x,
-          mobileImage3x: bannerMobileImg3x,
-          fallbackImage: '/banner-hero-3x1.jpg',
-          mobileFallbackImage: 'https://i.imgur.com/5hYpdmB.png',
-          alt: 'Panzarotto Real Street Food Pompei',
+          image: 'https://i.imgur.com/tdcSw9D.jpeg',
+          mobileImage: 'https://i.imgur.com/tdcSw9D.jpeg',
+          mobileImage2x: 'https://i.imgur.com/tdcSw9D.jpeg',
+          mobileImage3x: 'https://i.imgur.com/tdcSw9D.jpeg',
+          fallbackImage: bannerImg,
+          mobileFallbackImage: bannerImg,
+          alt: 'La Briout Ristorante',
           showButtons: true,
         },
       ];
@@ -173,20 +173,6 @@ export const Hero: React.FC = () => {
                     loading={idx === 0 ? 'eager' : 'lazy'}
                   />
                 </picture>
-
-                {isLabriout && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-transparent flex flex-col justify-center px-5 sm:px-10 md:px-12 pb-10 md:pb-14 z-10 pointer-events-none">
-                    <span className="inline-flex items-center gap-1.5 w-fit px-3 py-1 rounded-full bg-rose-600/90 text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wider mb-2 shadow-lg">
-                      🔥 100% Casher • Bonneuil-sur-Marne (94)
-                    </span>
-                    <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight uppercase drop-shadow-lg">
-                      LABRIOUT STREET FOOD
-                    </h1>
-                    <p className="text-xs sm:text-sm md:text-base text-neutral-200 font-semibold max-w-xl mt-1.5 drop-shadow">
-                      Smash Burgers, Shawarma, Pitas, Laffas & Assiettes Gourmandes • 64 avenue Simone Veil
-                    </p>
-                  </div>
-                )}
 
                 {/* Action Buttons: ORDINA ORA & SCOPRI IL MENU (Slide 1) */}
                 {slide.showButtons && (
