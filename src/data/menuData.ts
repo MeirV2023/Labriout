@@ -1192,6 +1192,11 @@ export const MENU_PRODUCTS: ProductItem[] = RAW_MENU_PRODUCTS.map((item) => {
   };
 });
 
+const LABRIOUT_DAILY_SLOTS = [
+  '12:00', '12:15', '12:30', '12:45', '13:00', '13:15', '13:30', '13:45', '14:00', '14:15', '14:30', '14:45', '15:00',
+  '18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45', '21:00', '21:15', '21:30', '21:45', '22:00', '22:15'
+];
+
 export const STORE_SCHEDULE: Record<
   number,
   {
@@ -1206,116 +1211,90 @@ export const STORE_SCHEDULE: Record<
   }
 > = {
   0: {
-    // Domenica
     name: 'Domenica',
     nameEn: 'Sunday',
     nameRu: 'Воскресенье',
     nameDe: 'Sonntag',
     nameFr: 'Dimanche',
-    hours: '10:00 – 14:30',
-    slots: [
-      '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
-      '13:00', '13:30', '14:00', '14:30'
-    ]
+    hours: '12:00 – 22:15',
+    slots: LABRIOUT_DAILY_SLOTS,
   },
   1: {
-    // Lunedì
     name: 'Lunedì',
     nameEn: 'Monday',
     nameRu: 'Понедельник',
     nameDe: 'Montag',
     nameFr: 'Lundi',
-    hours: '19:30 – 23:00',
-    slots: [
-      '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
-      '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00'
-    ]
+    hours: '12:00 – 22:15',
+    slots: LABRIOUT_DAILY_SLOTS,
   },
   2: {
-    // Martedì
     name: 'Martedì',
     nameEn: 'Tuesday',
     nameRu: 'Вторник',
     nameDe: 'Dienstag',
     nameFr: 'Mardi',
-    hours: '19:30 – 23:00',
-    slots: [
-      '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
-      '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00'
-    ]
+    hours: '12:00 – 22:15',
+    slots: LABRIOUT_DAILY_SLOTS,
   },
   3: {
-    // Mercoledì
     name: 'Mercoledì',
     nameEn: 'Wednesday',
     nameRu: 'Среда',
     nameDe: 'Mittwoch',
     nameFr: 'Mercredi',
-    hours: '19:30 – 23:00',
-    slots: [
-      '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
-      '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00'
-    ]
+    hours: '12:00 – 22:15',
+    slots: LABRIOUT_DAILY_SLOTS,
   },
   4: {
-    // Giovedì
     name: 'Giovedì',
     nameEn: 'Thursday',
     nameRu: 'Четверг',
     nameDe: 'Donnerstag',
     nameFr: 'Jeudi',
-    hours: '19:30 – 23:00',
-    slots: [
-      '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
-      '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00'
-    ]
+    hours: '12:00 – 22:15',
+    slots: LABRIOUT_DAILY_SLOTS,
   },
   5: {
-    // Venerdì
     name: 'Venerdì',
     nameEn: 'Friday',
     nameRu: 'Пятница',
     nameDe: 'Freitag',
     nameFr: 'Vendredi',
-    hours: '19:30 – 23:00',
+    hours: '12:00 – 15:00',
     slots: [
-      '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
-      '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00'
-    ]
+      '12:00', '12:15', '12:30', '12:45', '13:00', '13:15', '13:30', '13:45', '14:00', '14:15', '14:30', '14:45', '15:00'
+    ],
   },
   6: {
-    // Sabato
     name: 'Sabato',
     nameEn: 'Saturday',
     nameRu: 'Суббота',
     nameDe: 'Samstag',
     nameFr: 'Samedi',
-    hours: '19:30 – 23:00',
-    slots: [
-      '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
-      '21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00'
-    ]
+    hours: '12:00 – 22:15',
+    slots: LABRIOUT_DAILY_SLOTS,
   }
 };
 
 export const STORE_DETAILS = {
-  name: 'Panzarotto Pompei',
-  address: 'Via Provinciale Ripuaria, 133, 80045 Pompei (NA)',
-  phone: '+39 081 850 1234',
-  whatsapp: '+39 347 123 4567',
-  whatsappClean: '393471234567',
-  email: 'info@panzarotto.it',
-  hours: 'Lun–Sab: 19:30–23:00 | Dom: 10:00–14:30',
-  city: 'Pompei (NA)',
-  freeDeliveryThreshold: 25,
-  deliveryFee: 5.00,
-  minOrderDelivery: 10.00,
-  asportoEstimatedMins: 20,
-  deliveryEstimatedMins: 35,
-  instagram: 'https://instagram.com/panzarotto_pompei',
-  instagramHandle: '@panzarotto_pompei',
-  facebook: 'https://facebook.com/panzarottopompei',
-  tiktok: 'https://tiktok.com/@panzarotto_pompei',
+  name: 'LABRIOUT',
+  address: '64 av. Simone Veil, Bonneuil-sur-Marne',
+  phone: '0769774086',
+  whatsapp: '0769774086',
+  whatsappClean: '33769774086',
+  email: 'labriout@eat-view.local.',
+  hours: '12h-15h 18h-22h15',
+  city: 'Bonneuil-sur-Marne',
+  freeDeliveryThreshold: 30,
+  deliveryFee: 3.50,
+  minOrderDelivery: 15.00,
+  asportoEstimatedMins: 15,
+  deliveryEstimatedMins: 30,
+  instagram: 'https://instagram.com/labriout_94',
+  instagramHandle: '@labriout_94',
+  facebook: 'https://facebook.com',
+  tiktok: 'https://tiktok.com',
 };
 
 export const REVIEWS_DATA = [

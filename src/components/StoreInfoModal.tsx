@@ -20,7 +20,7 @@ export const StoreInfoModal: React.FC = () => {
   if (!isStoreInfoOpen) return null;
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    'Panzarotto Via Provinciale Ripuaria 133 Pompei'
+    'LABRIOUT 64 av. Simone Veil Bonneuil-sur-Marne'
   )}`;
 
   return (
@@ -29,14 +29,16 @@ export const StoreInfoModal: React.FC = () => {
         {/* Header */}
         <div className="p-4 sm:p-5 bg-[#171a23] border-b border-[#242834] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-[#ff5500] flex items-center justify-center text-white">
-              <Store className="w-4 h-4" />
-            </div>
+            <img
+              src="/logo-labriur-dark.png"
+              alt="LABRIOUT"
+              className="h-10 w-auto object-contain"
+            />
             <div>
               <h3 className="font-heading font-black text-lg text-white uppercase tracking-tight">
-                Panzarotto Pompei
+                LABRIOUT
               </h3>
-              <p className="text-xs text-[#ff7722]">Street Food Autentico</p>
+              <p className="text-xs text-[#ff7722]">🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy</p>
             </div>
           </div>
 
@@ -55,9 +57,9 @@ export const StoreInfoModal: React.FC = () => {
             <div className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-[#ff5500] shrink-0 mt-0.5" />
               <div>
-                <p className="font-extrabold text-white text-sm">Dove Trovarci</p>
-                <p className="text-xs text-neutral-300 mt-0.5">{STORE_DETAILS.address}</p>
-                <p className="text-[11px] text-neutral-500 mt-0.5">A pochi minuti dagli Scavi di Pompei e dal Santuario</p>
+                <p className="font-extrabold text-white text-sm">📍 64 av. Simone Veil, Bonneuil-sur-Marne</p>
+                <p className="text-xs text-neutral-300 mt-0.5">📞 0769774086 • labriout@eat-view.local.</p>
+                <p className="text-[11px] text-neutral-400 mt-0.5">✡️ 100% Casher • Badatz de Brunoy</p>
               </div>
             </div>
 
@@ -68,7 +70,7 @@ export const StoreInfoModal: React.FC = () => {
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#202532] hover:bg-[#ff5500] text-neutral-200 hover:text-white text-xs font-bold transition cursor-pointer"
             >
               <Navigation className="w-3.5 h-3.5" />
-              <span>Apri indicazioni stradali su Google Maps</span>
+              <span>Google Maps</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -77,16 +79,12 @@ export const StoreInfoModal: React.FC = () => {
           <div className="bg-[#181b24] border border-[#272c3a] rounded-2xl p-4 space-y-2">
             <div className="flex items-center gap-2.5 text-white font-bold text-sm">
               <Clock className="w-4 h-4 text-[#ff5500]" />
-              <span>Orari di Apertura</span>
+              <span>⏰ Horaires d&apos;ouverture</span>
             </div>
             <div className="space-y-1.5 text-xs text-neutral-300">
               <div className="flex justify-between">
-                <span>Lunedì – Sabato:</span>
-                <span className="font-semibold text-white">19:30 – 23:00</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Domenica:</span>
-                <span className="font-semibold text-white">10:00 – 14:30</span>
+                <span>Service Midi &amp; Soir:</span>
+                <span className="font-semibold text-white">12h-15h 18h-22h15</span>
               </div>
             </div>
           </div>

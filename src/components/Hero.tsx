@@ -177,13 +177,13 @@ export const Hero: React.FC = () => {
                 {isLabriout && (
                   <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-transparent flex flex-col justify-center px-5 sm:px-10 md:px-12 pb-10 md:pb-14 z-10 pointer-events-none">
                     <span className="inline-flex items-center gap-1.5 w-fit px-3 py-1 rounded-full bg-rose-600/90 text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wider mb-2 shadow-lg">
-                      🔥 100% Casher • Bonneuil-sur-Marne (94)
+                      ✡️ 100% Casher • Badatz de Brunoy
                     </span>
                     <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight uppercase drop-shadow-lg">
-                      LABRIOUT STREET FOOD
+                      LABRIOUT
                     </h1>
                     <p className="text-xs sm:text-sm md:text-base text-neutral-200 font-semibold max-w-xl mt-1.5 drop-shadow">
-                      Smash Burgers, Shawarma, Pitas, Laffas & Assiettes Gourmandes • 64 avenue Simone Veil
+                      🥩 Street food & spécialités maison • 📍 64 av. Simone Veil, Bonneuil-sur-Marne • ⏰ 12h-15h 18h-22h15
                     </p>
                   </div>
                 )}

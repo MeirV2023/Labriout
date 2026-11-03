@@ -67,9 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
   const handleCopyAddress = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const addressToCopy = isLabriout
-      ? LABRIOUT_STORE_DETAILS.address
-      : 'Via Provinciale Ripuaria, 133, 80045 Pompei NA';
+    const addressToCopy = '64 av. Simone Veil, Bonneuil-sur-Marne';
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(addressToCopy).catch(() => {
         fallbackCopyText(addressToCopy);
@@ -152,19 +150,11 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
   };
 
   const getOperatingHoursText = () => {
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    const sched = STORE_SCHEDULE[dayOfWeek];
-    const rawHours = sched?.hours || '19:30 – 23:00';
-    const parts = rawHours.split(/[–-]/).map(s => s.trim());
-    const start = parts[0] || '19:30';
-    const end = parts[1] || '23:00';
-
-    if (language === 'ru') return `Работаем с ${start} до ${end}`;
-    if (language === 'it') return `Aperti dalle ${start} alle ${end}`;
-    if (language === 'de') return `Geöffnet von ${start} bis ${end}`;
-    if (language === 'fr') return `Ouvert de ${start} à ${end}`;
-    return `Open from ${start} to ${end}`;
+    if (language === 'ru') return '⏰ 12h-15h 18h-22h15';
+    if (language === 'it') return '⏰ 12h-15h 18h-22h15';
+    if (language === 'de') return '⏰ 12h-15h 18h-22h15';
+    if (language === 'fr') return '⏰ 12h-15h 18h-22h15';
+    return '⏰ 12h-15h 18h-22h15';
   };
 
   const getMobileHeaderTimeText = () => {
@@ -373,32 +363,16 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               className="flex items-center cursor-pointer select-none group shrink-0"
               id="navbar-brand-logo"
             >
-              {isLabriout ? (
-                <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-600 to-[#ff5500] text-white font-black text-lg flex items-center justify-center shadow-md">
-                    L
-                  </div>
-                  <div>
-                    <span className="block font-black text-base tracking-tight text-neutral-900 leading-none">
-                      LABRIOUT
-                    </span>
-                    <span className="block text-[10px] font-bold text-rose-600 uppercase tracking-widest mt-0.5">
-                      Casher Street Food
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <img
-                  src="/logo-custom.png"
-                  onError={(e) => {
-                    e.currentTarget.src = 'https://i.imgur.com/pM48xGr.png';
-                  }}
-                  alt="Panzarotto Street Food - Pompei"
-                  className="h-9 sm:h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                  style={{ imageRendering: '-webkit-optimize-contrast' }}
-                  loading="eager"
-                />
-              )}
+              <img
+                src="/logo-labriur.png"
+                onError={(e) => {
+                  e.currentTarget.src = '/logo-custom.png';
+                }}
+                alt="LABRIOUT"
+                className="h-11 sm:h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                style={{ imageRendering: '-webkit-optimize-contrast' }}
+                loading="eager"
+              />
             </div>
 
             {/* Desktop Navigation Menu (on the same level) */}
@@ -464,9 +438,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                   ? language === 'ru'
                     ? 'Скопировано!'
                     : 'Copiato!'
-                  : isLabriout
-                  ? '64 Av. Simone Veil, Bonneuil'
-                  : 'Via Provinciale Ripuaria, 133'}
+                  : '64 av. Simone Veil, Bonneuil-sur-Marne'}
               </span>
             </button>
 
@@ -630,12 +602,12 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                   className="cursor-pointer select-none pt-0.5"
                 >
                   <img
-                    src="/logo-custom.png"
+                    src="/logo-labriur.png"
                     onError={(e) => {
-                      e.currentTarget.src = 'https://i.imgur.com/pM48xGr.png';
+                      e.currentTarget.src = '/logo-custom.png';
                     }}
-                    alt="Panzarotto Street Food Pompei"
-                    className="h-[58px] w-auto object-contain"
+                    alt="LABRIOUT"
+                    className="h-[62px] w-auto object-contain"
                   />
                 </div>
 

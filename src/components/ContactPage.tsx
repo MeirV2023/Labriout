@@ -55,7 +55,7 @@ export const ContactPage: React.FC = () => {
   };
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    'Panzarotto Via Provinciale Ripuaria 133 Pompei'
+    'LABRIOUT 64 av. Simone Veil Bonneuil-sur-Marne'
   )}`;
 
   // FAQ Data with Multilingual Support
@@ -137,12 +137,12 @@ export const ContactPage: React.FC = () => {
         ? 'Where are you located and what are your opening hours?'
         : isRu
         ? 'Где вы находитесь и часы работы?'
-        : 'Dove vi trovate e quali sono gli orari di apertura?',
+        : 'Où êtes-vous situés et quels sont vos horaires ?',
       a: isEn
-        ? 'We are located at Via Provinciale Ripuaria, 133 in Pompei. We are open Monday to Saturday from 19:30 to 23:00, and Sunday lunchtime from 10:00 to 14:30.'
+        ? 'We are located at 64 av. Simone Veil, Bonneuil-sur-Marne. Opening hours: 12h-15h & 18h-22h15. 100% Casher • Badatz de Brunoy.'
         : isRu
-        ? 'Мы находимся по адресу Via Provinciale Ripuaria, 133, Помпеи. Работаем с Пн по Сб с 19:30 до 23:00, в Воскресенье с 10:00 до 14:30.'
-        : 'Ci troviamo a Pompei in Via Provinciale Ripuaria, 133. Siamo aperti dal Lunedì al Sabato dalle 19:30 alle 23:00, e la Domenica a pranzo dalle 10:00 alle 14:30.',
+        ? 'Мы находимся по адресу 64 av. Simone Veil, Bonneuil-sur-Marne. Часы работы: 12h-15h и 18h-22h15. 100% Casher • Badatz de Brunoy.'
+        : 'Nous sommes situés au 64 av. Simone Veil, Bonneuil-sur-Marne. Horaires : 12h-15h et 18h-22h15. 100% Casher • Badatz de Brunoy.',
     },
   ];
 
@@ -157,11 +157,7 @@ export const ContactPage: React.FC = () => {
             <div className="lg:col-span-5 space-y-3 sm:space-y-4">
               <div className="space-y-1">
                 <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-[#ff5500] block">
-                  {isEn
-                    ? 'CONTACT PANZAROTTO'
-                    : isRu
-                    ? 'СВЯЗЬ С PANZAROTTO'
-                    : 'CONTATTA PANZAROTTO'}
+                  LABRIOUT • 🥩 STREET FOOD &amp; SPÉCIALITÉS MAISON • ✡️ 100% CASHER • BADATZ DE BRUNOY
                 </span>
 
                 <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black font-heading text-[#ff5500] tracking-tight uppercase leading-[0.96]">
@@ -169,16 +165,12 @@ export const ContactPage: React.FC = () => {
                     ? 'STILL CURIOUS?'
                     : isRu
                     ? 'ОСТАЛИСЬ ВОПРОСЫ?'
-                    : 'ANCORA DUBBI?'}
+                    : 'CONTACTEZ LABRIOUT'}
                 </h1>
               </div>
 
               <p className="text-neutral-900 font-medium text-xs sm:text-sm lg:text-[14px] leading-relaxed max-w-md">
-                {isEn
-                  ? "We hope you found everything you needed about Panzarotto. But if you've got more questions (or just wanna talk panzerotti), hit us up."
-                  : isRu
-                  ? 'Надеемся, вы нашли все, что искали в Panzarotto! Но если у вас остались вопросы или вы хотите заказать для компании — свяжитесь с нами.'
-                  : 'Speriamo tu abbia trovato tutto ciò che cercavi su Panzarotto. Ma se hai altre domande (o vuoi solo parlare di panzerotti caldi), scrivici subito!'}
+                🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy • 📍 64 av. Simone Veil, Bonneuil-sur-Marne • 📞 0769774086 • ⏰ 12h-15h 18h-22h15
               </p>
 
               {/* Typographic Contact Info (Styled like Screen 2) */}
@@ -249,10 +241,10 @@ export const ContactPage: React.FC = () => {
                     </div>
                     <div>
                       <a
-                        href={`mailto:${STORE_DETAILS.email}`}
-                        className="hover:text-[#ff5500] transition-colors inline-block"
+                        href="mailto:labriout@eat-view.local"
+                        className="hover:text-[#ff5500] transition-colors inline-block lowercase"
                       >
-                        {STORE_DETAILS.email.toUpperCase()}
+                        labriout@eat-view.local.
                       </a>
                     </div>
                   </div>
@@ -261,18 +253,18 @@ export const ContactPage: React.FC = () => {
                 {/* ADRES / ADDRESS */}
                 <div className="grid grid-cols-[85px_1fr] sm:grid-cols-[105px_1fr] gap-3 items-start">
                   <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#ff5500] pt-0.5">
-                    {isEn ? 'ADDRESS' : isRu ? 'АДРЕС' : 'ADRES'}
+                    {isEn ? 'ADDRESS' : isRu ? 'АДРЕС' : 'ADRESSE'}
                   </span>
-                  <div className="font-black text-neutral-900 text-xs sm:text-sm uppercase tracking-wider leading-snug">
+                  <div className="font-black text-neutral-900 text-xs sm:text-sm tracking-wider leading-snug">
                     <a
                       href={googleMapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:text-[#ff5500] transition-colors block"
                     >
-                      VIA PROVINCIALE RIPUARIA, 133
+                      📍 64 av. Simone Veil, Bonneuil-sur-Marne
                       <br />
-                      80045 POMPEI (NA)
+                      ⏰ 12h-15h 18h-22h15
                     </a>
                   </div>
                 </div>
@@ -557,25 +549,25 @@ export const ContactPage: React.FC = () => {
             {/* Schedule Rows with Orange Dashed Lines */}
             <div className="space-y-4 sm:space-y-6">
               
-              {/* Monday - Saturday */}
+              {/* Midi */}
               <div className="flex items-end justify-between gap-2">
                 <span className="text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider text-neutral-800 shrink-0">
-                  {isEn ? 'MONDAY - SATURDAY' : isRu ? 'ПОНЕДЕЛЬНИК - СУББОТА' : 'LUNEDÌ - SABATO'}
+                  {isEn ? 'LUNCH SERVICE (MIDI)' : isRu ? 'ДНЕВНОЙ СЕРВИС (ОБЕД)' : 'SERVICE MIDI'}
                 </span>
                 <div className="flex-1 border-b-2 border-dashed border-[#ff5500]/50 mx-2 sm:mx-4 mb-1 min-w-[30px]" />
                 <span className="text-xs sm:text-sm md:text-base font-black text-neutral-900 shrink-0">
-                  19:30 - 23:00
+                  12h - 15h
                 </span>
               </div>
 
-              {/* Sunday */}
+              {/* Soir */}
               <div className="flex items-end justify-between gap-2">
                 <span className="text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider text-neutral-800 shrink-0">
-                  {isEn ? 'SUNDAY' : isRu ? 'ВОСКРЕСЕНЬЕ' : 'DOMENICA'}
+                  {isEn ? 'EVENING SERVICE (SOIR)' : isRu ? 'ВЕЧЕРНИЙ СЕРВИС (УЖИН)' : 'SERVICE SOIR'}
                 </span>
                 <div className="flex-1 border-b-2 border-dashed border-[#ff5500]/50 mx-2 sm:mx-4 mb-1 min-w-[30px]" />
                 <span className="text-xs sm:text-sm md:text-base font-black text-neutral-900 shrink-0">
-                  10:00 - 14:30
+                  18h - 22h15
                 </span>
               </div>
 

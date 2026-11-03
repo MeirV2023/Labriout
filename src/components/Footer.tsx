@@ -89,30 +89,40 @@ export const Footer: React.FC = () => {
         <div className="relative z-10 max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 items-start">
             {/* Col 1: Brand & Address */}
-            <div className="lg:col-span-4 xl:col-span-3 space-y-4">
+            <div className="lg:col-span-4 xl:col-span-3 space-y-3">
               <div className="flex items-center">
                 <img
-                  src="https://i.imgur.com/qoHbOB7.png"
+                  src="/logo-labriur-dark.png"
                   onError={(e) => {
-                    e.currentTarget.src = 'https://i.imgur.com/qoHbOB7.jpeg';
+                    e.currentTarget.src = '/logo-labriur.png';
                   }}
-                  alt="Panzarotto Street Food - Pompei"
-                  className="h-11 sm:h-14 w-auto object-contain select-none"
+                  alt="LABRIOUT"
+                  className="h-16 sm:h-20 w-auto object-contain select-none"
                   loading="lazy"
                 />
               </div>
 
-              <div className="space-y-1.5 pt-1 text-xs">
+              <div className="space-y-1 text-xs text-neutral-300 leading-relaxed">
+                <p className="font-extrabold text-white text-sm tracking-wide">LABRIOUT</p>
+                <p>🥩 Street food &amp; spécialités maison</p>
+                <p>✡️ 100% Casher • Badatz de Brunoy</p>
                 <button
                   onClick={() => setIsStoreInfoOpen(true)}
-                  className="flex items-start gap-2.5 text-left text-neutral-300 hover:text-white transition cursor-pointer group"
+                  className="block text-left text-neutral-300 hover:text-white transition cursor-pointer"
                 >
-                  <MapPin className="w-5 h-5 text-[#ff5500] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                  <div className="leading-snug">
-                    <p className="font-semibold text-white">Via Provinciale Ripuaria, 133</p>
-                    <p className="text-neutral-400">80045 Pompei NA</p>
-                  </div>
+                  📍 64 av. Simone Veil, Bonneuil-sur-Marne
                 </button>
+                <p>
+                  <a href="tel:0769774086" className="hover:text-white transition">
+                    📞 0769774086
+                  </a>
+                </p>
+                <p>
+                  <a href="mailto:labriout@eat-view.local" className="hover:text-white transition">
+                    labriout@eat-view.local.
+                  </a>
+                </p>
+                <p>⏰ 12h-15h 18h-22h15</p>
               </div>
             </div>
 
@@ -274,22 +284,22 @@ export const Footer: React.FC = () => {
 
       {/* Bottom copyright line */}
       <div className="max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-20 sm:pb-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-neutral-500">
-        <p>© 2025 Panzarotto Restaurant. Tutti i diritti riservati.</p>
+        <p>© 2025 LABRIOUT. Tous droits réservés.</p>
         <p className="flex items-center gap-1.5">
-          <span>Street Food • Pompei • Italia</span>
+          <span>Street food &amp; spécialités maison • 100% Casher • Bonneuil-sur-Marne</span>
           <span
             className="inline-flex items-center justify-center overflow-hidden rounded-[2px] border border-white/25 shadow-sm shrink-0"
-            title="Italia"
-            aria-label="Bandiera Italia"
+            title="France"
+            aria-label="France"
           >
             <svg
               className="w-4.5 h-3 block"
               viewBox="0 0 3 2"
               preserveAspectRatio="none"
             >
-              <rect width="1" height="2" x="0" fill="#009246" />
+              <rect width="1" height="2" x="0" fill="#002395" />
               <rect width="1" height="2" x="1" fill="#ffffff" />
-              <rect width="1" height="2" x="2" fill="#ce2b37" />
+              <rect width="1" height="2" x="2" fill="#ed2939" />
             </svg>
           </span>
         </p>

@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 export const StoreAndAppBanner: React.FC = () => {
   const { language, setCurrentView } = useCart();
 
-  const googleMapsUrl = `https://maps.google.com/?q=${encodeURIComponent('Panzarotto, Via Provinciale Ripuaria, 133, 80045 Pompei NA')}`;
+  const googleMapsUrl = `https://maps.google.com/?q=${encodeURIComponent('LABRIOUT, 64 av. Simone Veil, Bonneuil-sur-Marne')}`;
 
   const handleOpenStore = () => {
     // Navigate cleanly to the Contact & Store page without opening any pop-up modal
@@ -29,8 +29,8 @@ export const StoreAndAppBanner: React.FC = () => {
   const isDe = language === 'de';
 
   const headingText = isRu ? 'Приходи к нам!' : isIt ? 'Vieni a trovarci!' : 'Come visit us!';
-  const storeSubtitle = isRu ? 'Меню предприятия' : isIt ? 'Menu del locale' : 'Store menu';
-  const storeAddress = isRu ? 'Pompei, Via Provinciale Ripuaria, 133' : 'Via Provinciale Ripuaria, 133, Pompei';
+  const storeSubtitle = '🥩 Street food & spécialités maison • ✡️ 100% Casher';
+  const storeAddress = '64 av. Simone Veil, Bonneuil-sur-Marne';
   const otherButtonText = isRu ? 'Подробнее' : isIt ? 'Dettagli' : 'Details';
   const downloadButtonText = isRu
     ? 'В веб-приложение'

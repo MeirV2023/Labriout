@@ -141,7 +141,7 @@ export const CheckoutModal: React.FC = () => {
               {t('checkoutTitle')}
             </h3>
             <p className="text-xs text-neutral-400">
-              {fulfillmentType === 'asporto' ? 'Ritiro presso Via Provinciale Ripuaria, 133 Pompei' : 'Consegna a domicilio rapida'}
+              {fulfillmentType === 'asporto' ? 'Retrait : 64 av. Simone Veil, Bonneuil-sur-Marne' : 'Livraison rapide à domicile'}
             </p>
           </div>
 

@@ -1265,47 +1265,44 @@ export const CartPage: React.FC = () => {
                       {language === 'ru' ? (
                         <>
                           <p>
-                            Исполнитель (продавец): {STORE_DETAILS.name} Street Food,{' '}
-                            {STORE_DETAILS.address}, Italia. Тел.: {STORE_DETAILS.phone}.
+                            Исполнитель (продавец): {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy,{' '}
+                            {STORE_DETAILS.address}. Тел.: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                           </p>
                           <p>
-                            Режим работы организации: Пн–Сб с 19:30 до 23:00, Вс с 10:00 до 14:30.
+                            Режим работы: ⏰ 12h-15h 18h-22h15.
                           </p>
                           <p>
                             {fulfillmentType === 'asporto'
                               ? `Самовывоз заказов по адресу: ${STORE_DETAILS.address}.`
-                              : 'Доставка осуществляется собственной курьерской службой Panzarotto.'}
+                              : 'Доставка осуществляется курьерской службой LABRIOUT.'}
                           </p>
                         </>
                       ) : language === 'it' ? (
                         <>
                           <p>
-                            Venditore: {STORE_DETAILS.name} Street Food, {STORE_DETAILS.address},
-                            Italia. Tel: {STORE_DETAILS.phone}.
+                            Venditore: {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy, {STORE_DETAILS.address}. Tel: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                           </p>
                           <p>
-                            Orari di apertura: Lun–Sab dalle 19:30 alle 23:00, Dom dalle 10:00 alle
-                            14:30.
+                            Orari di apertura: ⏰ 12h-15h 18h-22h15.
                           </p>
                           <p>
                             {fulfillmentType === 'asporto'
                               ? `Ritiro ordini in sede presso ${STORE_DETAILS.address}.`
-                              : 'La consegna è effettuata dal servizio corrieri di Panzarotto.'}
+                              : 'La consegna è effettuata dal servizio corrieri di LABRIOUT.'}
                           </p>
                         </>
                       ) : (
                         <>
                           <p>
-                            Seller: {STORE_DETAILS.name} Street Food, {STORE_DETAILS.address}, Italy.
-                            Tel: {STORE_DETAILS.phone}.
+                            {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy • 📍 {STORE_DETAILS.address} • 📞 {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                           </p>
                           <p>
-                            Opening hours: Mon–Sat 19:30–23:00, Sun 10:00–14:30.
+                            ⏰ 12h-15h 18h-22h15
                           </p>
                           <p>
                             {fulfillmentType === 'asporto'
-                              ? `Pickup directly at our store: ${STORE_DETAILS.address}.`
-                              : "Delivery is provided by Panzarotto's dedicated courier service."}
+                              ? `Pickup / Retrait: ${STORE_DETAILS.address}.`
+                              : 'Delivery by LABRIOUT.'}
                           </p>
                         </>
                       )}
@@ -1541,47 +1538,44 @@ export const CartPage: React.FC = () => {
                               {language === 'ru' ? (
                                 <>
                                   <p>
-                                    Исполнитель (продавец): {STORE_DETAILS.name} Street Food,{' '}
-                                    {STORE_DETAILS.address}, Italia. Тел.: {STORE_DETAILS.phone}.
+                                    Исполнитель (продавец): {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy,{' '}
+                                    {STORE_DETAILS.address}. Тел.: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                                   </p>
                                   <p>
-                                    Режим работы организации: Пн–Сб с 19:30 до 23:00, Вс с 10:00 до 14:30.
+                                    Режим работы: ⏰ 12h-15h 18h-22h15.
                                   </p>
                                   <p>
                                     {fulfillmentType === 'asporto'
                                       ? `Самовывоз заказов по адресу: ${STORE_DETAILS.address}.`
-                                      : 'Доставка осуществляется собственной курьерской службой Panzarotto.'}
+                                      : 'Доставка осуществляется курьерской службой LABRIOUT.'}
                                   </p>
                                 </>
                               ) : language === 'it' ? (
                                 <>
                                   <p>
-                                    Venditore: {STORE_DETAILS.name} Street Food, {STORE_DETAILS.address},
-                                    Italia. Tel: {STORE_DETAILS.phone}.
+                                    Venditore: {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy, {STORE_DETAILS.address}. Tel: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                                   </p>
                                   <p>
-                                    Orari di apertura: Lun–Sab dalle 19:30 alle 23:00, Dom dalle 10:00 alle
-                                    14:30.
+                                    Orari di apertura: ⏰ 12h-15h 18h-22h15.
                                   </p>
                                   <p>
                                     {fulfillmentType === 'asporto'
                                       ? `Ritiro ordini in sede presso ${STORE_DETAILS.address}.`
-                                      : 'La consegna è effettuata dal servizio corrieri di Panzarotto.'}
+                                      : 'La consegna è effettuata dal servizio corrieri di LABRIOUT.'}
                                   </p>
                                 </>
                               ) : (
                                 <>
                                   <p>
-                                    Seller: {STORE_DETAILS.name} Street Food, {STORE_DETAILS.address}, Italy.
-                                    Tel: {STORE_DETAILS.phone}.
+                                    {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy • 📍 {STORE_DETAILS.address} • 📞 {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                                   </p>
                                   <p>
-                                    Opening hours: Mon–Sat 19:30–23:00, Sun 10:00–14:30.
+                                    ⏰ 12h-15h 18h-22h15
                                   </p>
                                   <p>
                                     {fulfillmentType === 'asporto'
-                                      ? `Pickup directly at our store: ${STORE_DETAILS.address}.`
-                                      : "Delivery is provided by Panzarotto's dedicated courier service."}
+                                      ? `Pickup / Retrait: ${STORE_DETAILS.address}.`
+                                      : 'Delivery by LABRIOUT.'}
                                   </p>
                                 </>
                               )}

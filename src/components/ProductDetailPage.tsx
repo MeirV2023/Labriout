@@ -906,9 +906,9 @@ export const ProductDetailPage: React.FC = () => {
                   <div className="overflow-hidden">
                     <div className="p-3 rounded-2xl bg-[#F5F4F2] text-[12px] text-[#6E6C69] leading-relaxed">
                       <p className="font-semibold text-[#21201F] mb-0.5">
-                        Panzarotto Street Food Pompei
+                        LABRIOUT • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy
                       </p>
-                      <p>Via Provinciale Ripuaria, 133, 80045 Pompei (NA)</p>
+                      <p>📍 64 av. Simone Veil, Bonneuil-sur-Marne • 📞 0769774086 • ⏰ 12h-15h 18h-22h15</p>
                       <p className="mt-1">
                         {language === 'ru'
                           ? 'Состав и возможные аллергены уточняйте у персонала при заказе.'

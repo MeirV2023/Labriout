@@ -130,8 +130,8 @@ export const OrderTrackerModal: React.FC = () => {
               </h4>
               <p className="text-xs text-[#ff7722] mt-0.5">
                 {isAsporto
-                  ? (language === 'ru' ? 'Самовывоз: via Provinciale Ripuaria 133' : 'Ritiro in via Provinciale Ripuaria 133')
-                  : (language === 'ru' ? `Доставка: ${activePlacedOrder.customer.deliveryCity || 'Помпеи'}` : `Consegna per ${activePlacedOrder.customer.deliveryCity || 'Pompei'}`)}
+                  ? (language === 'ru' ? 'Самовывоз: 64 av. Simone Veil, Bonneuil-sur-Marne' : 'Retrait : 64 av. Simone Veil, Bonneuil-sur-Marne')
+                  : (language === 'ru' ? `Доставка: ${activePlacedOrder.customer.deliveryCity || 'Bonneuil-sur-Marne'}` : `Livraison : ${activePlacedOrder.customer.deliveryCity || 'Bonneuil-sur-Marne'}`)}
               </p>
             </div>
             <div className="w-14 h-14 rounded-2xl bg-[#ff5500] text-white flex items-center justify-center shadow-lg shadow-[#ff5500]/30 animate-pulse">

@@ -279,15 +279,15 @@ export const MenuPage: React.FC = () => {
           <div className="text-right shrink-0">
             <div className="inline-flex flex-col items-center border-2 border-dashed border-[#ff5500]/50 rounded-2xl p-2.5 sm:p-3 bg-orange-50/50 transform rotate-1 shadow-xs">
               <img
-                src="/logo-custom.png"
+                src="/logo-labriur.png"
                 onError={(e) => {
-                  e.currentTarget.src = 'https://i.imgur.com/pM48xGr.png';
+                  e.currentTarget.src = '/logo-custom.png';
                 }}
-                alt="Panzarotto Pompei"
-                className="h-9 sm:h-11 w-auto object-contain"
+                alt="LABRIOUT"
+                className="h-11 sm:h-13 w-auto object-contain"
               />
               <span className="text-[9px] uppercase tracking-widest text-[#ff5500] font-bold mt-1">
-                POMPEI • DAL VIVO
+                100% CASHER • BADATZ DE BRUNOY
               </span>
             </div>
           </div>
@@ -394,7 +394,7 @@ export const MenuPage: React.FC = () => {
 
                 <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
                   <a
-                    href="https://maps.google.com/?q=Via+Provinciale+Ripuaria+133+Pompei"
+                    href="https://maps.google.com/?q=64+av.+Simone+Veil+Bonneuil-sur-Marne"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 sm:flex-none text-center px-4 py-2 rounded-full border border-[#ff5500] text-[#ff5500] hover:bg-[#ff5500] hover:text-white transition-all text-xs font-bold uppercase tracking-wider shadow-2xs"
