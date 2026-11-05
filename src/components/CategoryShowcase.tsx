@@ -1,12 +1,10 @@
 import React, { useRef } from 'react';
-import { ArrowRight, Smartphone, Globe, Zap } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { CategoryId } from '../types';
 import { SHOWCASE_CATEGORIES } from '../data/menuData';
 import { LABRIOUT_CATEGORY_CONFIGS } from '../data/labrioutMenuData';
 import { useCart } from '../context/CartContext';
 import { getCategoryLabel } from '../utils/menuTranslations';
-import phoneImage from '../assets/phone.png';
-import appBgImage from '../assets/app-bg.png';
 
 interface CategoryShowcaseProps {
   selectedCategory: CategoryId;
@@ -294,101 +292,30 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
           </div>
         </div>
 
-        {/* RIGHT SECTION: App Promo Banner with Smartphone (Desktop only, hidden on mobile) */}
-        <div className="hidden lg:flex w-full lg:w-[360px] shrink-0 relative mt-6 lg:mt-0 overflow-visible items-stretch">
-          {/* Card Container with user background image (app-bg.png) */}
-          <div
-            className="relative w-full rounded-2xl sm:rounded-3xl overflow-visible metallic-border shadow-2xl p-4 sm:p-5 flex flex-col justify-between min-h-[220px]"
-            style={{
-              backgroundImage: `url(${appBgImage}), url(/app-bg.png), url(https://i.imgur.com/FdHmsaO.png)`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+        {/* RIGHT SECTION: App Promo Banner (Desktop only, hidden on mobile) */}
+        <div className="hidden lg:flex w-full lg:w-[360px] shrink-0 relative mt-6 lg:mt-0 items-stretch">
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById('products-main-layout') || document.getElementById('menu-catalog-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
+            className="relative w-full h-full rounded-[22px] sm:rounded-[26px] overflow-hidden shadow-2xl border border-black/10 p-0 cursor-pointer group focus:outline-none block"
+            title={webContent.cta}
           >
-            {/* Dark gradient overlay for text readability on the left */}
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-black/95 via-black/85 to-black/30 pointer-events-none" />
-
-            {/* Left Content */}
-            <div className="relative z-10 max-w-[62%] sm:max-w-[66%] lg:max-w-[63%] xl:max-w-[65%] flex flex-col justify-between h-full space-y-2 sm:space-y-2.5">
-              {/* Title: LA NOSTRA WEB APP COMODA & VELOCE */}
-              <div>
-                <h3 className="font-brush text-base sm:text-lg lg:text-xl font-black text-white uppercase leading-[1.1] tracking-wide drop-shadow-md">
-                  {webContent.titleLine1}<br />
-                  {webContent.titleLine2}<br />
-                  {webContent.titleLine3}
-                </h3>
-                {/* Orange brush underline */}
-                <div className="w-28 sm:w-32 h-1.5 bg-[#ff5500] rounded-full mt-1 -rotate-1 origin-left shadow-sm shadow-[#ff5500]/40" />
-              </div>
-
-              {/* Subtitle with browser / globe icon */}
-              <div className="flex items-start gap-1.5 sm:gap-2">
-                <div className="shrink-0 text-[#ff5500] mt-0.5">
-                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </div>
-                <p className="text-[10px] sm:text-xs text-neutral-200 font-medium leading-snug">
-                  {webContent.subtitle}
-                </p>
-              </div>
-
-              {/* Web App Badges / Buttons (Replaced App Store & Google Play buttons) */}
-              <div className="space-y-2 pt-0.5">
-                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                  {/* Badge 1: iOS & Android */}
-                  <div className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-black/85 text-white border border-neutral-700/80 shadow-md">
-                    <Smartphone className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#ff5500] shrink-0" />
-                    <div className="flex flex-col text-left leading-none">
-                      <span className="text-[7px] sm:text-[8px] uppercase tracking-wider text-neutral-400 font-semibold">
-                        {webContent.badge1Sub}
-                      </span>
-                      <span className="text-[9px] sm:text-[11px] font-bold tracking-tight text-white mt-0.5">
-                        {webContent.badge1Title}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Badge 2: In Browser */}
-                  <div className="flex items-center gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-xl bg-black/85 text-white border border-neutral-700/80 shadow-md">
-                    <Zap className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0 fill-amber-400" />
-                    <div className="flex flex-col text-left leading-none">
-                      <span className="text-[7px] sm:text-[8px] uppercase tracking-wider text-neutral-400 font-semibold">
-                        {webContent.badge2Sub}
-                      </span>
-                      <span className="text-[9px] sm:text-[11px] font-bold tracking-tight text-white mt-0.5">
-                        {webContent.badge2Title}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Direct CTA button to order via web app */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    const el = document.getElementById('menu-catalog-section');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#ff5500] to-[#ff3300] hover:from-[#ff6611] hover:to-[#ff4400] text-white text-[11px] sm:text-xs font-black shadow-md shadow-[#ff5500]/30 transition-all transform active:scale-95 cursor-pointer"
-                >
-                  <span>{webContent.cta}</span>
-                  <ArrowRight className="w-3 h-3 stroke-[3]" />
-                </button>
-              </div>
-            </div>
-
-            {/* Right: 3D Smartphone Image - scaled down and barely protruding beyond the banner area */}
-            <div className="absolute right-0 sm:right-1 md:right-2 lg:right-1 xl:right-2 -top-2 sm:-top-2.5 md:-top-3 lg:-top-3 xl:-top-3.5 bottom-0 z-30 pointer-events-none flex items-end">
-              <img
-                src={phoneImage}
-                onError={(e) => {
-                  e.currentTarget.src = 'https://i.imgur.com/r0eRxW8.png';
-                }}
-                alt="Panzarotto Web App Smartphone"
-                className="w-28 sm:w-34 md:w-38 lg:w-40 xl:w-44 h-auto max-h-[108%] object-contain select-none drop-shadow-[0_12px_24px_rgba(0,0,0,0.75)]"
-                loading="eager"
-              />
-            </div>
-          </div>
+            <img
+              src="https://i.imgur.com/6yJq83Q.jpeg"
+              referrerPolicy="no-referrer"
+              onError={(e) => {
+                if (!e.currentTarget.src.endsWith('/webapp-labriout.jpg')) {
+                  e.currentTarget.src = '/webapp-labriout.jpg';
+                }
+              }}
+              alt="La Briout Web App"
+              className="w-full h-full object-cover select-none transition-transform duration-300 group-hover:scale-[1.01]"
+              loading="eager"
+            />
+          </button>
         </div>
       </div>
     </div>
