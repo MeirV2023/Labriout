@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, ChefHat, Globe2, ArrowLeft, KeyRound, CheckCircle2, Sparkles } from 'lucide-react';
+import { Lock, ChefHat, Globe2, ArrowLeft, KeyRound, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 interface PortalAuthGateProps {
@@ -14,18 +14,20 @@ const STORAGE_KEYS = {
 
 export const CREDENTIALS = {
   owner: {
-    login: 'owner@panzarotto.it',
+    login: 'labriout@eat-view.local',
+    altLogin: 'owner@panzarotto.it',
     password: 'pompei2025',
     kitchenPin: '1930',
-    title: 'Вход для Владельца Ресторана & Кухни (KDS)',
-    subtitle: 'Управление заказами, экран сборщика (Packing), склад и прямые выплаты Stripe',
+    title: 'Панель Кухни & Владельца (KDS)',
+    subtitle: 'Экран повара с живым таймером блюд, список заказов, стоп-лист (86) и касса Stripe',
   },
   'super-admin': {
     login: 'admin@streetfood-saas.com',
+    altLogin: 'labriout@eat-view.local',
     password: 'superadmin2025',
     kitchenPin: '9999',
-    title: 'Вход в Центр Управления SaaS-Платформой (Super-Admin)',
-    subtitle: 'Управление всеми ресторанами мира (50–100€/мес), удаленное обновление цен, фото и меню',
+    title: 'Панель Супер-Админа (CMS Меню)',
+    subtitle: 'Управление блюдами, ценами, фотографиями, добавками и промокодами',
   },
 };
 
@@ -74,8 +76,10 @@ export const PortalAuthGate: React.FC<PortalAuthGateProps> = ({ role, children }
       return;
     }
 
+    const cleanLogin = loginInput.trim().toLowerCase().replace(/\.$/, '');
     if (
-      loginInput.trim().toLowerCase() === targetCreds.login.toLowerCase() &&
+      (cleanLogin === targetCreds.login.toLowerCase() ||
+        cleanLogin === targetCreds.altLogin.toLowerCase()) &&
       passwordInput.trim() === targetCreds.password
     ) {
       try {
@@ -85,7 +89,7 @@ export const PortalAuthGate: React.FC<PortalAuthGateProps> = ({ role, children }
       }
       setIsAuthenticated(true);
     } else {
-      setErrorMsg('Неверный логин или пароль. Проверьте данные ниже или нажмите «Войти в 1 клик».');
+      setErrorMsg('Неверный логин или пароль. Нажмите «Войти в 1 клик» ниже.');
     }
   };
 
@@ -114,33 +118,45 @@ export const PortalAuthGate: React.FC<PortalAuthGateProps> = ({ role, children }
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0c12] text-white flex flex-col justify-center items-center p-4">
-      <div className="w-full max-w-md bg-[#131722] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+    <div className="min-h-screen bg-[#f5f6fa] text-slate-800 flex flex-col justify-center items-center p-4">
+      <div className="w-full max-w-md bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-[0_8px_32px_rgba(0,0,0,0.06)] space-y-6">
         {/* Top Back Link */}
         <div className="flex items-center justify-between">
           <button
             type="button"
             onClick={() => setCurrentView('home')}
-            className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4 text-[#ff5500]" />
-            <span>Вернуться на витрину</span>
+            <ArrowLeft className="w-4 h-4 text-[#e66430]" />
+            <span>На витрину</span>
           </button>
 
-          <span className="px-2.5 py-1 rounded-full bg-[#ff5500]/15 border border-[#ff5500]/30 text-[#ff7733] text-[11px] font-extrabold uppercase flex items-center gap-1">
+          <span className="px-3 py-1 rounded-full bg-[#d6e6ff] text-[#3b76ef] text-[11px] font-extrabold uppercase flex items-center gap-1.5">
             {role === 'owner' ? <ChefHat className="w-3.5 h-3.5" /> : <Globe2 className="w-3.5 h-3.5" />}
-            {role === 'owner' ? '/owner' : '/super-admin'}
+            {role === 'owner' ? 'Kitchen KDS' : 'Super-Admin'}
           </span>
         </div>
 
-        {/* Header */}
-        <div className="space-y-1.5">
-          <h1 className="text-xl font-black text-white tracking-tight">{targetCreds.title}</h1>
-          <p className="text-xs text-neutral-400 leading-relaxed">{targetCreds.subtitle}</p>
+        {/* Logo & Header */}
+        <div className="flex items-center gap-3">
+          <img
+            src="/logo-labriur.png"
+            onError={e => {
+              e.currentTarget.src = '/logo-custom.png';
+            }}
+            alt="La Briout"
+            className="h-12 w-auto object-contain"
+          />
+          <div>
+            <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+              {targetCreds.title}
+            </h1>
+            <p className="text-xs text-slate-500 leading-relaxed mt-0.5">{targetCreds.subtitle}</p>
+          </div>
         </div>
 
-        {/* Mode Switcher (Email/Password vs Kitchen Tablet PIN) */}
-        <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-[#0b0e15] border border-white/10">
+        {/* Mode Switcher */}
+        <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-[#f5f6fa] border border-slate-200/70">
           <button
             type="button"
             onClick={() => {
@@ -149,8 +165,8 @@ export const PortalAuthGate: React.FC<PortalAuthGateProps> = ({ role, children }
             }}
             className={`py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
               authMode === 'password'
-                ? 'bg-[#ff5500] text-white'
-                : 'text-neutral-400 hover:text-white'
+                ? 'bg-[#4c84ff] text-white shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
             }`}
           >
             Логин и Пароль
@@ -163,16 +179,16 @@ export const PortalAuthGate: React.FC<PortalAuthGateProps> = ({ role, children }
             }}
             className={`py-2 rounded-xl text-xs font-extrabold transition cursor-pointer ${
               authMode === 'pin'
-                ? 'bg-[#ff5500] text-white'
-                : 'text-neutral-400 hover:text-white'
+                ? 'bg-[#4c84ff] text-white shadow-xs'
+                : 'text-slate-500 hover:text-slate-800'
             }`}
           >
-            Быстрый PIN-код кухни
+            Быстрый PIN кухни
           </button>
         </div>
 
         {errorMsg && (
-          <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-bold">
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold">
             ⚠️ {errorMsg}
           </div>
         )}
@@ -181,37 +197,33 @@ export const PortalAuthGate: React.FC<PortalAuthGateProps> = ({ role, children }
           {authMode === 'password' ? (
             <>
               <div>
-                <label className="block text-xs font-bold text-neutral-300 mb-1">
-                  Логин / Email
-                </label>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Логин / Email</label>
                 <input
                   type="text"
                   required
                   value={loginInput}
                   onChange={e => setLoginInput(e.target.value)}
                   placeholder={targetCreds.login}
-                  className="w-full bg-[#0b0e15] border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff5500]"
+                  className="w-full bg-[#f8f9fc] border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#4c84ff]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-neutral-300 mb-1">
-                  Пароль
-                </label>
+                <label className="block text-xs font-bold text-slate-600 mb-1">Пароль</label>
                 <input
                   type="password"
                   required
                   value={passwordInput}
                   onChange={e => setPasswordInput(e.target.value)}
                   placeholder="••••••••••"
-                  className="w-full bg-[#0b0e15] border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-[#ff5500]"
+                  className="w-full bg-[#f8f9fc] border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-[#4c84ff]"
                 />
               </div>
             </>
           ) : (
             <div>
-              <label className="block text-xs font-bold text-neutral-300 mb-1">
-                4-значный PIN-код терминала / планшета повара
+              <label className="block text-xs font-bold text-slate-600 mb-1">
+                4-значный PIN-код терминала кухни
               </label>
               <input
                 type="text"
@@ -220,47 +232,45 @@ export const PortalAuthGate: React.FC<PortalAuthGateProps> = ({ role, children }
                 value={pinInput}
                 onChange={e => setPinInput(e.target.value.replace(/\D/g, ''))}
                 placeholder={targetCreds.kitchenPin}
-                className="w-full bg-[#0b0e15] border border-white/15 rounded-xl px-3.5 py-3 text-center text-2xl font-mono font-black tracking-[0.5em] text-[#ff7733] focus:outline-none focus:border-[#ff5500]"
+                className="w-full bg-[#f8f9fc] border border-slate-200 rounded-xl px-3.5 py-3 text-center text-2xl font-mono font-black tracking-[0.5em] text-[#e66430] focus:outline-none focus:border-[#4c84ff]"
               />
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-2xl bg-[#ff5500] hover:bg-[#e04a00] text-white font-black text-xs uppercase tracking-wider shadow-lg shadow-[#ff5500]/25 transition cursor-pointer flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-2xl bg-[#e66430] hover:bg-[#d45625] text-white font-black text-xs uppercase tracking-wider shadow-md shadow-[#e66430]/20 transition cursor-pointer flex items-center justify-center gap-2"
           >
             <Lock className="w-4 h-4" />
-            <span>Войти в систему</span>
+            <span>Войти в панель</span>
           </button>
         </form>
 
-        {/* Credentials Reference Box + 1-Click Auto-Login */}
-        <div className="p-4 rounded-2xl bg-[#0c0f17] border border-white/10 space-y-3 text-xs">
-          <div className="flex items-center justify-between">
-            <span className="font-extrabold text-emerald-400 flex items-center gap-1.5">
-              <KeyRound className="w-4 h-4" />
-              Доступы для входа ({role === 'owner' ? 'Владелец / Кухня' : 'Супер-Админ SaaS'}):
-            </span>
-          </div>
-          <div className="space-y-1 font-mono text-[11px] text-neutral-300">
+        {/* Credentials Reference + 1-Click Auto-Login */}
+        <div className="p-4 rounded-2xl bg-[#f8f9fc] border border-slate-200/80 space-y-3 text-xs">
+          <span className="font-extrabold text-emerald-700 flex items-center gap-1.5">
+            <KeyRound className="w-4 h-4" />
+            Быстрый вход ({role === 'owner' ? 'Кухня KDS' : 'Супер-Админ'}):
+          </span>
+          <div className="space-y-1 font-mono text-[11px] text-slate-600">
             <p>
-              Логин: <strong className="text-white select-all">{targetCreds.login}</strong>
+              Логин: <strong className="text-slate-900 select-all">{targetCreds.login}</strong>
             </p>
             <p>
-              Пароль: <strong className="text-white select-all">{targetCreds.password}</strong>
+              Пароль: <strong className="text-slate-900 select-all">{targetCreds.password}</strong>
             </p>
             <p>
-              PIN-код планшета: <strong className="text-[#ff7733] select-all">{targetCreds.kitchenPin}</strong>
+              PIN-код: <strong className="text-[#e66430] select-all">{targetCreds.kitchenPin}</strong>
             </p>
           </div>
 
           <button
             type="button"
             onClick={handleQuickDemoLogin}
-            className="w-full py-2.5 px-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 font-extrabold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
+            className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-xs"
           >
             <Sparkles className="w-4 h-4" />
-            <span>Войти в 1 клик (Автозаполнение)</span>
+            <span>Войти в 1 клик</span>
           </button>
         </div>
       </div>
