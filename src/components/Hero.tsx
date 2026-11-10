@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { LABRIOUT_STORE_DETAILS } from '../data/labrioutMenuData';
+import {
+  LABRIOUT_STORE_DETAILS,
+  getLabrioutKosherBadge,
+  getLabrioutShortSpecialty,
+} from '../data/labrioutMenuData';
 import bannerImg from '../assets/banner-hero-3x1.jpg';
 import bannerMobileImg from '../assets/banner-mobile-370x220.png';
 import bannerMobileImg2x from '../assets/banner-mobile@2x.png';
@@ -20,7 +24,7 @@ interface Slide {
 }
 
 export const Hero: React.FC = () => {
-  const { t, activeTenantId } = useCart();
+  const { t, language, activeTenantId } = useCart();
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const touchStartXRef = useRef<number | null>(null);
@@ -38,7 +42,7 @@ export const Hero: React.FC = () => {
           mobileImage3x: LABRIOUT_STORE_DETAILS.heroImage,
           fallbackImage: LABRIOUT_STORE_DETAILS.heroImage,
           mobileFallbackImage: LABRIOUT_STORE_DETAILS.heroImage,
-          alt: 'Labriout Street Food — Bonneuil-sur-Marne',
+          alt: `Labriout — ${getLabrioutShortSpecialty(language)} — Bonneuil-sur-Marne`,
           showButtons: true,
         },
       ]
@@ -51,7 +55,7 @@ export const Hero: React.FC = () => {
           mobileImage3x: bannerMobileImg3x,
           fallbackImage: '/banner-hero-3x1.jpg',
           mobileFallbackImage: 'https://i.imgur.com/5hYpdmB.png',
-          alt: 'Panzarotto Real Street Food Pompei',
+          alt: 'Labriout Street Food — Bonneuil-sur-Marne',
           showButtons: true,
         },
       ];
@@ -177,13 +181,13 @@ export const Hero: React.FC = () => {
                 {isLabriout && (
                   <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-transparent flex flex-col justify-center px-5 sm:px-10 md:px-12 pb-10 md:pb-14 z-10 pointer-events-none">
                     <span className="inline-flex items-center gap-1.5 w-fit px-3 py-1 rounded-full bg-rose-600/90 text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wider mb-2 shadow-lg">
-                      ✡️ 100% Casher • Badatz de Brunoy
+                      {getLabrioutKosherBadge(language)}
                     </span>
                     <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight uppercase drop-shadow-lg">
                       LABRIOUT
                     </h1>
                     <p className="text-xs sm:text-sm md:text-base text-neutral-200 font-semibold max-w-xl mt-1.5 drop-shadow">
-                      🥩 Street food & spécialités maison • 📍 64 av. Simone Veil, Bonneuil-sur-Marne • ⏰ 12h-15h 18h-22h15
+                      {getLabrioutShortSpecialty(language)} • 📍 64 av. Simone Veil, Bonneuil-sur-Marne • ⏰ 12h-15h 18h-22h15
                     </p>
                   </div>
                 )}
@@ -235,8 +239,8 @@ export const Hero: React.FC = () => {
                 {slide.id === 1 && (
                   <button
                     onClick={scrollToMenu}
-                    aria-label="Ordina Ora"
-                    title="Ordina Ora"
+                    aria-label={t('orderNow')}
+                    title={t('orderNow')}
                     className="absolute right-[2%] sm:right-[3%] top-[38%] sm:top-[40%] w-[16%] sm:w-[14%] md:w-[12%] h-[38%] sm:h-[36%] md:h-[34%] z-20 cursor-pointer rounded-2xl transition-transform hover:scale-105 active:scale-95"
                   />
                 )}
@@ -274,7 +278,17 @@ export const Hero: React.FC = () => {
                 e.stopPropagation();
                 prevSlide();
               }}
-              aria-label="Precedente"
+              aria-label={
+                language === 'ru'
+                  ? 'Назад'
+                  : language === 'en'
+                  ? 'Previous'
+                  : language === 'de'
+                  ? 'Zurück'
+                  : language === 'it'
+                  ? 'Precedente'
+                  : 'Précédent'
+              }
               className="absolute -left-3 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-full bg-white hover:bg-neutral-50 active:scale-95 text-neutral-700 hover:text-black shadow-[0_6px_22px_rgba(0,0,0,0.15)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.22)] border border-neutral-200/80 flex items-center justify-center transition-all cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />
@@ -285,7 +299,17 @@ export const Hero: React.FC = () => {
                 e.stopPropagation();
                 nextSlide();
               }}
-              aria-label="Successivo"
+              aria-label={
+                language === 'ru'
+                  ? 'Вперёд'
+                  : language === 'en'
+                  ? 'Next'
+                  : language === 'de'
+                  ? 'Weiter'
+                  : language === 'it'
+                  ? 'Successivo'
+                  : 'Suivant'
+              }
               className="absolute -right-3 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-full bg-white hover:bg-neutral-50 active:scale-95 text-neutral-700 hover:text-black shadow-[0_6px_22px_rgba(0,0,0,0.15)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.22)] border border-neutral-200/80 flex items-center justify-center transition-all cursor-pointer"
             >
               <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5]" />

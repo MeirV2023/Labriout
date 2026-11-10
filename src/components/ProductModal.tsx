@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { X, Plus, Minus, Check, Sparkles, MessageSquare } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { SelectedExtra, ExtraOption } from '../types';
+import {
+  getBadgeLabel,
+  getLocalizedExtraName,
+  getLocalizedProductDescription,
+  getLocalizedProductName,
+} from '../utils/menuTranslations';
 
 export const ProductModal: React.FC = () => {
   const {
@@ -50,7 +56,7 @@ export const ProductModal: React.FC = () => {
       if (exists) {
         return prev.filter(e => e.id !== extra.id);
       } else {
-        const extraName = language === 'en' ? extra.nameEn : language === 'ru' ? extra.nameRu : extra.name;
+        const extraName = getLocalizedExtraName(extra, language);
         return [...prev, { id: extra.id, name: extraName, price: extra.price }];
       }
     });
@@ -69,27 +75,9 @@ export const ProductModal: React.FC = () => {
     handleClose();
   };
 
-  const localizedName =
-    language === 'en'
-      ? productModalItem.nameEn || productModalItem.name
-      : language === 'de'
-      ? productModalItem.nameDe || productModalItem.nameEn || productModalItem.name
-      : language === 'fr'
-      ? productModalItem.nameFr || productModalItem.nameEn || productModalItem.name
-      : language === 'ru'
-      ? productModalItem.nameRu || productModalItem.name
-      : productModalItem.name;
-
-  const productDescription =
-    language === 'en'
-      ? productModalItem.descriptionEn || productModalItem.description
-      : language === 'de'
-      ? productModalItem.descriptionDe || productModalItem.descriptionEn || productModalItem.description
-      : language === 'fr'
-      ? productModalItem.descriptionFr || productModalItem.descriptionEn || productModalItem.description
-      : language === 'ru'
-      ? productModalItem.descriptionRu || productModalItem.description
-      : productModalItem.description;
+  const localizedName = getLocalizedProductName(productModalItem, language);
+  const productDescription = getLocalizedProductDescription(productModalItem, language);
+  const localizedBadge = getBadgeLabel(productModalItem.badge, language);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
@@ -108,15 +96,15 @@ export const ProductModal: React.FC = () => {
           <button
             onClick={handleClose}
             className="absolute top-3 right-3 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md transition cursor-pointer"
-            aria-label="Chiudi"
+            aria-label={t('close')}
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Badge */}
-          {productModalItem.badge && (
+          {localizedBadge && (
             <span className="absolute top-3 left-3 bg-[#ff5500] text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-full tracking-wider shadow-md">
-              {productModalItem.badge}
+              {localizedBadge}
             </span>
           )}
 
@@ -135,24 +123,27 @@ export const ProductModal: React.FC = () => {
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-xs uppercase font-extrabold tracking-wider text-neutral-400 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#ff5500]" />
-                  <span>{t('addExtra')} (Opzionale)</span>
+                  <span>
+                    {t('addExtra')} ({t('optional')})
+                  </span>
                 </h4>
-                <span className="text-[11px] text-neutral-500">Puoi selezionarne più di uno</span>
+                <span className="text-[11px] text-neutral-500">
+                  {language === 'ru'
+                    ? 'Можно выбрать несколько'
+                    : language === 'en'
+                    ? 'Select one or more'
+                    : language === 'de'
+                    ? 'Mehrere auswählbar'
+                    : language === 'it'
+                    ? 'Puoi selezionarne più di uno'
+                    : 'Plusieurs choix possibles'}
+                </span>
               </div>
 
               <div className="space-y-2">
                 {productModalItem.availableExtras.map(extra => {
                   const isSelected = selectedExtras.some(e => e.id === extra.id);
-                  const extraLabel =
-                    language === 'en'
-                      ? extra.nameEn || extra.name
-                      : language === 'de'
-                      ? extra.nameDe || extra.nameEn || extra.name
-                      : language === 'fr'
-                      ? extra.nameFr || extra.nameEn || extra.name
-                      : language === 'ru'
-                      ? extra.nameRu || extra.name
-                      : extra.name;
+                  const extraLabel = getLocalizedExtraName(extra, language);
 
                   return (
                     <button
@@ -225,7 +216,7 @@ export const ProductModal: React.FC = () => {
             onClick={handleSubmit}
             className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#ff5500] to-[#ff6a00] hover:from-[#e04a00] hover:to-[#ff5500] text-white font-extrabold text-sm flex items-center justify-between shadow-lg shadow-[#ff5500]/25 transition active:scale-98 cursor-pointer"
           >
-            <span>{editingCartItemId ? 'Aggiorna Modifiche' : t('addToCart')}</span>
+            <span>{editingCartItemId ? t('updateChanges') : t('addToCart')}</span>
             <span className="text-white/95">€{(Number(totalPrice) || 0).toFixed(2)}</span>
           </button>
         </div>

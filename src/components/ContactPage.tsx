@@ -6,12 +6,10 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { STORE_DETAILS } from '../data/menuData';
+import { getLabrioutTagline } from '../data/labrioutMenuData';
 
 export const ContactPage: React.FC = () => {
-  const { setCurrentView, language } = useCart();
-
-  const isEn = language === 'en';
-  const isRu = language === 'ru';
+  const { language } = useCart();
 
   // Form states
   const [firstName, setFirstName] = useState('');
@@ -58,93 +56,322 @@ export const ContactPage: React.FC = () => {
     'LABRIOUT 64 av. Simone Veil Bonneuil-sur-Marne'
   )}`;
 
-  // FAQ Data with Multilingual Support
-  const faqList = [
-    {
-      q: isEn
-        ? 'Can I order online?'
-        : isRu
-        ? 'Можно ли сделать заказ онлайн?'
-        : 'Puis-je commander en ligne ?',
-      a: isEn
-        ? 'Yes, absolutely! You can browse our entire kosher menu right here on the website, customize your Smash Burgers, Pitas, Laffas and Assiettes, and choose between store pickup or home delivery.'
-        : isRu
-        ? 'Да, конечно! Вы можете выбрать любые кошерные бургеры, шаурму в лаффе, питы и сытные тарелки на сайте и оформить доставку на дом или самовывоз.'
-        : 'Oui, absolument ! Vous pouvez consulter toute notre carte casher sur le site, personnaliser vos Smash Burgers, Pitas, Laffas et Assiettes, et choisir entre le retrait sur place ou la livraison à domicile.',
+  // FAQ Data & UI Texts across all 5 languages (fr, en, de, it, ru)
+  const ui = {
+    fr: {
+      heading: 'CONTACTEZ LABRIOUT',
+      socialsLabel: 'RÉSEAUX',
+      comingSoon: 'Bientôt disponible',
+      contactLabel: 'CONTACT',
+      addressLabel: 'ADRESSE',
+      thanksTitle: 'Message reçu !',
+      thanksSub:
+        'Nous avons bien reçu votre demande et vous répondrons très rapidement par téléphone ou par e-mail.',
+      sendAnother: 'Envoyer un autre message',
+      firstNamePlaceholder: 'Prénom*',
+      lastNamePlaceholder: 'Nom*',
+      emailPlaceholder: 'E-mail*',
+      phonePlaceholder: 'Téléphone',
+      reasonPlaceholder: 'Motif du contact*',
+      reasonOrder: 'Question commande / livraison',
+      reasonTakeaway: 'Précommande à emporter',
+      reasonCatering: 'Événements, réceptions & traiteur (Simcha)',
+      reasonAllergens: 'Allergènes & cacherout',
+      reasonFeedback: 'Avis / Autre demande',
+      messagePlaceholder: 'Comment pouvons-nous vous aider ?',
+      termsText:
+        "En envoyant ce formulaire, vous acceptez nos Conditions générales et consentez au traitement de vos coordonnées conformément à notre politique de confidentialité.",
+      termsErr: 'Veuillez accepter les conditions avant de valider.',
+      submitting: 'Envoi...',
+      submitBtn: 'ENVOYER',
+      faqEyebrow: 'FAQ',
+      faqHeading: 'VOS QUESTIONS, NOS RÉPONSES',
+      hoursEyebrow: "HORAIRES D'OUVERTURE",
+      lunchLabel: 'SERVICE MIDI (LUN–VEN)',
+      dinnerLabel: 'SERVICE SOIR (DIM–JEU)',
+      faqs: [
+        {
+          q: 'Puis-je commander en ligne ?',
+          a: 'Oui, absolument ! Vous pouvez consulter toute notre carte casher sur le site, personnaliser vos Smash Burgers, Pitas, Laffas et Assiettes, et choisir entre le retrait sur place ou la livraison à domicile.',
+        },
+        {
+          q: 'Proposez-vous la livraison à domicile ?',
+          a: 'Oui ! Nous livrons vos commandes bien chaudes à Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort et dans les villes voisines du 94. Livraison offerte dès 30€ de commande !',
+        },
+        {
+          q: 'Quelle est votre certification Casher ?',
+          a: 'LABRIOUT est un restaurant 100% Casher Bassar sous la stricte surveillance rabbinique du Badatz de Brunoy, avec des viandes fraîches sélectionnées et une cuisine faite maison.',
+        },
+        {
+          q: 'Quelles sont vos spécialités maison ?',
+          a: 'Nos clients adorent nos Smash Burgers juteux (avec cheddar fondant Parvé ou veau pressé), nos Laffas & Pitas Shawarma, notre Parguit mariné grillé, le Schnitzel au sésame et notre Houmous Bassar maison.',
+        },
+        {
+          q: 'Avez-vous des options végétariennes ?',
+          a: 'Oui ! Découvrez nos Falafels croustillants aux herbes fraîches (en pita, laffa ou assiette), notre Sabich israélien aux aubergines fondantes, notre Houmous classique et nos salades fraîcheur.',
+        },
+        {
+          q: 'Puis-je commander pour un groupe ou un événement (Simcha) ?',
+          a: "Avec plaisir ! Nous préparons des plateaux conviviaux pour vos repas de famille, anniversaires et déjeuners d'entreprise. Contactez-nous sur WhatsApp ou via le formulaire !",
+        },
+        {
+          q: 'Où êtes-vous situés et quels sont vos horaires ?',
+          a: 'Nous sommes situés au 64 av. Simone Veil, Bonneuil-sur-Marne. Horaires : 12h-15h et 18h-22h15 (vendredi midi uniquement, fermé chabbat, ouvert dimanche soir).',
+        },
+      ],
     },
-    {
-      q: isEn
-        ? 'Do you offer delivery?'
-        : isRu
-        ? 'Есть ли у вас доставка?'
-        : 'Proposez-vous la livraison à domicile ?',
-      a: isEn
-        ? 'Yes! We deliver hot, freshly grilled orders across Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort and surrounding areas in 94. Delivery is free for orders over €30!'
-        : isRu
-        ? 'Да! Мы доставляем горячие блюда с огня по Бонёй-сюр-Марн, Кретею, Сен-Мор-де-Фоссе и соседним городам департамента 94. Бесплатная доставка от 30€!'
-        : 'Oui ! Nous livrons vos commandes bien chaudes à Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort et dans les villes voisines du 94. Livraison offerte dès 30€ de commande !',
+    en: {
+      heading: 'STILL CURIOUS?',
+      socialsLabel: 'SOCIALS',
+      comingSoon: 'Coming soon',
+      contactLabel: 'CONTACT',
+      addressLabel: 'ADDRESS',
+      thanksTitle: 'Thank You!',
+      thanksSub:
+        'We received your message and our team will get back to you very shortly by phone or email!',
+      sendAnother: 'Send Another Message',
+      firstNamePlaceholder: 'First Name*',
+      lastNamePlaceholder: 'Last Name*',
+      emailPlaceholder: 'Email*',
+      phonePlaceholder: 'Phone Number',
+      reasonPlaceholder: 'Contact Reason*',
+      reasonOrder: 'Order / Delivery Question',
+      reasonTakeaway: 'Takeaway Pre-order',
+      reasonCatering: 'Party, Event & Catering Order',
+      reasonAllergens: 'Allergens & Kashrut Info',
+      reasonFeedback: 'Feedback / Other Inquiry',
+      messagePlaceholder: 'How can we help you?',
+      termsText:
+        'By submitting this form, you agree to our Terms & Conditions and understand that your information will be used in accordance with our privacy policy.',
+      termsErr: 'Please agree to the terms before submitting.',
+      submitting: 'Submitting...',
+      submitBtn: 'SUBMIT',
+      faqEyebrow: 'FAQS',
+      faqHeading: 'YOU ASK, WE ANSWER',
+      hoursEyebrow: 'OPENING HOURS',
+      lunchLabel: 'LUNCH SERVICE (MON–FRI)',
+      dinnerLabel: 'EVENING SERVICE (SUN–THU)',
+      faqs: [
+        {
+          q: 'Can I order online?',
+          a: 'Yes, absolutely! You can browse our entire kosher menu right here on the website, customize your Smash Burgers, Pitas, Laffas and Plates, and choose between store pickup or home delivery.',
+        },
+        {
+          q: 'Do you offer delivery?',
+          a: 'Yes! We deliver hot, freshly grilled orders across Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort and surrounding areas in 94. Delivery is free for orders over €30!',
+        },
+        {
+          q: 'What is your Kosher certification?',
+          a: 'LABRIOUT is 100% Kosher meat (Bassar) under the strict rabbinical supervision of Badatz de Brunoy, with daily fresh meat and house-prepared recipes.',
+        },
+        {
+          q: 'What are your house specialties?',
+          a: 'Our guests love our juicy Smash Burgers (with Parve melted cheddar or pressed veal), warm Laffa & Pita Shawarma, flame-grilled Parguit, sesame Schnitzel, and creamy homemade Hummus Bassar.',
+        },
+        {
+          q: 'Do you have vegetarian options?',
+          a: 'Yes! Try our crispy herb Falafel in Pita, Laffa or Platter, our Israeli Sabich with fried eggplant and hard-boiled egg, classic Hummus, and fresh salads.',
+        },
+        {
+          q: 'Can I order for groups, family events or Simchas?',
+          a: 'Yes! We gladly prepare large platters, burger & shawarma assortments, and mezzes for birthdays, family gatherings, and office lunches. Contact us via WhatsApp or the form!',
+        },
+        {
+          q: 'Where are you located and what are your opening hours?',
+          a: 'We are located at 64 av. Simone Veil, Bonneuil-sur-Marne. Opening hours: 12h-15h & 18h-22h15 (Friday lunch only, closed Shabbat, open Sunday evening).',
+        },
+      ],
     },
-    {
-      q: isEn
-        ? 'What is your Kosher certification?'
-        : isRu
-        ? 'Какой у вас сертификат кашрута?'
-        : 'Quelle est votre certification Casher ?',
-      a: isEn
-        ? 'LABRIOUT is 100% Kosher meat (Bassar) under the strict rabbinical supervision of Badatz de Brunoy, with daily fresh meat and house-prepared recipes.'
-        : isRu
-        ? 'Ресторан LABRIOUT на 100% кошерный мясной (Басар) под строгим раввинским контролем Бадац де Брюнуа (Badatz de Brunoy).'
-        : 'LABRIOUT est un restaurant 100% Casher Bassar sous la stricte surveillance rabbinique du Badatz de Brunoy, avec des viandes fraîches sélectionnées et une cuisine faite maison.',
+    de: {
+      heading: 'KONTAKTIEREN SIE LABRIOUT',
+      socialsLabel: 'SOCIALS',
+      comingSoon: 'Demnächst verfügbar',
+      contactLabel: 'KONTAKT',
+      addressLabel: 'ADRESSE',
+      thanksTitle: 'Vielen Dank!',
+      thanksSub:
+        'Wir haben Ihre Nachricht erhalten und melden uns in Kürze telefonisch oder per E-Mail bei Ihnen.',
+      sendAnother: 'Weitere Nachricht senden',
+      firstNamePlaceholder: 'Vorname*',
+      lastNamePlaceholder: 'Nachname*',
+      emailPlaceholder: 'E-Mail*',
+      phonePlaceholder: 'Telefonnummer',
+      reasonPlaceholder: 'Grund der Anfrage*',
+      reasonOrder: 'Frage zu Bestellung / Lieferung',
+      reasonTakeaway: 'Vorbestellung zur Abholung',
+      reasonCatering: 'Events, Feiern & Catering (Simcha)',
+      reasonAllergens: 'Allergene & Kaschrut-Informationen',
+      reasonFeedback: 'Feedback / Sonstige Anfrage',
+      messagePlaceholder: 'Wie können wir Ihnen helfen?',
+      termsText:
+        'Mit dem Absenden dieses Formulars stimmen Sie unseren AGB und der Verarbeitung Ihrer Kontaktdaten gemäß unserer Datenschutzerklärung zu.',
+      termsErr: 'Bitte stimmen Sie den Bedingungen vor dem Absenden zu.',
+      submitting: 'Wird gesendet...',
+      submitBtn: 'SENDEN',
+      faqEyebrow: 'FAQS',
+      faqHeading: 'IHRE FRAGEN, UNSERE ANTWORTEN',
+      hoursEyebrow: 'ÖFFNUNGSZEITEN',
+      lunchLabel: 'MITTAGSSERVICE (MO–FR)',
+      dinnerLabel: 'ABENDSERVICE (SO–DO)',
+      faqs: [
+        {
+          q: 'Kann ich online bestellen?',
+          a: 'Ja, natürlich! Sie können unsere gesamte koschere Speisekarte auf der Website durchsuchen, Ihre Smash Burger, Pitas, Laffas und Teller individuell anpassen und zwischen Abholung und Lieferung wählen.',
+        },
+        {
+          q: 'Bieten Sie Lieferung nach Hause an?',
+          a: 'Ja! Wir liefern heiß und frisch nach Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort und in die umliegenden Städte im Département 94. Kostenlose Lieferung ab 30 €!',
+        },
+        {
+          q: 'Welche Koscher-Zertifizierung haben Sie?',
+          a: 'LABRIOUT ist ein 100 % koscheres Fleischrestaurant (Bassar) unter der strengen rabbinischen Aufsicht des Badatz de Brunoy.',
+        },
+        {
+          q: 'Was sind Ihre Hausspezialitäten?',
+          a: 'Unsere Gäste lieben unsere saftigen Smash Burger (mit Parve-Cheddar oder Kalbs-Bacon), warme Laffa- & Pita-Shawarmas, gegrilltes Parguit, Sesam-Schnitzel und hausgemachten Hummus Bassar.',
+        },
+        {
+          q: 'Haben Sie vegetarische Gerichte?',
+          a: 'Ja! Probieren Sie unsere knusprigen Kräuter-Falafel in Pita, Laffa oder als Teller, unser israelisches Sabich mit gebratenen Auberginen, klassischen Hummus und frische Salate.',
+        },
+        {
+          q: 'Kann ich für Gruppen oder Familienfeiern (Simcha) bestellen?',
+          a: 'Sehr gerne! Wir bereiten große Platten mit Burgern, Pitas, Shawarma und Mezze für Familienfeste, Geburtstage und Firmenessen zu. Schreiben Sie uns per WhatsApp oder über das Formular!',
+        },
+        {
+          q: 'Wo befinden Sie sich und wie sind Ihre Öffnungszeiten?',
+          a: 'Sie finden uns in der 64 av. Simone Veil, Bonneuil-sur-Marne. Öffnungszeiten: 12h–15h und 18h–22h15 (Freitag nur mittags, am Schabbat geschlossen, Sonntagabend geöffnet).',
+        },
+      ],
     },
-    {
-      q: isEn
-        ? 'What are your house specialties?'
-        : isRu
-        ? 'Какие ваши фирменные блюда?'
-        : 'Quelles sont vos spécialités maison ?',
-      a: isEn
-        ? 'Our guests love our juicy Smash Burgers (with Parve melted cheddar or pressed veal), warm Laffa & Pita Shawarma, flame-grilled Parguit, sesame Schnitzel, and creamy homemade Houmous Bassar.'
-        : isRu
-        ? 'Гости особенно любят наши сочные Смэш-бургеры (с чеддером Парве и прессованной телятиной), шаурму в теплой лаффе и пите, паргит на углях, хрустящий шницель в кунжуте и домашний Хумус Басар.'
-        : 'Nos clients adorent nos Smash Burgers juteux (avec cheddar fondant Parvé ou veau pressé), nos Laffas & Pitas Shawarma, notre Parguit mariné grillé, le Schnitzel au sésame et notre Houmous Bassar maison.',
+    it: {
+      heading: 'CONTATTA LABRIOUT',
+      socialsLabel: 'SOCIAL',
+      comingSoon: 'Disponibile a breve',
+      contactLabel: 'CONTATTI',
+      addressLabel: 'INDIRIZZO',
+      thanksTitle: 'Messaggio Ricevuto!',
+      thanksSub:
+        'Abbiamo ricevuto la tua richiesta e ti risponderemo telefonicamente o via email al più presto.',
+      sendAnother: 'Invia un altro messaggio',
+      firstNamePlaceholder: 'Nome*',
+      lastNamePlaceholder: 'Cognome*',
+      emailPlaceholder: 'Email*',
+      phonePlaceholder: 'Telefono',
+      reasonPlaceholder: 'Motivo del contatto*',
+      reasonOrder: 'Informazioni Ordine / Consegna',
+      reasonTakeaway: 'Prenotazione Asporto',
+      reasonCatering: 'Feste, Eventi e Catering (Simcha)',
+      reasonAllergens: 'Info Allergeni & Kasherut',
+      reasonFeedback: 'Feedback / Altra richiesta',
+      messagePlaceholder: 'Come possiamo aiutarti?',
+      termsText:
+        'Inviando questo modulo, accetti i Termini & Condizioni e acconsenti al trattamento dei dati nel rispetto della nostra informativa sulla privacy.',
+      termsErr: 'Per favore conferma il consenso prima di inviare.',
+      submitting: 'Invio...',
+      submitBtn: 'INVIA',
+      faqEyebrow: 'FAQ',
+      faqHeading: 'VOI CHIEDETE, NOI RISPONDIAMO',
+      hoursEyebrow: 'ORARI DI APERTURA',
+      lunchLabel: 'SERVIZIO PRANZO (LUN–VEN)',
+      dinnerLabel: 'SERVIZIO CENA (DOM–GIO)',
+      faqs: [
+        {
+          q: 'Posso ordinare online?',
+          a: 'Sì, certamente! Puoi consultare tutto il nostro menù kosher sul sito, personalizzare i tuoi Smash Burger, Pita, Laffa e Piatti e scegliere tra ritiro in sede o consegna a domicilio.',
+        },
+        {
+          q: 'Effettuate consegne a domicilio?',
+          a: 'Sì! Consegniamo piatti caldi appena grigliati a Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort e nei comuni limitrofi del 94. Consegna gratuita oltre i 30€!',
+        },
+        {
+          q: 'Qual è la vostra certificazione Kosher?',
+          a: 'LABRIOUT è un ristorante 100% Kosher di carne (Bassar) sotto la stretta supervisione rabbinica del Badatz de Brunoy, con carni fresche selezionate e cucina fatta in casa.',
+        },
+        {
+          q: 'Quali sono le vostre specialità della casa?',
+          a: 'I nostri ospiti amano gli Smash Burger succosi (con cheddar fuso Parve o vitello pressato), Laffa e Pita Shawarma, il Parguit marinato alla griglia, lo Schnitzel al sesamo e l’Hummus Bassar fatto in casa.',
+        },
+        {
+          q: 'Avete opzioni vegetariane?',
+          a: 'Sì! Prova i nostri Falafel croccanti alle erbe fresche (in pita, laffa o piatto), il Sabich israeliano con melanzane fritte, l’Hummus classico e le nostre insalate fresche.',
+        },
+        {
+          q: 'Posso ordinare per gruppi o eventi familiari (Simcha)?',
+          a: 'Con piacere! Prepariamo vassoi conviviali per feste di famiglia, compleanni e pranzi aziendali. Scrivici su WhatsApp o tramite il modulo!',
+        },
+        {
+          q: 'Dove vi trovate e quali sono gli orari di apertura?',
+          a: 'Siamo in 64 av. Simone Veil, Bonneuil-sur-Marne. Orari: 12h-15h e 18h-22h15 (venerdì solo a pranzo, chiuso di Shabbat, aperto domenica sera).',
+        },
+      ],
     },
-    {
-      q: isEn
-        ? 'Do you have vegetarian options?'
-        : isRu
-        ? 'Есть ли вегетарианские блюда?'
-        : 'Avez-vous des options végétariennes ?',
-      a: isEn
-        ? 'Yes! Try our crispy herb Falafel in Pita, Laffa or Platter, our Israeli Sabich with fried eggplant and hard-boiled egg, classic Hummus, and fresh salads.'
-        : isRu
-        ? 'Да! Попробуйте наш хрустящий фалафель с зеленью в пите, лаффе или на тарелке, традиционный израильский Сабих с баклажанами и яйцом, классический хумус и свежие салаты.'
-        : 'Oui ! Découvrez nos Falafels croustillants aux herbes fraîches (en pita, laffa ou assiette), notre Sabich israélien aux aubergines fondantes, notre Houmous classique et nos salades fraîcheur.',
+    ru: {
+      heading: 'ОСТАЛИСЬ ВОПРОСЫ?',
+      socialsLabel: 'СОЦСЕТИ',
+      comingSoon: 'Скоро',
+      contactLabel: 'КОНТАКТЫ',
+      addressLabel: 'АДРЕС',
+      thanksTitle: 'Спасибо за сообщение!',
+      thanksSub:
+        'Мы получили ваш запрос и свяжемся с вами по телефону или электронной почте в самое ближайшее время!',
+      sendAnother: 'Отправить ещё',
+      firstNamePlaceholder: 'Имя*',
+      lastNamePlaceholder: 'Фамилия*',
+      emailPlaceholder: 'Email*',
+      phonePlaceholder: 'Телефон',
+      reasonPlaceholder: 'Причина обращения*',
+      reasonOrder: 'Вопрос по заказу / доставке',
+      reasonTakeaway: 'Предзаказ навынос',
+      reasonCatering: 'Кейтеринг, праздники и Симха',
+      reasonAllergens: 'Аллергены и кашрут',
+      reasonFeedback: 'Отзыв / Другой вопрос',
+      messagePlaceholder: 'Чем мы можем вам помочь?',
+      termsText:
+        'Отправляя эту форму, вы соглашаетесь с Условиями использования и подтверждаете согласие на обработку контактных данных.',
+      termsErr: 'Пожалуйста, подтвердите согласие.',
+      submitting: 'Отправка...',
+      submitBtn: 'ОТПРАВИТЬ',
+      faqEyebrow: 'ЧАСТЫЕ ВОПРОСЫ',
+      faqHeading: 'ВЫ СПРАШИВАЕТЕ, МЫ ОТВЕЧАЕМ',
+      hoursEyebrow: 'ЧАСЫ РАБОТЫ',
+      lunchLabel: 'ДНЕВНОЙ СЕРВИС (ПН–ПТ)',
+      dinnerLabel: 'ВЕЧЕРНИЙ СЕРВИС (ВС–ЧТ)',
+      faqs: [
+        {
+          q: 'Можно ли сделать заказ онлайн?',
+          a: 'Да, конечно! Вы можете выбрать любые кошерные бургеры, шаурму в лаффе, питы и сытные тарелки на сайте и оформить доставку на дом или самовывоз.',
+        },
+        {
+          q: 'Есть ли у вас доставка?',
+          a: 'Да! Мы доставляем горячие блюда с огня по Бонёй-сюр-Марн, Кретею, Сен-Мор-де-Фоссе и соседним городам департамента 94. Бесплатная доставка от 30€!',
+        },
+        {
+          q: 'Какой у вас сертификат кашрута?',
+          a: 'Ресторан LABRIOUT на 100% кошерный мясной (Басар) под строгим раввинским контролем Бадац де Брюнуа (Badatz de Brunoy).',
+        },
+        {
+          q: 'Какие ваши фирменные блюда?',
+          a: 'Гости особенно любят наши сочные Смэш-бургеры (с чеддером Парве и прессованной телятиной), шаурму в тёплой лаффе и пите, паргит на углях, хрустящий шницель в кунжуте и домашний Хумус Басар.',
+        },
+        {
+          q: 'Есть ли вегетарианские блюда?',
+          a: 'Да! Попробуйте наш хрустящий фалафель с зеленью в пите, лаффе или на тарелке, традиционный израильский Сабих с баклажанами и яйцом, классический хумус и свежие салаты.',
+        },
+        {
+          q: 'Можно ли заказать на большую компанию или Симху?',
+          a: 'Конечно! Мы с радостью готовим большие сеты бургеров, пит, шаурмы и мезе для семейных праздников, дней рождения и корпоративов. Напишите нам в WhatsApp или через форму!',
+        },
+        {
+          q: 'Где вы находитесь и часы работы?',
+          a: 'Мы находимся по адресу 64 av. Simone Veil, Bonneuil-sur-Marne. Часы работы: 12h-15h и 18h-22h15 (в пятницу только обед, в Шаббат закрыто, открыты в воскресенье вечером).',
+        },
+      ],
     },
-    {
-      q: isEn
-        ? 'Can I order for groups, family events or Simchas?'
-        : isRu
-        ? 'Можно ли заказать на большую компанию или Симху?'
-        : 'Puis-je commander pour un groupe ou un événement (Simcha) ?',
-      a: isEn
-        ? 'Yes! We gladly prepare large platters, burger & shawarma assortments, and mezzes for birthdays, family gatherings, and office lunches. Contact us via WhatsApp or the form!'
-        : isRu
-        ? 'Конечно! Мы с радостью готовим большие сеты бургеров, пит, шаурмы и мезе для семейных праздников, дней рождения и корпоративов. Напишите нам в WhatsApp или через форму!'
-        : 'Avec plaisir ! Nous préparons des plateaux conviviaux pour vos repas de famille, anniversaires et déjeuners d’entreprise. Contactez-nous sur WhatsApp ou via le formulaire !',
-    },
-    {
-      q: isEn
-        ? 'Where are you located and what are your opening hours?'
-        : isRu
-        ? 'Где вы находитесь и часы работы?'
-        : 'Où êtes-vous situés et quels sont vos horaires ?',
-      a: isEn
-        ? 'We are located at 64 av. Simone Veil, Bonneuil-sur-Marne. Opening hours: 12h-15h & 18h-22h15. 100% Casher • Badatz de Brunoy.'
-        : isRu
-        ? 'Мы находимся по адресу 64 av. Simone Veil, Bonneuil-sur-Marne. Часы работы: 12h-15h и 18h-22h15. 100% Casher • Badatz de Brunoy.'
-        : 'Nous sommes situés au 64 av. Simone Veil, Bonneuil-sur-Marne. Horaires : 12h-15h et 18h-22h15. 100% Casher • Badatz de Brunoy.',
-    },
-  ];
+  }[language];
+
+  const faqList = ui.faqs;
+  const tagline = getLabrioutTagline(language);
 
   return (
     <div className="min-h-screen bg-[#FAF6ED] text-[#1f2937]">
@@ -157,20 +384,16 @@ export const ContactPage: React.FC = () => {
             <div className="lg:col-span-5 space-y-3 sm:space-y-4">
               <div className="space-y-1">
                 <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-[#ff5500] block">
-                  LABRIOUT • 🥩 STREET FOOD &amp; SPÉCIALITÉS MAISON • ✡️ 100% CASHER • BADATZ DE BRUNOY
+                  LABRIOUT • {tagline}
                 </span>
 
                 <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-black font-heading text-[#ff5500] tracking-tight uppercase leading-[0.96]">
-                  {isEn
-                    ? 'STILL CURIOUS?'
-                    : isRu
-                    ? 'ОСТАЛИСЬ ВОПРОСЫ?'
-                    : 'CONTACTEZ LABRIOUT'}
+                  {ui.heading}
                 </h1>
               </div>
 
               <p className="text-neutral-900 font-medium text-xs sm:text-sm lg:text-[14px] leading-relaxed max-w-md">
-                🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy • 📍 64 av. Simone Veil, Bonneuil-sur-Marne • 📞 0769774086 • ⏰ 12h-15h 18h-22h15
+                {tagline} • 📍 64 av. Simone Veil, Bonneuil-sur-Marne • 📞 0769774086 • ⏰ 12h-15h 18h-22h15
               </p>
 
               {/* Typographic Contact Info (Styled like Screen 2) */}
@@ -179,7 +402,7 @@ export const ContactPage: React.FC = () => {
                 {/* SOCIALS - Placeholders */}
                 <div className="grid grid-cols-[85px_1fr] sm:grid-cols-[105px_1fr] gap-3 items-start">
                   <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#ff5500] pt-0.5">
-                    {isEn ? 'SOCIALS' : isRu ? 'СОЦСЕТИ' : 'SOCIALS'}
+                    {ui.socialsLabel}
                   </span>
                   <div className="space-y-0.5 font-black text-neutral-900 text-xs sm:text-sm uppercase tracking-wider">
                     <div>
@@ -187,7 +410,7 @@ export const ContactPage: React.FC = () => {
                         href="#tiktok"
                         onClick={(e) => e.preventDefault()}
                         className="hover:text-[#ff5500] transition-colors inline-block cursor-pointer"
-                        title="Coming soon"
+                        title={ui.comingSoon}
                       >
                         TIKTOK
                       </a>
@@ -197,17 +420,17 @@ export const ContactPage: React.FC = () => {
                         href="#facebook"
                         onClick={(e) => e.preventDefault()}
                         className="hover:text-[#ff5500] transition-colors inline-block cursor-pointer"
-                        title="Coming soon"
+                        title={ui.comingSoon}
                       >
                         FACEBOOK
                       </a>
                     </div>
                     <div>
                       <a
-                        href="#instagram"
-                        onClick={(e) => e.preventDefault()}
+                        href={STORE_DETAILS.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="hover:text-[#ff5500] transition-colors inline-block cursor-pointer"
-                        title="Coming soon"
                       >
                         INSTAGRAM
                       </a>
@@ -218,7 +441,7 @@ export const ContactPage: React.FC = () => {
                 {/* CONTACT */}
                 <div className="grid grid-cols-[85px_1fr] sm:grid-cols-[105px_1fr] gap-3 items-start">
                   <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#ff5500] pt-0.5">
-                    {isEn ? 'CONTACT' : isRu ? 'КОНТАКТЫ' : 'CONTACT'}
+                    {ui.contactLabel}
                   </span>
                   <div className="space-y-0.5 font-black text-neutral-900 text-xs sm:text-sm uppercase tracking-wider">
                     <div>
@@ -253,7 +476,7 @@ export const ContactPage: React.FC = () => {
                 {/* ADRES / ADDRESS */}
                 <div className="grid grid-cols-[85px_1fr] sm:grid-cols-[105px_1fr] gap-3 items-start">
                   <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#ff5500] pt-0.5">
-                    {isEn ? 'ADDRESS' : isRu ? 'АДРЕС' : 'ADRESSE'}
+                    {ui.addressLabel}
                   </span>
                   <div className="font-black text-neutral-900 text-xs sm:text-sm tracking-wider leading-snug">
                     <a
@@ -283,14 +506,10 @@ export const ContactPage: React.FC = () => {
                     </div>
                     <div className="space-y-1">
                       <h3 className="text-xl font-black text-neutral-900 font-heading uppercase">
-                        {isEn ? 'Thank You!' : isRu ? 'Спасибо за сообщение!' : 'Messaggio Ricevuto!'}
+                        {ui.thanksTitle}
                       </h3>
                       <p className="text-xs sm:text-sm text-neutral-600 max-w-md mx-auto">
-                        {isEn
-                          ? 'We received your inquiry and will get back to you as fast as a hot panzerotto!'
-                          : isRu
-                          ? 'Мы получили ваше сообщение и ответим вам в самое ближайшее время!'
-                          : 'Abbiamo ricevuto la tua richiesta e ti risponderemo telefonicamente o via email a breve.'}
+                        {ui.thanksSub}
                       </p>
                     </div>
 
@@ -300,7 +519,7 @@ export const ContactPage: React.FC = () => {
                       className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#ff5500] hover:bg-[#e04a00] text-white font-bold text-xs uppercase tracking-wider transition cursor-pointer shadow-md shadow-[#ff5500]/25"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      <span>{isEn ? 'Send Another Message' : isRu ? 'Отправить еще' : 'Invia un altro messaggio'}</span>
+                      <span>{ui.sendAnother}</span>
                     </button>
                   </div>
                 ) : (
@@ -313,7 +532,7 @@ export const ContactPage: React.FC = () => {
                           required
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
-                          placeholder={isEn ? 'First Name*' : isRu ? 'Имя*' : 'Nome*'}
+                          placeholder={ui.firstNamePlaceholder}
                           className="w-full h-[52px] sm:h-[56px] bg-white border border-[#d2d6dc] focus:border-[#ff5500] focus:ring-2 focus:ring-[#ff5500]/20 rounded-xl px-4 text-xs sm:text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none transition flex items-center"
                         />
                       </div>
@@ -323,7 +542,7 @@ export const ContactPage: React.FC = () => {
                           required
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
-                          placeholder={isEn ? 'Last Name*' : isRu ? 'Фамилия*' : 'Cognome*'}
+                          placeholder={ui.lastNamePlaceholder}
                           className="w-full h-[52px] sm:h-[56px] bg-white border border-[#d2d6dc] focus:border-[#ff5500] focus:ring-2 focus:ring-[#ff5500]/20 rounded-xl px-4 text-xs sm:text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none transition flex items-center"
                         />
                       </div>
@@ -337,7 +556,7 @@ export const ContactPage: React.FC = () => {
                           required
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder={isEn ? 'Email*' : isRu ? 'Email*' : 'Email*'}
+                          placeholder={ui.emailPlaceholder}
                           className="w-full h-[52px] sm:h-[56px] bg-white border border-[#d2d6dc] focus:border-[#ff5500] focus:ring-2 focus:ring-[#ff5500]/20 rounded-xl px-4 text-xs sm:text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none transition flex items-center"
                         />
                       </div>
@@ -346,7 +565,7 @@ export const ContactPage: React.FC = () => {
                           type="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder={isEn ? 'Phone Number' : isRu ? 'Телефон' : 'Telefono'}
+                          placeholder={ui.phonePlaceholder}
                           className="w-full h-[52px] sm:h-[56px] bg-white border border-[#d2d6dc] focus:border-[#ff5500] focus:ring-2 focus:ring-[#ff5500]/20 rounded-xl px-4 text-xs sm:text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none transition flex items-center"
                         />
                       </div>
@@ -367,27 +586,13 @@ export const ContactPage: React.FC = () => {
                         }}
                       >
                         <option value="" disabled>
-                          {isEn
-                            ? 'Contact Reason*'
-                            : isRu
-                            ? 'Причина обращения*'
-                            : 'Motivo del contatto*'}
+                          {ui.reasonPlaceholder}
                         </option>
-                        <option value="takeaway_delivery">
-                          {isEn ? 'Order / Delivery Question' : isRu ? 'Вопрос по заказу / доставке' : 'Informazioni Ordine / Consegna'}
-                        </option>
-                        <option value="table_reservation">
-                          {isEn ? 'Food Reservation / Takeaway' : isRu ? 'Предзаказ на вынос' : 'Prenotazione Asporto'}
-                        </option>
-                        <option value="party_catering">
-                          {isEn ? 'Party, Event & Catering Order' : isRu ? 'Кейтеринг, праздники и мероприятия' : 'Feste, Eventi e Catering'}
-                        </option>
-                        <option value="allergens">
-                          {isEn ? 'Allergens & Dietary Information' : isRu ? 'Аллергены и состав' : 'Info Allergeni & Ingredienti'}
-                        </option>
-                        <option value="feedback">
-                          {isEn ? 'Feedback / Other Inquiry' : isRu ? 'Отзыв / Другой вопрос' : 'Feedback / Altra richiesta'}
-                        </option>
+                        <option value="takeaway_delivery">{ui.reasonOrder}</option>
+                        <option value="table_reservation">{ui.reasonTakeaway}</option>
+                        <option value="party_catering">{ui.reasonCatering}</option>
+                        <option value="allergens">{ui.reasonAllergens}</option>
+                        <option value="feedback">{ui.reasonFeedback}</option>
                       </select>
                     </div>
 
@@ -398,13 +603,7 @@ export const ContactPage: React.FC = () => {
                         required
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        placeholder={
-                          isEn
-                            ? 'How can we help you?'
-                            : isRu
-                            ? 'Чем мы можем вам помочь?'
-                            : 'Come possiamo aiutarti?'
-                        }
+                        placeholder={ui.messagePlaceholder}
                         className="w-full bg-white border border-[#d2d6dc] focus:border-[#ff5500] focus:ring-2 focus:ring-[#ff5500]/20 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-neutral-900 placeholder-neutral-400 focus:outline-none transition resize-none"
                       />
                     </div>
@@ -422,20 +621,12 @@ export const ContactPage: React.FC = () => {
                           className="mt-0.5 w-3.5 h-3.5 rounded border-[#d2d6dc] text-[#ff5500] focus:ring-[#ff5500] cursor-pointer accent-[#ff5500]"
                         />
                         <span className="text-[11px] sm:text-xs text-neutral-600 leading-snug">
-                          {isEn
-                            ? 'By submitting this form, you agree to our Terms & Conditions and understand that your information may be used in accordance with our privacy practices.'
-                            : isRu
-                            ? 'Отправляя эту форму, вы соглашаетесь с Условиями использования и подтверждаете согласие на обработку контактных данных.'
-                            : 'Inviando questo modulo, accetti i Termini & Condizioni e comprendi che le informazioni fornite saranno trattate nel rispetto della privacy.'}
+                          {ui.termsText}
                         </span>
                       </label>
                       {termsError && (
                         <p className="text-[11px] text-[#ff5500] font-bold pl-6">
-                          {isEn
-                            ? 'Please agree to the terms before submitting.'
-                            : isRu
-                            ? 'Пожалуйста, подтвердите согласие.'
-                            : 'Per favore conferma il consenso prima di inviare.'}
+                          {ui.termsErr}
                         </p>
                       )}
                     </div>
@@ -450,18 +641,10 @@ export const ContactPage: React.FC = () => {
                         {isSubmitting ? (
                           <>
                             <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            <span>
-                              {isEn
-                                ? 'Submitting...'
-                                : isRu
-                                ? 'Отправка...'
-                                : 'Invio...'}
-                            </span>
+                            <span>{ui.submitting}</span>
                           </>
                         ) : (
-                          <span>
-                            {isEn ? 'SUBMIT' : isRu ? 'ОТПРАВИТЬ' : 'INVIA'}
-                          </span>
+                          <span>{ui.submitBtn}</span>
                         )}
                       </button>
                     </div>
@@ -481,14 +664,10 @@ export const ContactPage: React.FC = () => {
           {/* Header */}
           <div className="mb-8 sm:mb-10">
             <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#ff5500] block mb-1">
-              {isEn ? 'FAQ´S' : isRu ? 'ЧАСТЫЕ ВОПРОСЫ' : 'FAQ´S'}
+              {ui.faqEyebrow}
             </span>
             <h2 className="text-3xl sm:text-5xl font-black font-heading text-[#ff5500] uppercase tracking-tight">
-              {isEn
-                ? 'YOU ASK, WE ANSWER'
-                : isRu
-                ? 'ВЫ СПРАШИВАЕТЕ, МЫ ОТВЕЧАЕМ'
-                : 'VOI CHIEDETE, NOI RISPONDIAMO'}
+              {ui.faqHeading}
             </h2>
           </div>
 
@@ -543,7 +722,7 @@ export const ContactPage: React.FC = () => {
             
             {/* Orange Uppercase Subhead */}
             <span className="text-xs sm:text-sm md:text-base font-extrabold uppercase tracking-widest text-[#ff5500] block">
-              {isEn ? 'OPENING HOURS' : isRu ? 'ЧАСЫ РАБОТЫ' : 'ORARI DI APERTURA'}
+              {ui.hoursEyebrow}
             </span>
 
             {/* Schedule Rows with Orange Dashed Lines */}
@@ -552,7 +731,7 @@ export const ContactPage: React.FC = () => {
               {/* Midi */}
               <div className="flex items-end justify-between gap-2">
                 <span className="text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider text-neutral-800 shrink-0">
-                  {isEn ? 'LUNCH SERVICE (MIDI)' : isRu ? 'ДНЕВНОЙ СЕРВИС (ОБЕД)' : 'SERVICE MIDI'}
+                  {ui.lunchLabel}
                 </span>
                 <div className="flex-1 border-b-2 border-dashed border-[#ff5500]/50 mx-2 sm:mx-4 mb-1 min-w-[30px]" />
                 <span className="text-xs sm:text-sm md:text-base font-black text-neutral-900 shrink-0">
@@ -563,7 +742,7 @@ export const ContactPage: React.FC = () => {
               {/* Soir */}
               <div className="flex items-end justify-between gap-2">
                 <span className="text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider text-neutral-800 shrink-0">
-                  {isEn ? 'EVENING SERVICE (SOIR)' : isRu ? 'ВЕЧЕРНИЙ СЕРВИС (УЖИН)' : 'SERVICE SOIR'}
+                  {ui.dinnerLabel}
                 </span>
                 <div className="flex-1 border-b-2 border-dashed border-[#ff5500]/50 mx-2 sm:mx-4 mb-1 min-w-[30px]" />
                 <span className="text-xs sm:text-sm md:text-base font-black text-neutral-900 shrink-0">

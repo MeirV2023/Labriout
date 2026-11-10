@@ -1,4 +1,4 @@
-import { ExtraOption, ProductItem, CategoryId } from '../types';
+import { ExtraOption, ProductItem, CategoryId, Language } from '../types';
 import { MenuCategoryConfig } from './menuData';
 
 export const LABRIOUT_STORE_DETAILS = {
@@ -7,7 +7,11 @@ export const LABRIOUT_STORE_DETAILS = {
   name: 'LABRIOUT',
   shortName: 'LABRIOUT',
   tagline: '🥩 Street food & spécialités maison • ✡️ 100% Casher • Badatz de Brunoy',
-  taglineRu: '🥩 Street food & spécialités maison • ✡️ 100% Casher • Badatz de Brunoy',
+  taglineFr: '🥩 Street food & spécialités maison • ✡️ 100% Casher • Badatz de Brunoy',
+  taglineEn: '🥩 Homemade street food & specialties • ✡️ 100% Kosher • Badatz de Brunoy',
+  taglineDe: '🥩 Hausgemachtes Streetfood & Spezialitäten • ✡️ 100% Koscher • Badatz de Brunoy',
+  taglineIt: '🥩 Street food & specialità fatte in casa • ✡️ 100% Kosher • Badatz de Brunoy',
+  taglineRu: '🥩 Домашний стритфуд и фирменные блюда • ✡️ 100% Кошер • Бадац де Брюнуа',
   address: '64 av. Simone Veil, Bonneuil-sur-Marne',
   phone: '0769774086',
   whatsapp: '0769774086',
@@ -26,103 +30,190 @@ export const LABRIOUT_STORE_DETAILS = {
   instagramHandle: '@labriout_94',
 };
 
+export function getLabrioutTagline(lang: Language): string {
+  switch (lang) {
+    case 'en':
+      return LABRIOUT_STORE_DETAILS.taglineEn;
+    case 'de':
+      return LABRIOUT_STORE_DETAILS.taglineDe;
+    case 'it':
+      return LABRIOUT_STORE_DETAILS.taglineIt;
+    case 'ru':
+      return LABRIOUT_STORE_DETAILS.taglineRu;
+    default:
+      return LABRIOUT_STORE_DETAILS.taglineFr;
+  }
+}
+
+export function getLabrioutKosherBadge(lang: Language): string {
+  switch (lang) {
+    case 'en':
+      return '✡️ 100% Kosher • Badatz de Brunoy';
+    case 'de':
+      return '✡️ 100% Koscher • Badatz de Brunoy';
+    case 'it':
+      return '✡️ 100% Kosher • Badatz de Brunoy';
+    case 'ru':
+      return '✡️ 100% Кошер • Бадац де Брюнуа';
+    default:
+      return '✡️ 100% Casher • Badatz de Brunoy';
+  }
+}
+
+export function getLabrioutShortSpecialty(lang: Language): string {
+  switch (lang) {
+    case 'en':
+      return '🥩 Homemade street food & specialties';
+    case 'de':
+      return '🥩 Hausgemachtes Streetfood & Spezialitäten';
+    case 'it':
+      return '🥩 Street food & specialità fatte in casa';
+    case 'ru':
+      return '🥩 Домашний стритфуд и фирменные блюда';
+    default:
+      return '🥩 Street food & spécialités maison';
+  }
+}
+
 export const LABRIOUT_EXTRAS: ExtraOption[] = [
   {
     id: 'lab-ex-menu-formule',
     name: 'Formule Menu (+ Frites fraîches + Boisson 33cl)',
+    nameFr: 'Formule Menu (+ Frites fraîches + Boisson 33cl)',
     nameRu: 'Формула Меню (+ Свежий фри + Напиток 33сл)',
     nameEn: 'Meal Deal (+ Fresh Fries + 33cl Drink)',
+    nameDe: 'Menü-Upgrade (+ Frische Pommes + Getränk 33cl)',
+    nameIt: 'Formula Menù (+ Patatine fresche + Bibita 33cl)',
     price: 5.0,
   },
   {
     id: 'lab-ex-patates-douces',
     name: 'Option Frites de Patates Douces',
+    nameFr: 'Option Frites de Patates Douces',
     nameRu: 'Замена на картофель фри из батата',
     nameEn: 'Sweet Potato Fries Upgrade',
+    nameDe: 'Upgrade auf Süßkartoffel-Pommes',
+    nameIt: 'Opzione Patatine Dolci',
     price: 2.5,
   },
   {
     id: 'lab-ex-cheddar',
     name: 'Cheddar fondant Parvé',
+    nameFr: 'Cheddar fondant Parvé',
     nameRu: 'Плавленый сыр Чеддер (Parvé)',
     nameEn: 'Melted Parve Cheddar',
+    nameDe: 'Geschmolzener Parve-Cheddar',
+    nameIt: 'Cheddar fuso Parve',
     price: 2.0,
   },
   {
     id: 'lab-ex-oeuf',
     name: 'Œuf au plat',
+    nameFr: 'Œuf au plat',
     nameRu: 'Жареное яйцо (глазунья)',
     nameEn: 'Fried Egg',
+    nameDe: 'Spiegelei',
+    nameIt: 'Uovo al tegamino',
     price: 2.0,
   },
   {
     id: 'lab-ex-avocat',
     name: 'Avocat frais',
+    nameFr: 'Avocat frais',
     nameRu: 'Свежий авокадо',
     nameEn: 'Fresh Avocado',
+    nameDe: 'Frische Avocado',
+    nameIt: 'Avocado fresco',
     price: 2.0,
   },
   {
     id: 'lab-ex-veau-presse',
     name: 'Tranche de veau pressé',
+    nameFr: 'Tranche de veau pressé',
     nameRu: 'Ломтик прессованной телятины',
     nameEn: 'Pressed Veal Bacon Slice',
+    nameDe: 'Gegrillter Kalbs-Bacon (koscher)',
+    nameIt: 'Fetta di vitello pressato croccante',
     price: 3.0,
   },
   {
     id: 'lab-ex-oignons-confits',
     name: 'Oignons confits',
+    nameFr: 'Oignons confits',
     nameRu: 'Карамелизированный лук конфи',
     nameEn: 'Caramelized Onions',
+    nameDe: 'Karamellisierte Zwiebeln',
+    nameIt: 'Cipolle caramellate',
     price: 1.0,
   },
   {
     id: 'lab-ex-champignons',
     name: "Champignons poêlés à l'huile d'olive",
+    nameFr: "Champignons poêlés à l'huile d'olive",
     nameRu: 'Шампиньоны на оливковом масле',
     nameEn: 'Sautéed Mushrooms in Olive Oil',
+    nameDe: 'Gebratene Champignons in Olivenöl',
+    nameIt: "Funghi saltati all'olio d'oliva",
     price: 1.0,
   },
   {
     id: 'lab-ex-viande-supp',
     name: 'Viande supplémentaire',
+    nameFr: 'Viande supplémentaire',
     nameRu: 'Дополнительная порция мяса',
     nameEn: 'Extra Meat Portion',
+    nameDe: 'Extra Fleischportion',
+    nameIt: 'Porzione extra di carne',
     price: 6.0,
   },
   {
     id: 'lab-ex-poulet-parguit',
     name: 'Supplément Poulet / Parguit',
+    nameFr: 'Supplément Poulet / Parguit',
     nameRu: 'Доп. Курица гриль / Паргит',
     nameEn: 'Extra Grilled Chicken / Parguit',
+    nameDe: 'Extra Grillhähnchen / Parguit',
+    nameIt: 'Extra Pollo alla griglia / Parguit',
     price: 5.0,
   },
   {
     id: 'lab-ex-shawarma',
     name: 'Supplément Shawarma',
+    nameFr: 'Supplément Shawarma',
     nameRu: 'Доп. порция Шаурмы',
     nameEn: 'Extra Shawarma',
+    nameDe: 'Extra Shawarma',
+    nameIt: 'Extra Shawarma',
     price: 5.0,
   },
   {
     id: 'lab-ex-grande-frites',
     name: 'Grande barquette de frites',
+    nameFr: 'Grande barquette de frites',
     nameRu: 'Большая порция картофеля фри',
     nameEn: 'Large Portion of Fries',
+    nameDe: 'Große Portion Pommes Frites',
+    nameIt: 'Porzione grande di patatine',
     price: 2.0,
   },
   {
     id: 'lab-ex-piment-doux',
     name: 'Piment doux',
+    nameFr: 'Piment doux',
     nameRu: 'Сладкий перец пимент',
     nameEn: 'Sweet Pepper',
+    nameDe: 'Milde Peperoni',
+    nameIt: 'Peperoncino dolce',
     price: 1.0,
   },
   {
     id: 'lab-ex-sauce-supp',
     name: 'Sauce supplémentaire (l’unité)',
+    nameFr: 'Sauce supplémentaire (l’unité)',
     nameRu: 'Дополнительный соус (1 шт.)',
     nameEn: 'Extra Sauce Portion',
+    nameDe: 'Extra Sauce (1 Stück)',
+    nameIt: 'Salsa extra (1 porzione)',
     price: 0.25,
   },
 ];
@@ -997,11 +1088,357 @@ const RAW_LABRIOUT_PRODUCTS: ProductItem[] = [
   },
 ];
 
-export const LABRIOUT_MENU_PRODUCTS: ProductItem[] = RAW_LABRIOUT_PRODUCTS.map(item => ({
-  ...item,
-  nameDe: item.nameEn || item.name,
-  nameFr: item.name,
-  descriptionDe: item.descriptionEn || item.description,
-  descriptionFr: item.description,
-  isAvailable: true,
-}));
+const LABRIOUT_PRODUCT_DE_IT: Record<
+  string,
+  {
+    nameDe: string;
+    descriptionDe: string;
+    nameIt: string;
+    descriptionIt: string;
+  }
+> = {
+  'lab-burger-smash': {
+    nameDe: 'Smash Burger',
+    descriptionDe:
+      'Saftiges Smash-Rindfleischpatty, hausgemachte Burgersauce, Ketchup, Salat, Tomate, Gewürzgurken und rote Zwiebeln.',
+    nameIt: 'Smash Burger',
+    descriptionIt:
+      'Hamburger smash di manzo, salsa burger fatta in casa, ketchup, lattuga, pomodoro, cetriolini e cipolla rossa.',
+  },
+  'lab-burger-double-smash': {
+    nameDe: 'Double Smash Burger',
+    descriptionDe:
+      'Doppeltes Smash-Rindfleischpatty, hausgemachte Burgersauce, Ketchup und knackiges frisches Gemüse.',
+    nameIt: 'Double Smash Burger',
+    descriptionIt:
+      'Doppio hamburger smash di manzo, salsa burger fatta in casa, ketchup e verdure fresche croccanti.',
+  },
+  'lab-burger-smash-cheese': {
+    nameDe: 'Smash Cheese Burger',
+    descriptionDe:
+      'Smash-Rindfleischpatty, geschmolzener Parve-Cheddar, Haussauce, Ketchup und frisches Gemüse.',
+    nameIt: 'Smash Cheese Burger',
+    descriptionIt:
+      'Hamburger smash di manzo, cheddar Parve fuso, salsa della casa, ketchup e verdure fresche.',
+  },
+  'lab-burger-double-smash-cheese': {
+    nameDe: 'Double Smash Cheese Burger',
+    descriptionDe:
+      'Doppeltes Smash-Rindfleischpatty, doppelt geschmolzener Parve-Cheddar, hausgemachte Burgersauce und Ketchup.',
+    nameIt: 'Double Smash Cheese Burger',
+    descriptionIt:
+      'Doppio hamburger smash di manzo, doppio cheddar Parve fuso, salsa burger della casa e ketchup.',
+  },
+  'lab-burger-revisite': {
+    nameDe: 'Signature Burger Revisité (Kalbs-Bacon & Avocado)',
+    descriptionDe:
+      'Würziger gepresster Kalbs-Bacon, frische Avocado, geschmolzener Parve-Cheddar, Haussauce und Ketchup.',
+    nameIt: 'Burger Revisité dello Chef (Vitello Pressato & Avocado)',
+    descriptionIt:
+      'Saporito vitello pressato croccante, avocado fresco, cheddar Parve fuso, salsa della casa e ketchup.',
+  },
+  'lab-burger-schnitzel': {
+    nameDe: 'Knuspriger Schnitzel-Burger',
+    descriptionDe:
+      'Goldbraun paniertes knuspriges Hähnchenschnitzel, hausgemachte Burgersauce, Ketchup und frisches Gemüse.',
+    nameIt: 'Burger Schnitzel Croccante',
+    descriptionIt:
+      'Cotoletta di pollo dorata e croccante, salsa burger fatta in casa, ketchup e verdure fresche.',
+  },
+  'lab-burger-classic': {
+    nameDe: 'Classic Beef Burger',
+    descriptionDe:
+      'Frisch auf offener Flamme gegrilltes Rindfleischpatty, hausgemachte Burgersauce, Ketchup und Gemüse.',
+    nameIt: 'Classic Burger di Manzo',
+    descriptionIt:
+      'Hamburger fresco di manzo alla griglia, salsa burger fatta in casa, ketchup e verdure fresche.',
+  },
+  'lab-burger-double-classic': {
+    nameDe: 'Double Classic Burger',
+    descriptionDe:
+      'Doppeltes frisch gegrilltes Rindfleischpatty, hausgemachte Burgersauce, Ketchup und frisches Gemüse.',
+    nameIt: 'Double Classic Burger',
+    descriptionIt:
+      'Doppio hamburger fresco di manzo alla griglia, salsa burger della casa, ketchup e verdure.',
+  },
+  'lab-burger-chicken': {
+    nameDe: 'Knuspriger Chicken-Burger',
+    descriptionDe:
+      'Mariniertes knuspriges Hähnchenfilet, hausgemachte Burgersauce, Ketchup und frisches Gemüse.',
+    nameIt: 'Chicken Burger Croccante',
+    descriptionIt:
+      'Filetto di pollo marinato croccante, salsa burger fatta in casa, ketchup e verdure fresche.',
+  },
+  'lab-burger-fish': {
+    nameDe: 'Knuspriger Fish-Burger',
+    descriptionDe:
+      'Knusprig paniertes Fischfilet, Parve-Cheddar, Tartar- oder Haussauce, Salat und Tomate.',
+    nameIt: 'Fish Burger Croccante',
+    descriptionIt:
+      'Filetto di pesce panato croccante, cheddar Parve, salsa tartara o della casa, lattuga e pomodoro.',
+  },
+  'lab-hot-dog-gourmet': {
+    nameDe: 'Gourmet Hot Dog',
+    descriptionDe:
+      'Gegrilltes koscheres Würstchen im weichen Brötchen mit Ketchup, US-Senf und knusprigen Röstzwiebeln.',
+    nameIt: 'Hot Dog Gourmet',
+    descriptionIt:
+      'Wurstel kosher alla griglia con ketchup, senape americana e cipolle fritte croccanti.',
+  },
+  'lab-pita-shawarma': {
+    nameDe: 'Pita / Baguette mit würzigem Shawarma',
+    descriptionDe:
+      'Orientalisch mariniertes Shawarma, Haussauce, Salat, Tomaten, Gewürzgurken und rote Zwiebeln.',
+    nameIt: 'Pita / Baguette Shawarma Speziato',
+    descriptionIt:
+      'Shawarma marinato alle spezie orientali, salsa della casa, lattuga, pomodori, cetriolini e cipolla rossa.',
+  },
+  'lab-pita-falafel': {
+    nameDe: 'Falafel Pita / Baguette',
+    descriptionDe:
+      'Knusprige Falafel, gebratene Auberginen, Hummus, Tahina, Tomaten, Gurken sowie Rot- und Weißkohl.',
+    nameIt: 'Pita / Baguette Falafel',
+    descriptionIt:
+      'Falafel croccanti, melanzane fritte, hummus, tahina, pomodori, cetrioli, cavolo rosso e bianco.',
+  },
+  'lab-pita-merguez': {
+    nameDe: 'Pita / Baguette mit hausgemachten Merguez',
+    descriptionDe:
+      'Auf offener Flamme gegrillte pikante Rinds-Merguez, Haussauce, Salat, Tomaten und rote Zwiebeln.',
+    nameIt: 'Pita / Baguette Merguez Artigianali',
+    descriptionIt:
+      'Salsicce merguez di manzo piccanti alla griglia, salsa della casa, insalata, pomodori e cipolla rossa.',
+  },
+  'lab-pita-poulet-grille': {
+    nameDe: 'Pita / Baguette mit Grillhähnchen',
+    descriptionDe:
+      'Auf offener Flamme gegrillte Hähnchenbrustfilets, Haussauce, Salat, Tomaten, Gurken und rote Zwiebeln.',
+    nameIt: 'Pita / Baguette Pollo alla Griglia',
+    descriptionIt:
+      'Filetti di pollo alla griglia, salsa della casa, lattuga, pomodori, cetriolini e cipolla rossa.',
+  },
+  'lab-pita-parguit': {
+    nameDe: 'Pita / Baguette Parguit (Hähnchenschenkel)',
+    descriptionDe:
+      'Zart marinierte und gegrillte Hähnchenschenkel (Parguit), Haussauce, Salat, Tomaten und Gewürzgurken.',
+    nameIt: 'Pita / Baguette Parguit (Sovracoscia alla Griglia)',
+    descriptionIt:
+      'Tenera sovracoscia di pollo marinata alla griglia, salsa della casa, insalata, pomodori e cetriolini.',
+  },
+  'lab-pita-schnitzel': {
+    nameDe: 'Pita / Baguette mit goldbraunem Schnitzel',
+    descriptionDe:
+      'Knusprig paniertes goldenes Schnitzel, Haussauce, Ketchup, Salat, Tomaten und Gewürzgurken.',
+    nameIt: 'Pita / Baguette Schnitzel Dorato',
+    descriptionIt:
+      'Cotoletta di pollo panata dorata e croccante, salsa della casa, ketchup, lattuga, pomodori e cetriolini.',
+  },
+  'lab-assiette-shawarma': {
+    nameDe: 'Gourmet-Teller Shawarma',
+    descriptionDe:
+      'Würziges Shawarma nach traditioneller orientalischer Rezeptur, serviert mit frischem Salat, Rohkost und Hauspommes.',
+    nameIt: 'Piatto Gourmet Shawarma',
+    descriptionIt:
+      'Saporito shawarma marinato alle spezie orientali tradizionali, servito con insalata fresca, verdure e patatine fatte in casa.',
+  },
+  'lab-assiette-parguit': {
+    nameDe: 'Gourmet-Teller Parguit',
+    descriptionDe:
+      'Zart gegrillte Hähnchenschenkel vom Grill, serviert mit frischem Salat, Rohkost und hausgemachten Pommes.',
+    nameIt: 'Piatto Parguit alla Griglia',
+    descriptionIt:
+      'Tenere sovracosce di pollo alla griglia servite con insalata fresca, contorni di verdure e patatine fatte in casa.',
+  },
+  'lab-assiette-schnitzel': {
+    nameDe: 'Knuspriger Schnitzel-Teller',
+    descriptionDe:
+      'Knusprig panierte Schnitzelstreifen, serviert mit frischem Salat, Rohkost und hausgemachten Pommes.',
+    nameIt: 'Piatto Schnitzel Croccante',
+    descriptionIt:
+      'Straccetti di cotoletta panata croccante serviti con insalata fresca, verdure e patatine fatte in casa.',
+  },
+  'lab-assiette-poulet-grille': {
+    nameDe: 'Teller mit gegrilltem Hähnchenfilet',
+    descriptionDe:
+      'Zart auf offener Flamme gegrillte Geflügelfilets mit frischem Salat, Rohkost und Hauspommes.',
+    nameIt: 'Piatto Pollo alla Griglia',
+    descriptionIt:
+      'Filetti di pollo scottati alla fiamma serviti con insalata fresca, verdure e patatine fatte in casa.',
+  },
+  'lab-assiette-falafel': {
+    nameDe: 'Vegetarischer Falafel-Teller mit Hummus & Tahina',
+    descriptionDe:
+      'Goldbraune Falafel, cremiger Hummus, Sesam-Tahina, frische Rohkost und Pommes nach Wahl.',
+    nameIt: 'Piatto Falafel, Hummus & Tahina',
+    descriptionIt:
+      'Falafel dorati, hummus cremoso, tahina, verdure fresche e patatine fritte a scelta.',
+  },
+  'lab-assiette-merguez': {
+    nameDe: 'Merguez-Grillteller (4 Stück)',
+    descriptionDe:
+      '4 erstklassige gegrillte Rinds-Merguez-Würstchen, serviert mit frischem Salat und hausgemachten Pommes.',
+    nameIt: 'Piatto Merguez alla Griglia (x4)',
+    descriptionIt:
+      '4 salsicce merguez di manzo scelte alla griglia, servite con insalata fresca e patatine fatte in casa.',
+  },
+  'lab-assiette-duo': {
+    nameDe: 'Großer Duo-Fleischteller (2 Fleischsorten nach Wahl)',
+    descriptionDe:
+      'Stellen Sie Ihren Teller mit 2 Fleischsorten nach Wahl zusammen (Shawarma, Parguit, Schnitzel, Hähnchen oder Merguez) + Pommes & Salat.',
+    nameIt: 'Piatto Maxi Duo (2 Carni a Scelta)',
+    descriptionIt:
+      'Componi il tuo piatto con 2 carni a scelta (Shawarma, Parguit, Schnitzel, Pollo o Merguez) + patatine e insalata fresca.',
+  },
+  'lab-salade-vegetarienne': {
+    nameDe: 'Frischer Vegetarischer Salat mit Avocado',
+    descriptionDe:
+      'Eisbergsalat, Mais, Palmherzen, reife Avocado, Gurke, Tomate und rote Zwiebeln.',
+    nameIt: 'Insalata Vegetariana Fresca con Avocado',
+    descriptionIt:
+      'Lattuga iceberg, mais, cuori di palma, avocado maturo, cetriolo, pomodoro e cipolla rossa.',
+  },
+  'lab-salade-cesar': {
+    nameDe: 'Caesar Salad mit gebratenem Hähnchen',
+    descriptionDe:
+      'Knackiger Eisbergsalat, gebratene Hähnchenstreifen, Tomate, Gurke, rote Zwiebeln und hausgemachtes Caesar-Dressing.',
+    nameIt: 'Caesar Salad con Pollo Arrosto',
+    descriptionIt:
+      'Lattuga iceberg croccante, straccetti di pollo arrosto, pomodoro, cetriolo, cipolla rossa e salsa Caesar fatta in casa.',
+  },
+  'lab-salade-composee': {
+    nameDe: 'Gemischter Salat mit warmem Fleisch nach Wahl',
+    descriptionDe:
+      'Frische Salatbasis mit warmem Fleisch nach Wahl: Grillhähnchen, Parguit, Schnitzel oder Shawarma.',
+    nameIt: 'Insalata Composta con Carne Calda a Scelta',
+    descriptionIt:
+      'Base di insalata fresca con carne calda a scelta: Pollo alla griglia, Parguit, Schnitzel o Shawarma.',
+  },
+  'lab-menu-enfant': {
+    nameDe: 'Komplettes Kindermenü',
+    descriptionDe:
+      'Nach Wahl: Kinder-Burger, Chicken Fingers (4 Stk.) oder Kinder-Hot-Dog + knusprige Pommes & Wasser oder Fruchtsaft.',
+    nameIt: 'Menù Bambini Completo',
+    descriptionIt:
+      'A scelta: Burger Bimbi, Chicken Fingers (x4) o Hot Dog Bimbi + patatine croccanti e acqua o succo di frutta.',
+  },
+  'lab-houmous-bassar': {
+    nameDe: 'Hummus Bassar mit gewürztem Fleisch & warmer Pita',
+    descriptionDe:
+      'Cremiger hausgemachter Hummus mit würzig angebratenem Rindfleisch, serviert mit 1 warmen Pita.',
+    nameIt: 'Hummus Bassar con Carne Speziata & Pita Calda',
+    descriptionIt:
+      'Cremoso hummus fatto in casa guarnito con carne saltata alle spezie, servito con 1 pita calda.',
+  },
+  'lab-houmous-falafel': {
+    nameDe: 'Hummus mit knusprigen Falafel & Pita',
+    descriptionDe:
+      'Cremiger hausgemachter Hummus mit goldbraunen Falafelbällchen und 1 warmen Pita.',
+    nameIt: 'Hummus & Falafel Croccanti con Pita',
+    descriptionIt:
+      'Morbido hummus fatto in casa accompagnato da falafel dorati e 1 pita calda.',
+  },
+  'lab-chicken-fingers': {
+    nameDe: 'Knusprige Chicken Fingers (4 / 8 Stk.)',
+    descriptionDe:
+      'Extra knusprig panierte Hähncheninnenfilets (Portion mit 4 oder 8 Stück).',
+    nameIt: 'Chicken Fingers Croccanti (x4 / x8)',
+    descriptionIt:
+      'Filetti di pollo panati ultra-croccanti (porzione da 4 o 8 pezzi).',
+  },
+  'lab-nuggets-poulet': {
+    nameDe: 'Chicken Nuggets (7 Stück)',
+    descriptionDe: '7 goldbraun gebackene, knusprige Hähnchenbrust-Nuggets.',
+    nameIt: 'Nuggets di Pollo (7 pezzi)',
+    descriptionIt: '7 bocconcini di filetto di pollo dorati e croccanti.',
+  },
+  'lab-boite-falafels': {
+    nameDe: 'Falafel-Box (5 / 10 Stück)',
+    descriptionDe:
+      'Frisch zubereitete Kichererbsenbällchen mit frischen Kräutern und orientalischen Gewürzen.',
+    nameIt: 'Box Falafel (5 / 10 pezzi)',
+    descriptionIt:
+      'Polpettine di ceci alle erbe fresche fritte al momento.',
+  },
+  'lab-frites-maison': {
+    nameDe: 'Frische hausgemachte Pommes Frites',
+    descriptionDe: 'Goldbraune, knusprige hausgeschnittene Pommes Frites.',
+    nameIt: 'Patatine Fritte Fresche Fatte in Casa',
+    descriptionIt: 'Patatine fresche tagliate a mano, dorate e croccanti.',
+  },
+  'lab-frites-patates-douces': {
+    nameDe: 'Süßkartoffel-Pommes',
+    descriptionDe: 'Außen knusprige und innen zarte Süßkartoffel-Pommes.',
+    nameIt: 'Patatine Fritte di Patata Dolce',
+    descriptionIt: 'Bastoncini di patata dolce croccanti fuori e morbidi dentro.',
+  },
+  'lab-onion-rings': {
+    nameDe: 'Knusprige Onion Rings (6 Stück)',
+    descriptionDe: '6 im Bierteig goldbraun ausgebackene knusprige Zwiebelringe.',
+    nameIt: 'Onion Rings Croccanti (6 pezzi)',
+    descriptionIt: '6 anelli di cipolla in pastella dorata e croccante.',
+  },
+  'lab-edamame': {
+    nameDe: 'Edamame mit Meersalz',
+    descriptionDe: 'Gedämpfte junge Sojabohnen, verfeinert mit Fleur de Sel.',
+    nameIt: 'Edamame al Sale Marino',
+    descriptionIt: 'Baccelli di soia cotti al vapore con fiocchi di sale marino.',
+  },
+  'lab-boisson-33cl': {
+    nameDe: 'Erfrischungsgetränk 33cl / Mineralwasser',
+    descriptionDe:
+      'Coca-Cola, Coca-Cola Zero, Fanta, Sprite, Oasis, Eistee oder Mineralwasser.',
+    nameIt: 'Bibita Analcolica 33cl / Acqua Minerale',
+    descriptionIt:
+      'Coca-Cola, Coca Zero, Fanta, Sprite, Oasis, Tè freddo o Acqua minerale.',
+  },
+  'lab-top-cheddar': {
+    nameDe: 'Extra geschmolzener Parve-Cheddar',
+    descriptionDe: 'Portion 100% koscherer geschmolzener Parve-Cheddar.',
+    nameIt: 'Supplemento Cheddar Fuso Parve',
+    descriptionIt: 'Porzione di cheddar Parve fuso 100% kosher.',
+  },
+  'lab-top-oeuf': {
+    nameDe: 'Extra Spiegelei',
+    descriptionDe: 'Frisches Spiegelei von der Grillplatte.',
+    nameIt: 'Supplemento Uovo al Tegamino',
+    descriptionIt: 'Uovo fresco cotto alla piastra.',
+  },
+  'lab-top-avocat': {
+    nameDe: 'Extra frische Avocado',
+    descriptionDe: 'Scheiben von perfekt gereifter frischer Avocado.',
+    nameIt: 'Supplemento Avocado Fresco',
+    descriptionIt: 'Fettine di avocado fresco maturo al punto giusto.',
+  },
+  'lab-top-veau-presse': {
+    nameDe: 'Extra Scheibe Kalbs-Bacon (gepresstes Kalbfleisch)',
+    descriptionDe: 'Knusprig gegrillter koscherer Kalbs-Bacon.',
+    nameIt: 'Supplemento Fetta di Vitello Pressato',
+    descriptionIt: 'Fetta di vitello pressato kosher grigliata e croccante.',
+  },
+  'lab-top-oignons-confits': {
+    nameDe: 'Extra karamellisierte Zwiebeln',
+    descriptionDe: 'Auf der Plancha sanft geschmorte süße Zwiebeln.',
+    nameIt: 'Supplemento Cipolle Caramellate',
+    descriptionIt: 'Cipolle dolci caramellate lentamente alla piastra.',
+  },
+  'lab-top-champignons': {
+    nameDe: 'Extra gebratene Champignons in Olivenöl',
+    descriptionDe: 'Frische Champignons, in Olivenöl und feinen Kräutern gebraten.',
+    nameIt: "Supplemento Funghi Saltati all'Olio d'Oliva",
+    descriptionIt: "Funghi freschi saltati in padella con olio d'oliva ed erbe aromatiche.",
+  },
+};
+
+export const LABRIOUT_MENU_PRODUCTS: ProductItem[] = RAW_LABRIOUT_PRODUCTS.map(item => {
+  const deIt = LABRIOUT_PRODUCT_DE_IT[item.id];
+  return {
+    ...item,
+    nameFr: item.name,
+    descriptionFr: item.description,
+    nameDe: deIt?.nameDe || item.nameEn || item.name,
+    descriptionDe: deIt?.descriptionDe || item.descriptionEn || item.description,
+    nameIt: deIt?.nameIt || item.nameEn || item.name,
+    descriptionIt: deIt?.descriptionIt || item.descriptionEn || item.description,
+    isAvailable: true,
+  };
+});

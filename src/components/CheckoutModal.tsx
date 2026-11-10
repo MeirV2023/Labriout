@@ -16,6 +16,7 @@ import {
 import { useCart } from '../context/CartContext';
 import { CustomerOrderInfo } from '../types';
 import { STORE_DETAILS } from '../data/menuData';
+import { getLocalizedProductName, getLocalizedExtraName } from '../utils/menuTranslations';
 
 export const CheckoutModal: React.FC = () => {
   const {
@@ -31,18 +32,232 @@ export const CheckoutModal: React.FC = () => {
     selectedTimeSlot,
     setSelectedTimeSlot,
     submitOrder,
+    language,
     t,
   } = useCart();
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
-  const [city, setCity] = useState('Pompei');
+  const [city, setCity] = useState('Bonneuil-sur-Marne');
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'satispay' | 'apple_pay'>('cash');
   const [formError, setFormError] = useState('');
 
   if (!isCheckoutModalOpen) return null;
+
+  const ui = {
+    fr: {
+      errName: 'Veuillez saisir votre nom et prénom',
+      errPhone: 'Veuillez saisir un numéro de téléphone valide',
+      errAddress: 'Veuillez saisir votre adresse de livraison à Bonneuil-sur-Marne ou environs',
+      waHeader: '*NOUVELLE COMMANDE EN LIGNE - LABRIOUT*',
+      waClient: 'Client',
+      waPhone: 'Téléphone',
+      waMode: 'Mode',
+      waPickup: 'À EMPORTER (Retrait)',
+      waDelivery: 'LIVRAISON À DOMICILE',
+      waAddress: 'Adresse',
+      waTime: 'Horaire',
+      waPayment: 'Paiement',
+      waDetails: 'DÉTAIL DE LA COMMANDE',
+      waExtras: 'Extras',
+      waNote: 'Note',
+      waTotal: 'TOTAL',
+      waOrderNotes: 'Notes',
+      subPickup: 'Retrait : 64 av. Simone Veil, Bonneuil-sur-Marne',
+      subDelivery: 'Livraison rapide à domicile',
+      closeAria: 'Fermer',
+      orderModeLabel: 'Mode de commande',
+      pickupTitle: 'À emporter (Retrait)',
+      pickupSub: 'Gratuit • ~15-20 min',
+      deliveryTitle: 'Livraison à domicile',
+      deliverySub: 'Bonneuil-sur-Marne & environs',
+      namePlaceholder: 'David Cohen',
+      phonePlaceholder: '+33 6 12 34 56 78',
+      addressPlaceholder: 'Ex. 12 Rue Paul Vaillant-Couturier, Bât. B',
+      asapValue: 'Le plus vite possible',
+      asapLabel: (mins: number) => `Le plus vite possible (~${mins} min)`,
+      slotPrefix: "Aujourd'hui à",
+      payCash: 'Espèces à la réception',
+      payCard: 'Carte bancaire',
+      notesLabel: 'Instructions supplémentaires pour la cuisine ou le livreur',
+      notesPlaceholder: 'Ex. digicode 1234, 2e étage, sauce à part',
+      recapLabel: (n: number) => `Récapitulatif final (${n} articles) :`,
+      recapPickup: 'Retrait sur place',
+      recapDelivery: (c: string) => `Livraison à ${c}`,
+      totalToPay: 'Total à payer',
+      waTitle: 'Envoyer le récapitulatif sur WhatsApp au restaurant',
+    },
+    en: {
+      errName: 'Please enter your full name',
+      errPhone: 'Please enter a valid phone number',
+      errAddress: 'Please enter your delivery address in Bonneuil-sur-Marne or nearby',
+      waHeader: '*NEW ONLINE ORDER - LABRIOUT*',
+      waClient: 'Customer',
+      waPhone: 'Phone',
+      waMode: 'Fulfillment',
+      waPickup: 'PICKUP AT STORE',
+      waDelivery: 'HOME DELIVERY',
+      waAddress: 'Address',
+      waTime: 'Time',
+      waPayment: 'Payment',
+      waDetails: 'ORDER DETAILS',
+      waExtras: 'Extras',
+      waNote: 'Note',
+      waTotal: 'TOTAL',
+      waOrderNotes: 'Notes',
+      subPickup: 'Pickup: 64 av. Simone Veil, Bonneuil-sur-Marne',
+      subDelivery: 'Fast home delivery',
+      closeAria: 'Close',
+      orderModeLabel: 'Order mode',
+      pickupTitle: 'Takeaway (Pickup)',
+      pickupSub: 'Free • ~15-20 min',
+      deliveryTitle: 'Home delivery',
+      deliverySub: 'Bonneuil-sur-Marne & nearby',
+      namePlaceholder: 'David Cohen',
+      phonePlaceholder: '+33 6 12 34 56 78',
+      addressPlaceholder: 'e.g. 12 Rue Paul Vaillant-Couturier, Apt 3',
+      asapValue: 'As soon as possible',
+      asapLabel: (mins: number) => `As soon as possible (~${mins} min)`,
+      slotPrefix: 'Today at',
+      payCash: 'Cash on delivery / pickup',
+      payCard: 'Credit / Debit card',
+      notesLabel: 'Additional notes for the kitchen or courier',
+      notesPlaceholder: 'e.g. intercom 1234, 2nd floor, sauce on the side',
+      recapLabel: (n: number) => `Final summary (${n} items):`,
+      recapPickup: 'Store pickup',
+      recapDelivery: (c: string) => `Delivery to ${c}`,
+      totalToPay: 'Total to pay',
+      waTitle: 'Send order summary via WhatsApp to the restaurant',
+    },
+    de: {
+      errName: 'Bitte geben Sie Ihren Vor- und Nachnamen ein',
+      errPhone: 'Bitte geben Sie eine gültige Telefonnummer ein',
+      errAddress: 'Bitte geben Sie Ihre Lieferadresse in Bonneuil-sur-Marne oder Umgebung ein',
+      waHeader: '*NEUE ONLINE-BESTELLUNG - LABRIOUT*',
+      waClient: 'Kunde',
+      waPhone: 'Telefon',
+      waMode: 'Bestellart',
+      waPickup: 'ABHOLUNG VOR ORT',
+      waDelivery: 'LIEFERUNG NACH HAUSE',
+      waAddress: 'Adresse',
+      waTime: 'Uhrzeit',
+      waPayment: 'Zahlung',
+      waDetails: 'BESTELLDETAILS',
+      waExtras: 'Extras',
+      waNote: 'Hinweis',
+      waTotal: 'GESAMT',
+      waOrderNotes: 'Hinweise',
+      subPickup: 'Abholung: 64 av. Simone Veil, Bonneuil-sur-Marne',
+      subDelivery: 'Schnelle Lieferung nach Hause',
+      closeAria: 'Schließen',
+      orderModeLabel: 'Bestellart',
+      pickupTitle: 'Abholung vor Ort',
+      pickupSub: 'Kostenlos • ~15-20 Min',
+      deliveryTitle: 'Lieferung nach Hause',
+      deliverySub: 'Bonneuil-sur-Marne & Umgebung',
+      namePlaceholder: 'David Cohen',
+      phonePlaceholder: '+33 6 12 34 56 78',
+      addressPlaceholder: 'z.B. 12 Rue Paul Vaillant-Couturier, 2. Etage',
+      asapValue: 'So schnell wie möglich',
+      asapLabel: (mins: number) => `So schnell wie möglich (~${mins} Min)`,
+      slotPrefix: 'Heute um',
+      payCash: 'Barzahlung bei Erhalt',
+      payCard: 'Kredit- / Debitkarte',
+      notesLabel: 'Zusätzliche Hinweise für Küche oder Kurier',
+      notesPlaceholder: 'z.B. Klingelcode 1234, 2. Stock, Sauce separat',
+      recapLabel: (n: number) => `Zusammenfassung (${n} Artikel):`,
+      recapPickup: 'Abholung vor Ort',
+      recapDelivery: (c: string) => `Lieferung nach ${c}`,
+      totalToPay: 'Zu zahlender Betrag',
+      waTitle: 'Bestellübersicht per WhatsApp an das Restaurant senden',
+    },
+    it: {
+      errName: 'Inserisci il tuo nome e cognome',
+      errPhone: 'Inserisci un numero di telefono valido per la conferma',
+      errAddress: "Inserisci l'indirizzo di consegna a Bonneuil-sur-Marne o dintorni",
+      waHeader: '*NUOVO ORDINE ONLINE - LABRIOUT*',
+      waClient: 'Cliente',
+      waPhone: 'Telefono',
+      waMode: 'Modalità',
+      waPickup: 'RITIRO IN SEDE (Asporto)',
+      waDelivery: 'CONSEGNA A DOMICILIO',
+      waAddress: 'Indirizzo',
+      waTime: 'Orario',
+      waPayment: 'Pagamento',
+      waDetails: 'DETTAGLIO ORDINE',
+      waExtras: 'Extra',
+      waNote: 'Nota',
+      waTotal: 'TOTALE',
+      waOrderNotes: 'Note',
+      subPickup: 'Ritiro: 64 av. Simone Veil, Bonneuil-sur-Marne',
+      subDelivery: 'Consegna rapida a domicilio',
+      closeAria: 'Chiudi',
+      orderModeLabel: "Modalità d'ordine",
+      pickupTitle: 'Asporto (Ritiro)',
+      pickupSub: 'Gratis • ~15-20 min',
+      deliveryTitle: 'Consegna a domicilio',
+      deliverySub: 'Bonneuil-sur-Marne & dintorni',
+      namePlaceholder: 'David Cohen',
+      phonePlaceholder: '+33 6 12 34 56 78',
+      addressPlaceholder: 'Es. 12 Rue Paul Vaillant-Couturier, int. 3',
+      asapValue: 'Il prima possibile',
+      asapLabel: (mins: number) => `Il prima possibile (~${mins} min)`,
+      slotPrefix: 'Oggi alle',
+      payCash: 'Contanti alla consegna',
+      payCard: 'Carta di credito',
+      notesLabel: 'Note aggiuntive per la cucina o per il corriere',
+      notesPlaceholder: 'Es. citofono 1234, secondo piano, salsa a parte',
+      recapLabel: (n: number) => `Riepilogo finale (${n} articoli):`,
+      recapPickup: 'Ritiro in sede',
+      recapDelivery: (c: string) => `Consegna a ${c}`,
+      totalToPay: 'Totale da pagare',
+      waTitle: 'Invia riepilogo su WhatsApp al ristorante',
+    },
+    ru: {
+      errName: 'Укажите ваше имя и фамилию',
+      errPhone: 'Укажите корректный номер телефона для подтверждения',
+      errAddress: 'Укажите адрес доставки в Bonneuil-sur-Marne или окрестностях',
+      waHeader: '*НОВЫЙ ОНЛАЙН-ЗАКАЗ - LABRIOUT*',
+      waClient: 'Клиент',
+      waPhone: 'Телефон',
+      waMode: 'Способ получения',
+      waPickup: 'САМОВЫВОЗ ИЗ РЕСТОРАНА',
+      waDelivery: 'ДОСТАВКА НА ДОМ',
+      waAddress: 'Адрес',
+      waTime: 'Время',
+      waPayment: 'Оплата',
+      waDetails: 'СОСТАВ ЗАКАЗА',
+      waExtras: 'Добавки',
+      waNote: 'Комментарий',
+      waTotal: 'ИТОГО',
+      waOrderNotes: 'Примечания',
+      subPickup: 'Самовывоз: 64 av. Simone Veil, Bonneuil-sur-Marne',
+      subDelivery: 'Быстрая доставка на дом',
+      closeAria: 'Закрыть',
+      orderModeLabel: 'Способ получения',
+      pickupTitle: 'Самовывоз',
+      pickupSub: 'Бесплатно • ~15–20 мин',
+      deliveryTitle: 'Доставка на дом',
+      deliverySub: 'Bonneuil-sur-Marne и окрестности',
+      namePlaceholder: 'Давид Коэн',
+      phonePlaceholder: '+33 6 12 34 56 78',
+      addressPlaceholder: 'Напр. 12 Rue Paul Vaillant-Couturier, кв. 3',
+      asapValue: 'Как можно скорее',
+      asapLabel: (mins: number) => `Как можно скорее (~${mins} мин)`,
+      slotPrefix: 'Сегодня к',
+      payCash: 'Наличными при получении',
+      payCard: 'Банковской картой',
+      notesLabel: 'Дополнительные пожелания для кухни или курьера',
+      notesPlaceholder: 'Напр. код домофона 1234, 2 этаж, соус отдельно',
+      recapLabel: (n: number) => `Итоговый заказ (${n} поз.):`,
+      recapPickup: 'Самовывоз из ресторана',
+      recapDelivery: (c: string) => `Доставка: ${c}`,
+      totalToPay: 'К оплате',
+      waTitle: 'Отправить заказ в ресторан через WhatsApp',
+    },
+  }[language];
 
   const handleClose = () => {
     setIsCheckoutModalOpen(false);
@@ -50,15 +265,15 @@ export const CheckoutModal: React.FC = () => {
 
   const validateForm = () => {
     if (!name.trim()) {
-      setFormError('Inserisci il tuo nome e cognome');
+      setFormError(ui.errName);
       return false;
     }
     if (!phone.trim() || phone.trim().length < 6) {
-      setFormError('Inserisci un numero di telefono valido per la conferma');
+      setFormError(ui.errPhone);
       return false;
     }
     if (fulfillmentType === 'consegna' && !address.trim()) {
-      setFormError('Inserisci l’indirizzo di consegna a Pompei o dintorni');
+      setFormError(ui.errAddress);
       return false;
     }
     setFormError('');
@@ -87,31 +302,32 @@ export const CheckoutModal: React.FC = () => {
     if (!validateForm()) return;
 
     // Construct formatted message
-    let message = `*NUOVO ORDINE ONLINE - PANZAROTTO POMPEI*%0A`;
-    message += `👤 *Cliente:* ${name}%0A`;
-    message += `📞 *Telefono:* ${phone}%0A`;
-    message += `🛵 *Modalità:* ${fulfillmentType === 'asporto' ? 'RITIRO IN SEDE (Asporto)' : 'CONSEGNA A DOMICILIO'}%0A`;
+    let message = `${ui.waHeader}%0A`;
+    message += `👤 *${ui.waClient}:* ${name}%0A`;
+    message += `📞 *${ui.waPhone}:* ${phone}%0A`;
+    message += `🛵 *${ui.waMode}:* ${fulfillmentType === 'asporto' ? ui.waPickup : ui.waDelivery}%0A`;
     if (fulfillmentType === 'consegna') {
-      message += `📍 *Indirizzo:* ${address}, ${city}%0A`;
+      message += `📍 *${ui.waAddress}:* ${address}, ${city}%0A`;
     }
-    message += `⏰ *Orario:* ${selectedTimeSlot}%0A`;
-    message += `💳 *Pagamento:* ${paymentMethod.toUpperCase()}%0A%0A`;
-    message += `🛒 *DETTAGLIO ORDINE:*%0A`;
+    message += `⏰ *${ui.waTime}:* ${selectedTimeSlot}%0A`;
+    message += `💳 *${ui.waPayment}:* ${paymentMethod.toUpperCase()}%0A%0A`;
+    message += `🛒 *${ui.waDetails}:*%0A`;
 
     items.forEach((item, idx) => {
       const itemTotal = (Number(item.totalUnitPrice ?? item.product?.price ?? 0)) * (Number(item.quantity) || 1);
-      message += `${idx + 1}. *${item.quantity}x ${item.product.name}* (€${itemTotal.toFixed(2)})%0A`;
+      const itemName = getLocalizedProductName(item.product, language);
+      message += `${idx + 1}. *${item.quantity}x ${itemName}* (€${itemTotal.toFixed(2)})%0A`;
       if (item.selectedExtras.length > 0) {
-        message += `   + Extras: ${item.selectedExtras.map(e => e.name).join(', ')}%0A`;
+        message += `   + ${ui.waExtras}: ${item.selectedExtras.map(e => getLocalizedExtraName(e, language)).join(', ')}%0A`;
       }
       if (item.specialNotes) {
-        message += `   Nota: ${item.specialNotes}%0A`;
+        message += `   ${ui.waNote}: ${item.specialNotes}%0A`;
       }
     });
 
-    message += `%0A💰 *TOTALE: €${(Number(total) || 0).toFixed(2)}*%0A`;
+    message += `%0A💰 *${ui.waTotal}: €${(Number(total) || 0).toFixed(2)}*%0A`;
     if (notes) {
-      message += `📝 *Note:* ${notes}%0A`;
+      message += `📝 *${ui.waOrderNotes}:* ${notes}%0A`;
     }
 
     const customerInfo: CustomerOrderInfo = {
@@ -141,12 +357,13 @@ export const CheckoutModal: React.FC = () => {
               {t('checkoutTitle')}
             </h3>
             <p className="text-xs text-neutral-400">
-              {fulfillmentType === 'asporto' ? 'Retrait : 64 av. Simone Veil, Bonneuil-sur-Marne' : 'Livraison rapide à domicile'}
+              {fulfillmentType === 'asporto' ? ui.subPickup : ui.subDelivery}
             </p>
           </div>
 
           <button
             onClick={handleClose}
+            aria-label={ui.closeAria}
             className="p-2 rounded-full bg-[#20232d] hover:bg-[#2c313f] text-neutral-300 hover:text-white transition cursor-pointer"
           >
             <X className="w-5 h-5" />
@@ -164,7 +381,7 @@ export const CheckoutModal: React.FC = () => {
           {/* Fulfillment Switcher */}
           <div>
             <label className="text-xs uppercase font-extrabold tracking-wider text-neutral-400 block mb-2">
-              Modalità d&apos;ordine
+              {ui.orderModeLabel}
             </label>
             <div className="grid grid-cols-2 gap-3">
               <button
@@ -178,8 +395,8 @@ export const CheckoutModal: React.FC = () => {
               >
                 <Building className="w-5 h-5 text-[#ff5500]" />
                 <div className="text-left">
-                  <p className="font-bold text-white leading-tight">Asporto (Ritiro)</p>
-                  <p className="text-[11px] text-neutral-400">Gratis • ~15-20 min</p>
+                  <p className="font-bold text-white leading-tight">{ui.pickupTitle}</p>
+                  <p className="text-[11px] text-neutral-400">{ui.pickupSub}</p>
                 </div>
               </button>
 
@@ -194,8 +411,8 @@ export const CheckoutModal: React.FC = () => {
               >
                 <MapPin className="w-5 h-5 text-[#ff5500]" />
                 <div className="text-left">
-                  <p className="font-bold text-white leading-tight">Consegna a domicilio</p>
-                  <p className="text-[11px] text-neutral-400">Pompei & dintorni</p>
+                  <p className="font-bold text-white leading-tight">{ui.deliveryTitle}</p>
+                  <p className="text-[11px] text-neutral-400">{ui.deliverySub}</p>
                 </div>
               </button>
             </div>
@@ -218,7 +435,7 @@ export const CheckoutModal: React.FC = () => {
                   required
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  placeholder="Mario Rossi"
+                  placeholder={ui.namePlaceholder}
                   className="w-full bg-[#181b24] border border-[#2a2f3d] rounded-xl px-3.5 py-2.5 text-white placeholder-neutral-500 focus:outline-none focus:border-[#ff5500]"
                 />
               </div>
@@ -232,7 +449,7 @@ export const CheckoutModal: React.FC = () => {
                   required
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
-                  placeholder="+39 340 123 4567"
+                  placeholder={ui.phonePlaceholder}
                   className="w-full bg-[#181b24] border border-[#2a2f3d] rounded-xl px-3.5 py-2.5 text-white placeholder-neutral-500 focus:outline-none focus:border-[#ff5500]"
                 />
               </div>
@@ -251,7 +468,7 @@ export const CheckoutModal: React.FC = () => {
                       required
                       value={address}
                       onChange={e => setAddress(e.target.value)}
-                      placeholder="Es. Via Plinio 45, int. 3 / Hotel Forum"
+                      placeholder={ui.addressPlaceholder}
                       className="w-full bg-[#181b24] border border-[#2a2f3d] rounded-xl px-3.5 py-2.5 text-white placeholder-neutral-500 focus:outline-none focus:border-[#ff5500]"
                     />
                   </div>
@@ -264,10 +481,11 @@ export const CheckoutModal: React.FC = () => {
                       onChange={e => setCity(e.target.value)}
                       className="w-full bg-[#181b24] border border-[#2a2f3d] rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-[#ff5500]"
                     >
-                      <option value="Pompei">Pompei (80045)</option>
-                      <option value="Scafati">Scafati (84018)</option>
-                      <option value="Torre Annunziata">Torre Annunziata</option>
-                      <option value="Castellammare">Castellammare di Stabia</option>
+                      <option value="Bonneuil-sur-Marne">Bonneuil-sur-Marne (94380)</option>
+                      <option value="Créteil">Créteil (94000)</option>
+                      <option value="Saint-Maur-des-Fossés">Saint-Maur-des-Fossés (94100)</option>
+                      <option value="Sucy-en-Brie">Sucy-en-Brie (94370)</option>
+                      <option value="Maisons-Alfort">Maisons-Alfort (94700)</option>
                     </select>
                   </div>
                 </div>
@@ -286,15 +504,20 @@ export const CheckoutModal: React.FC = () => {
               onChange={e => setSelectedTimeSlot(e.target.value)}
               className="w-full bg-[#181b24] border border-[#2a2f3d] rounded-xl px-3.5 py-2.5 text-white font-medium focus:outline-none focus:border-[#ff5500]"
             >
-              <option value="Il prima possibile">
-                Il prima possibile (~{fulfillmentType === 'asporto' ? 15 : 35} min)
+              <option value={ui.asapValue}>
+                {ui.asapLabel(fulfillmentType === 'asporto' ? 15 : 30)}
               </option>
-              <option value="19:30">Stasera alle 19:30</option>
-              <option value="20:00">Stasera alle 20:00</option>
-              <option value="20:30">Stasera alle 20:30</option>
-              <option value="21:00">Stasera alle 21:00</option>
-              <option value="21:30">Stasera alle 21:30</option>
-              <option value="22:00">Stasera alle 22:00</option>
+              <option value="12:30">{ui.slotPrefix} 12:30</option>
+              <option value="13:00">{ui.slotPrefix} 13:00</option>
+              <option value="13:30">{ui.slotPrefix} 13:30</option>
+              <option value="14:00">{ui.slotPrefix} 14:00</option>
+              <option value="19:00">{ui.slotPrefix} 19:00</option>
+              <option value="19:30">{ui.slotPrefix} 19:30</option>
+              <option value="20:00">{ui.slotPrefix} 20:00</option>
+              <option value="20:30">{ui.slotPrefix} 20:30</option>
+              <option value="21:00">{ui.slotPrefix} 21:00</option>
+              <option value="21:30">{ui.slotPrefix} 21:30</option>
+              <option value="22:00">{ui.slotPrefix} 22:00</option>
             </select>
           </div>
 
@@ -315,7 +538,7 @@ export const CheckoutModal: React.FC = () => {
                 }`}
               >
                 <Banknote className="w-5 h-5 mx-auto mb-1 text-[#ff5500]" />
-                <span className="text-[11px] block leading-tight">Contanti alla consegna</span>
+                <span className="text-[11px] block leading-tight">{ui.payCash}</span>
               </button>
 
               <button
@@ -328,7 +551,7 @@ export const CheckoutModal: React.FC = () => {
                 }`}
               >
                 <CreditCard className="w-5 h-5 mx-auto mb-1 text-[#ff5500]" />
-                <span className="text-[11px] block leading-tight">Carta di credito</span>
+                <span className="text-[11px] block leading-tight">{ui.payCard}</span>
               </button>
 
               <button
@@ -343,7 +566,7 @@ export const CheckoutModal: React.FC = () => {
                 <div className="w-5 h-5 rounded-full bg-red-600 text-white font-black text-[10px] mx-auto mb-1 flex items-center justify-center">
                   S
                 </div>
-                <span className="text-[11px] block leading-tight">Satispay</span>
+                <span className="text-[11px] block leading-tight">Ticket Resto</span>
               </button>
 
               <button
@@ -366,13 +589,13 @@ export const CheckoutModal: React.FC = () => {
           {/* Notes */}
           <div>
             <label className="block text-[11px] font-semibold text-neutral-400 mb-1">
-              Note aggiuntive per la cucina o per il rider
+              {ui.notesLabel}
             </label>
             <input
               type="text"
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="Es. citofono Rossi, secondo piano, oppure salsa a parte"
+              placeholder={ui.notesPlaceholder}
               className="w-full bg-[#181b24] border border-[#2a2f3d] rounded-xl px-3.5 py-2 text-white placeholder-neutral-500 focus:outline-none focus:border-[#ff5500]"
             />
           </div>
@@ -380,13 +603,13 @@ export const CheckoutModal: React.FC = () => {
           {/* Mini order recap */}
           <div className="bg-[#181b24] border border-[#262b3a] rounded-2xl p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs text-neutral-400">Riepilogo finale ({items.length} articoli):</p>
+              <p className="text-xs text-neutral-400">{ui.recapLabel(items.length)}</p>
               <p className="text-sm font-bold text-white">
-                {fulfillmentType === 'asporto' ? 'Ritiro in sede' : `Consegna a ${city}`}
+                {fulfillmentType === 'asporto' ? ui.recapPickup : ui.recapDelivery(city)}
               </p>
             </div>
             <div className="text-right">
-              <span className="text-xs text-neutral-400 block">Totale da pagare</span>
+              <span className="text-xs text-neutral-400 block">{ui.totalToPay}</span>
               <span className="font-heading font-black text-xl text-[#ff6611]">
                 €{(Number(total) || 0).toFixed(2)}
               </span>
@@ -396,12 +619,11 @@ export const CheckoutModal: React.FC = () => {
 
         {/* Footer actions with 2 buttons */}
         <div className="p-4 sm:p-5 bg-[#151720] border-t border-[#232734] flex flex-col sm:flex-row items-center gap-3 shrink-0">
-          {/* WhatsApp Direct Option (Extremely popular in Italy/Pompei) */}
           <button
             type="button"
             onClick={handleWhatsAppOrder}
             className="w-full sm:w-auto px-4 py-3 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366] text-[#25D366] hover:text-white border border-[#25D366]/40 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
-            title="Invia riepilogo su WhatsApp al ristorante"
+            title={ui.waTitle}
           >
             <MessageCircle className="w-4 h-4" />
             <span>{t('orderViaWhatsApp')}</span>

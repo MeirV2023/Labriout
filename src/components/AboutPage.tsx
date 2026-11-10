@@ -57,6 +57,7 @@ export const AboutPage: React.FC = () => {
   const isRu = language === 'ru';
   const isDe = language === 'de';
   const isFr = language === 'fr';
+  const isIt = language === 'it';
 
   // Mobile infinite circular horizontal carousel refs & state
   const mobileCarouselRef = useRef<HTMLDivElement>(null);
@@ -82,8 +83,8 @@ export const AboutPage: React.FC = () => {
         ? '✡️ 100% КОШЕР • BADATZ DE BRUNOY'
         : isDe
         ? '✡️ 100% KOSCHER • BADATZ DE BRUNOY'
-        : isFr
-        ? '✡️ 100% CASHER • BADATZ DE BRUNOY'
+        : isIt
+        ? '✡️ 100% KOSHER • BADATZ DE BRUNOY'
         : '✡️ 100% CASHER • BADATZ DE BRUNOY',
       content: (
         <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium max-w-sm">
@@ -93,6 +94,8 @@ export const AboutPage: React.FC = () => {
             ? 'Безупречный стандарт кашрута под строгим раввинским надзором Badatz de Brunoy (Халак Бейт Йосеф). Отборная говядина, птица, свежая зелень и ингредиенты Parvé ежедневно проверяются машгиахом (шомером) прямо на нашей кухне.'
             : isDe
             ? 'Kompromisslose Kaschrut unter der strengen rabbinischen Aufsicht des Badatz de Brunoy. Unser gesamtes Fleisch, Geflügel und alle Parve-Zutaten werden täglich vor Ort von unserem Maschgiach kontrolliert.'
+            : isIt
+            ? 'Standard di Kasherut rigorosi sotto la stretta supervisione rabbinica del Badatz de Brunoy (Halak Beth Yosef). Ogni taglio di carne, pollame e ingrediente Parve è controllato quotidianamente in sede dal nostro Mashgiach.'
             : 'Une cacherout irréprochable sous la surveillance stricte du Badatz de Brunoy (Halak Beth Yossef). Nos viandes, volailles et ingrédients Parvé sont rigoureusement sélectionnés et contrôlés chaque jour sur place par notre Chomer.'}
         </p>
       ),
@@ -122,6 +125,8 @@ export const AboutPage: React.FC = () => {
             ? 'На иврите «Лабриют» (לבריאות) означает «На здоровье!». В Бонёй-сюр-Марн мы встречаем каждого гостя как близкого друга семьи: щедрые порции, пышные питы и лаффы, атмосфера радости, уважения к традициям и домашнего уюта.'
             : isDe
             ? 'Auf Hebräisch bedeutet „Labriout“ (לבריאות) „Auf Ihre Gesundheit!“. In Bonneuil-sur-Marne empfangen wir jeden Gast wie Familie mit großzügigen Portionen, warmen Pitas und echter Herzlichkeit.'
+            : isIt
+            ? 'In ebraico, «Labriout» (לבריאות) significa «Alla tua salute!». A Bonneuil-sur-Marne accogliamo ogni ospite come in famiglia con piatti abbondanti, pane pita e laffa caldi e un’atmosfera conviviale e autentica.'
             : 'En hébreu, « Labriout » (לבריאות) signifie « À votre santé ! ». À Bonneuil-sur-Marne, nous recevons chaque client comme un invité de marque : des assiettes copieuses, des pains pitas et laffas généreux et une ambiance familiale chaleureuse.'}
         </p>
       ),
@@ -147,42 +152,90 @@ export const AboutPage: React.FC = () => {
         <div className="text-xs sm:text-sm text-neutral-700 leading-relaxed font-medium text-left space-y-1.5 max-w-sm">
           <p>
             <strong className="text-neutral-900 font-bold">
-              {isEn ? 'Strict Kashrut: ' : isRu ? 'Строгий Кашрут: ' : 'Cacherout Certifiée : '}
+              {isEn
+                ? 'Strict Kashrut: '
+                : isRu
+                ? 'Строгий Кашрут: '
+                : isDe
+                ? 'Zertifizierte Kaschrut: '
+                : isIt
+                ? 'Kasherut Certificata: '
+                : 'Cacherout Certifiée : '}
             </strong>
             {isEn
               ? '100% Kosher meat & Parve under Badatz de Brunoy supervision.'
               : isRu
               ? '100% кошерное мясо (Басар) и чеддер Parvé под контролем Badatz de Brunoy.'
+              : isDe
+              ? '100 % koscheres Fleisch (Bassar) & Parve unter Aufsicht des Badatz de Brunoy.'
+              : isIt
+              ? '100% carne Kosher (Bassar) e Parve sotto il controllo del Badatz de Brunoy.'
               : '100% Casher Bassar & Parvé sous le contrôle du Badatz de Brunoy.'}
           </p>
           <p>
             <strong className="text-neutral-900 font-bold">
-              {isEn ? 'Flame & Plancha: ' : isRu ? 'Огонь и Планча: ' : 'Grillades & Smash : '}
+              {isEn
+                ? 'Flame & Plancha: '
+                : isRu
+                ? 'Огонь и Планча: '
+                : isDe
+                ? 'Grill & Smash: '
+                : isIt
+                ? 'Griglia & Smash: '
+                : 'Grillades & Smash : '}
             </strong>
             {isEn
               ? 'Crispy Smash Burgers, spiced Shawarma, tender Parguit & artisanal Merguez.'
               : isRu
               ? 'Сочные Смэш-бургеры, пряная шаурма, нежный паргит и домашние мергез.'
+              : isDe
+              ? 'Knusprige Smash Burger, würziges Shawarma, zartes Parguit und hausgemachte Merguez.'
+              : isIt
+              ? 'Smash Burger croccanti, shawarma speziato, parguit tenero e merguez artigianali.'
               : 'Smash burgers croustillants, shawarma mariné, parguit tendre et merguez.'}
           </p>
           <p>
             <strong className="text-neutral-900 font-bold">
-              {isEn ? 'Homemade Tradition: ' : isRu ? 'Домашние рецепты: ' : 'Fait Maison : '}
+              {isEn
+                ? 'Homemade Tradition: '
+                : isRu
+                ? 'Домашние рецепты: '
+                : isDe
+                ? 'Hausgemachte Rezepte: '
+                : isIt
+                ? 'Tradizione Fatta in Casa: '
+                : 'Fait Maison : '}
             </strong>
             {isEn
               ? 'Creamy Hummus Bassar, golden Falafels, fresh fries & sweet potato fries.'
               : isRu
               ? 'Кремовый хумус басар, золотистый фалафель, тхина и домашний картофель фри.'
+              : isDe
+              ? 'Cremiger Hummus Bassar, goldene Kräuter-Falafel, Tahina und frische Hauspommes.'
+              : isIt
+              ? 'Hummus Bassar cremoso, falafel dorati alle erbe, tahina e patatine fresche.'
               : 'Houmous bassar onctueux, falafels dorés aux herbes, thina et frites fraîches.'}
           </p>
           <p>
             <strong className="text-neutral-900 font-bold">
-              {isEn ? 'Warm Service: ' : isRu ? 'Сервис с душой: ' : 'Esprit Famille : '}
+              {isEn
+                ? 'Warm Service: '
+                : isRu
+                ? 'Сервис с душой: '
+                : isDe
+                ? 'Familiengeist: '
+                : isIt
+                ? 'Spirito Familiare: '
+                : 'Esprit Famille : '}
             </strong>
             {isEn
               ? 'Dine-in, takeaway & hot delivery at 64 av. Simone Veil, Bonneuil-sur-Marne.'
               : isRu
               ? 'В зале, навынос и быстрая доставка: 64 av. Simone Veil, Bonneuil-sur-Marne.'
+              : isDe
+              ? 'Vor Ort, zum Mitnehmen und heiße Lieferung: 64 av. Simone Veil, Bonneuil-sur-Marne.'
+              : isIt
+              ? 'In sala, da asporto e consegna calda: 64 av. Simone Veil, Bonneuil-sur-Marne.'
               : 'Sur place, à emporter et livraison au 64 av. Simone Veil, Bonneuil-sur-Marne.'}
           </p>
         </div>
@@ -365,6 +418,8 @@ export const AboutPage: React.FC = () => {
                   ? 'В самом сердце Бонёй-сюр-Марн (64 av. Simone Veil) ресторан LABRIOUT родился из семейного призвания: объединить щедрость еврейской и израильской гастрономии с культурой современного гурмэ-стритфуда. Под строгим раввинским контролем кашрута Badatz de Brunoy (100% Casher • Бе-ашгахат Бадац Брюнуа) мы ежедневно готовим отборное кошерное мясо на открытом огне с теплом настоящего еврейского гостеприимства.'
                   : isDe
                   ? 'Im Herzen von Bonneuil-sur-Marne (64 av. Simone Veil) entstand LABRIOUT aus einer Familientradition: die Großzügigkeit der jüdisch-israelischen Küche mit modernem Gourmet-Streetfood zu verbinden. Unter der strengen rabbinischen Aufsicht des Badatz de Brunoy (100 % Koscher) grillen wir täglich bestes koscheres Fleisch frisch über der Flamme.'
+                  : isIt
+                  ? 'Nel cuore di Bonneuil-sur-Marne (64 av. Simone Veil), LABRIOUT nasce da una vocazione familiare: unire la generosità della cucina ebraica e israeliana con l’eccellenza dello street food moderno. Sotto la rigorosa supervisione rabbinica del Badatz de Brunoy (100% Kosher Bassar / Halak Beth Yosef), prepariamo ogni giorno carni selezionate e grigliate alla fiamma.'
                   : 'Au cœur de Bonneuil-sur-Marne (64 av. Simone Veil), LABRIOUT est né d’une vocation familiale : réunir la générosité de la cuisine juive et israélienne avec l’excellence du street food moderne. Sous la stricte surveillance rabbinique du Badatz de Brunoy (100% Casher Bassar / Halak Beth Yossef), nous préparons chaque jour des viandes sélectionnées avec soin et grillées à la flamme.'}
               </p>
             </div>
@@ -395,6 +450,8 @@ export const AboutPage: React.FC = () => {
                   ? 'От наших фирменных Смэш-бургеров с тающим чеддером Parvé и хрустящей прессованной телятиной до горячих пит и лафф с пряной шаурмой, сочным шашлыком паргит, золотистым шницелем, домашними колбасками мергез и кремовым хумусом басар с кунжутной тхиной — каждый рецепт бережно хранит законы кашрута и дарит незабываемый вкус.'
                   : isDe
                   ? 'Von unseren knusprigen Smash Burgern mit geschmolzenem Parve-Cheddar und koscherem Kalbs-Bacon bis hin zu warmen Pitas und Laffas mit würzigem Shawarma, zartem Parguit, goldenem Schnitzel, Merguez und hausgemachtem Hummus Bassar – jedes Gericht folgt streng den Kaschrut-Gesetzen.'
+                  : isIt
+                  ? 'Dai nostri Smash Burger croccanti con cheddar fuso Parve e vitello pressato kosher, fino alle laffa e pita calde farcite con shawarma marinato alle spezie, parguit tenero, schnitzel dorato al sesamo, merguez artigianali e hummus bassar fatto in casa — ogni ricetta rispetta scrupolosamente le leggi della Kasherut.'
                   : 'De nos Smash Burgers croustillants garnis de cheddar fondant Parvé et de veau pressé façon bacon casher, jusqu’à nos laffas et pitas chaudes au shawarma mariné aux épices orientales, parguit tendre, schnitzel doré, merguez artisanales et houmous bassar maison — chaque recette respecte scrupuleusement les lois de la Cacherout.'}
               </p>
             </div>
@@ -456,6 +513,8 @@ export const AboutPage: React.FC = () => {
                   ? 'На иврите «Лабриют» (לבריאות — «На здоровье!») — это тёплое благословение за богатым семейным столом. Именно эту душу и атмосферу Симхи (радости) мы вкладываем в каждое блюдо: щедрые мясные тарелки, свежие салаты, горячий фалафель, домашний фри и искреннее гостеприимство для всей еврейской общины и наших дорогих гостей.'
                   : isDe
                   ? 'Auf Hebräisch bedeutet „Labriout“ (לבריאות) „Auf Ihre Gesundheit!“. Genau diese Herzlichkeit steckt in jedem unserer Gerichte: großzügige Teller, hausgemachte Pommes, frische Salate und warme Pitas für die ganze Familie und Gemeinschaft.'
+                  : isIt
+                  ? 'In ebraico, «Labriout» (לבריאות) significa «Alla tua salute!». È l’anima della nostra casa: riunire famiglie, amici e tutta la comunità attorno a una tavola kosher ricca e gioiosa, dove ogni carne alla griglia, ogni pita calda e ogni porzione di patatine fresche è preparata al momento con amore e generosità.'
                   : 'En hébreu, « Labriout » (לבריאות) signifie « À votre santé ! ». C’est toute l’âme de notre maison : réunir les familles, les amis et la communauté autour d’une table casher abondante et joyeuse, où chaque viande grillée, chaque pita chaude et chaque barquette de frites maison est préparée à la minute avec amour et générosité.'}
               </p>
             </div>

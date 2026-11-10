@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from 'react';
 import { CartItem, ProductItem, SelectedExtra, FulfillmentType, PlacedOrder, CustomerOrderInfo, Language, CategoryId } from '../types';
 import { STORE_DETAILS, INITIAL_SAMPLE_CART_ITEMS, MENU_PRODUCTS } from '../data/menuData';
-import { LABRIOUT_MENU_PRODUCTS } from '../data/labrioutMenuData';
+import { LABRIOUT_MENU_PRODUCTS, getLabrioutTagline } from '../data/labrioutMenuData';
 import { TRANSLATIONS } from '../utils/translations';
 import {
   fetchCatalogMenu,
@@ -424,6 +424,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = language;
+      document.title = `LABRIOUT | ${getLabrioutTagline(language)}`;
+    }
+  }, [language]);
+
   // Fulfillment: default to 'asporto' (Pickup) as first tab
   const [fulfillmentType, setFulfillmentTypeState] = useState<FulfillmentType>(() => {
     try {
@@ -839,6 +846,14 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Coupons (Supports TikTok / Instagram influencer promo codes from DB + defaults)
   const applyCoupon = (code: string): { success: boolean; message: string } => {
     const cleanCode = code.trim().toUpperCase();
+    const formatSuccessMsg = (pct: number, channel?: string) => {
+      const ch = channel ? ` (${channel})` : '';
+      if (language === 'ru') return `Скидка ${pct}%${ch} успешно применена!`;
+      if (language === 'en') return `${pct}%${ch} discount applied successfully!`;
+      if (language === 'de') return `${pct}%${ch} Rabatt erfolgreich angewendet!`;
+      if (language === 'it') return `Sconto del ${pct}%${ch} applicato con successo!`;
+      return `Remise de ${pct}%${ch} appliquée avec succès !`;
+    };
     const dbMatch = backendCoupons.find(c => String(c.code).toUpperCase() === cleanCode);
     if (dbMatch) {
       const pct = Number(dbMatch.discount_percent || 10);
@@ -846,20 +861,30 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setDiscountPercent(pct);
       return {
         success: true,
-        message: `Sconto del ${pct}% (${dbMatch.channel || 'Promo'}) applicato!`,
+        message: formatSuccessMsg(pct, dbMatch.channel || 'Promo'),
       };
     }
-    if (cleanCode === 'POMPEI10' || cleanCode === 'PANZAROTTO10') {
+    if (cleanCode === 'LABRIOUT10' || cleanCode === 'POMPEI10' || cleanCode === 'PANZAROTTO10') {
       setAppliedCoupon(cleanCode);
       setDiscountPercent(10);
-      return { success: true, message: 'Sconto del 10% applicato con successo!' };
+      return { success: true, message: formatSuccessMsg(10) };
     }
     if (cleanCode === 'TIKTOK15' || cleanCode === 'WELCOME' || cleanCode === 'CIAO') {
       setAppliedCoupon(cleanCode);
       setDiscountPercent(15);
-      return { success: true, message: 'Sconto del 15% applicato con successo!' };
+      return { success: true, message: formatSuccessMsg(15) };
     }
-    return { success: false, message: 'Codice non valido o scaduto.' };
+    const invalidMsg =
+      language === 'ru'
+        ? 'Промокод недействителен или истёк.'
+        : language === 'en'
+        ? 'Invalid or expired promo code.'
+        : language === 'de'
+        ? 'Ungültiger oder abgelaufener Gutscheincode.'
+        : language === 'it'
+        ? 'Codice non valido o scaduto.'
+        : 'Code promo invalide ou expiré.';
+    return { success: false, message: invalidMsg };
   };
 
   const removeCoupon = () => {

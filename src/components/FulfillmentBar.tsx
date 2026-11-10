@@ -8,7 +8,7 @@ import iconConsegna from '../assets/icons/consegna.png';
 import iconPrenota from '../assets/icons/prenota.png';
 
 export const FulfillmentBar: React.FC = () => {
-  const { fulfillmentType, setFulfillmentType, selectedTimeSlot, setSelectedTimeSlot, t } = useCart();
+  const { fulfillmentType, setFulfillmentType, selectedTimeSlot, setSelectedTimeSlot, language, t } = useCart();
   const [isPrenotaDropdownOpen, setIsPrenotaDropdownOpen] = useState<boolean>(false);
   const prenotaButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -50,7 +50,7 @@ export const FulfillmentBar: React.FC = () => {
                   onError={(e) => {
                     e.currentTarget.src = iconScegli;
                   }}
-                  alt="Scegli come ordinare"
+                  alt={t('chooseHowToOrder')}
                   className="w-12 h-12 sm:w-14 sm:h-14 md:w-[56px] md:h-[56px] object-contain select-none pointer-events-none"
                   width={56}
                   height={56}
@@ -163,7 +163,15 @@ export const FulfillmentBar: React.FC = () => {
                         : 'bg-gray-200 text-neutral-600'
                     }`}
                   >
-                    COMING SOON
+                    {language === 'ru'
+                      ? 'СКОРО'
+                      : language === 'fr'
+                      ? 'BIENTÔT'
+                      : language === 'de'
+                      ? 'DEMNÄCHST'
+                      : language === 'it'
+                      ? 'PROSSIMAMENTE'
+                      : 'COMING SOON'}
                   </span>
                 </div>
               </button>
@@ -262,7 +270,15 @@ export const FulfillmentBar: React.FC = () => {
                 onClick={() => setIsPrenotaDropdownOpen(true)}
                 className="text-xs text-[#ff5500] hover:text-[#e04a00] font-bold underline cursor-pointer"
               >
-                Cambia orario
+                {language === 'ru'
+                  ? 'Изменить время'
+                  : language === 'en'
+                  ? 'Change time'
+                  : language === 'de'
+                  ? 'Uhrzeit ändern'
+                  : language === 'it'
+                  ? 'Cambia orario'
+                  : "Modifier l'horaire"}
               </button>
             </div>
           )}

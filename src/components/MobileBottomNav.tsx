@@ -13,14 +13,33 @@ export const MobileBottomNav: React.FC = () => {
     isCartBouncing,
     cartBounceKey,
     language,
+    t,
   } = useCart();
 
   const effectiveView = currentView === 'product' ? (productDetailSource || 'home') : currentView;
 
   const labels = {
-    home: language === 'ru' ? 'Главная' : language === 'it' ? 'Home' : 'Home',
-    menu: language === 'ru' ? 'Все Меню' : language === 'it' ? 'Tutto il Menu' : 'All Menu',
-    cart: language === 'ru' ? 'Корзина' : language === 'it' ? 'Carrello' : 'Cart',
+    home: t ? t('navHome') : language === 'ru' ? 'Главная' : language === 'fr' ? 'Accueil' : language === 'de' ? 'Startseite' : 'Home',
+    menu:
+      language === 'ru'
+        ? 'Всё Меню'
+        : language === 'it'
+        ? 'Tutto il Menu'
+        : language === 'de'
+        ? 'Speisekarte'
+        : language === 'fr'
+        ? 'Tout le Menu'
+        : 'All Menu',
+    cart:
+      language === 'ru'
+        ? 'Корзина'
+        : language === 'it'
+        ? 'Carrello'
+        : language === 'de'
+        ? 'Warenkorb'
+        : language === 'fr'
+        ? 'Panier'
+        : 'Cart',
     toPayBtn:
       language === 'ru'
         ? 'К оплате'
@@ -101,7 +120,7 @@ export const MobileBottomNav: React.FC = () => {
       {/* Floating Cart / Checkout Button above bottom dock (Screens 2 & 3) */}
       {itemsCount > 0 && effectiveView !== 'checkout' && (
         <aside
-          aria-label="Carrello rapido"
+          aria-label={labels.cart}
           className={`md:hidden fixed ${floatingCartBottom} right-4 z-40 transition-all duration-200`}
         >
           {effectiveView === 'cart' ? (
@@ -164,7 +183,7 @@ export const MobileBottomNav: React.FC = () => {
             <div
               onClick={() => handleTabClick('cart')}
               className="w-full pt-2 pb-1.5 px-4 flex flex-col items-center select-none cursor-pointer border-b border-neutral-100/80 active:bg-neutral-50/80 transition-colors"
-              title="Dettagli consegna"
+              title={deliveryLabels.freeDelivery}
             >
               {/* Pill Badge matching Screenshot 1 */}
               <div className="flex flex-col items-center text-center mb-1">

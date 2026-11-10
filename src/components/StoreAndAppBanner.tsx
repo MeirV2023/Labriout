@@ -1,6 +1,7 @@
 import React from 'react';
-import { MapPin, ArrowRight, ChevronRight } from 'lucide-react';
+import { MapPin, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { getLabrioutKosherBadge, getLabrioutShortSpecialty } from '../data/labrioutMenuData';
 
 export const StoreAndAppBanner: React.FC = () => {
   const { language, setCurrentView } = useCart();
@@ -28,10 +29,26 @@ export const StoreAndAppBanner: React.FC = () => {
   const isFr = language === 'fr';
   const isDe = language === 'de';
 
-  const headingText = isRu ? 'Приходи к нам!' : isIt ? 'Vieni a trovarci!' : 'Come visit us!';
-  const storeSubtitle = '🥩 Street food & spécialités maison • ✡️ 100% Casher';
+  const headingText = isRu
+    ? 'Приходи к нам!'
+    : isIt
+    ? 'Vieni a trovarci!'
+    : isFr
+    ? 'Venez nous voir !'
+    : isDe
+    ? 'Besuchen Sie uns!'
+    : 'Come visit us!';
+  const storeSubtitle = `${getLabrioutShortSpecialty(language)} • ${getLabrioutKosherBadge(language)}`;
   const storeAddress = '64 av. Simone Veil, Bonneuil-sur-Marne';
-  const otherButtonText = isRu ? 'Подробнее' : isIt ? 'Dettagli' : 'Details';
+  const otherButtonText = isRu
+    ? 'Подробнее'
+    : isIt
+    ? 'Dettagli'
+    : isFr
+    ? 'Détails'
+    : isDe
+    ? 'Details'
+    : 'Details';
   const downloadButtonText = isRu
     ? 'В веб-приложение'
     : isIt
@@ -180,6 +197,16 @@ export const StoreAndAppBanner: React.FC = () => {
                   <p className="text-[11px] sm:text-xs md:text-[13px] text-neutral-800 leading-snug">
                     <strong className="font-extrabold text-neutral-900">Non fare la fila —</strong>{' '}
                     <span>ordina tramite la nostra web app. Ritira il tuo ordine dove vuoi!</span>
+                  </p>
+                ) : isFr ? (
+                  <p className="text-[11px] sm:text-xs md:text-[13px] text-neutral-800 leading-snug">
+                    <strong className="font-extrabold text-neutral-900">Évitez la file d’attente —</strong>{' '}
+                    <span>commandez via notre web app. Retirez votre commande facilement !</span>
+                  </p>
+                ) : isDe ? (
+                  <p className="text-[11px] sm:text-xs md:text-[13px] text-neutral-800 leading-snug">
+                    <strong className="font-extrabold text-neutral-900">Keine Warteschlange —</strong>{' '}
+                    <span>bestellen Sie bequem über unsere Web-App zur schnellen Abholung!</span>
                   </p>
                 ) : (
                   <p className="text-[11px] sm:text-xs md:text-[13px] text-neutral-800 leading-snug">

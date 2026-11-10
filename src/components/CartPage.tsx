@@ -23,10 +23,15 @@ import {
   STORE_DETAILS,
   STORE_SCHEDULE,
   getAvailableExtrasForProduct,
+  getScheduleDayName,
 } from '../data/menuData';
+import { getLabrioutTagline } from '../data/labrioutMenuData';
 import { ExtraOption, ProductItem, SelectedExtra } from '../types';
 import { ProductCard } from './ProductCard';
-import { getLocalizedProductName } from '../utils/menuTranslations';
+import {
+  getLocalizedProductName,
+  getLocalizedExtraName as translateExtraName,
+} from '../utils/menuTranslations';
 
 export const CartPage: React.FC = () => {
   const {
@@ -192,11 +197,7 @@ export const CartPage: React.FC = () => {
   const getLocalizedExtraName = (prod: ProductItem, extra: SelectedExtra | ExtraOption): string => {
     const avail = getAvailableExtrasForProduct(prod);
     const match = avail.find(e => e.id === extra.id) || (extra as ExtraOption);
-    if (language === 'ru' && match.nameRu) return match.nameRu;
-    if (language === 'en' && match.nameEn) return match.nameEn;
-    if (language === 'de' && (match.nameDe || match.nameEn)) return match.nameDe || match.nameEn || match.name;
-    if (language === 'fr' && (match.nameFr || match.nameEn)) return match.nameFr || match.nameEn || match.name;
-    return match.name || extra.name;
+    return translateExtraName(match, language);
   };
 
   const handleToggleExtra = (item: typeof items[0], extra: ExtraOption) => {
@@ -297,10 +298,11 @@ export const CartPage: React.FC = () => {
       title: 'Корзина',
       clear: 'Очистить корзину',
       deliveryFreeTitle: 'Доставка 0 €',
+      pickupFreeTitle: 'Самовывоз 0 €',
       deliveryOldFee: '5,00 €',
       deliverySub: 'А это всегда приятно',
       emptyTitle: 'Корзина пуста',
-      emptySub: 'Добавьте что-нибудь вкусное из нашего меню!',
+      emptySub: 'Добавьте фирменные бургеры, сэндвичи и блюда из нашего меню!',
       browseMenu: 'Перейти в меню',
       loadSample: 'Загрузить пример заказа',
       addExtra: '+ Добавить добавку',
@@ -308,8 +310,9 @@ export const CartPage: React.FC = () => {
       summaryTitle: 'Итого',
       deliveryTab: 'Доставка',
       pickupTab: 'Самовывоз',
-      summaryDeliveryTime: 'Доставка 10–40 мин',
+      summaryDeliveryTime: 'Доставка 20–35 мин',
       summaryPickupTime: 'Готово через 15–20 мин',
+      shortDeliveryMins: '20–35 мин',
       productsTotal: (count: number) => `Товары (${count})`,
       discount: 'Скидки',
       delivery: 'Доставка',
@@ -325,13 +328,18 @@ export const CartPage: React.FC = () => {
       mobileRecommendedTitle: 'Порадовать себя',
       seeAll: 'Все ›',
       trust1Title: 'Быстрая доставка',
-      trust1Sub: 'Прямо к вашей двери в Помпеях.',
+      trust1Sub: 'Прямо к вашей двери в Бонёй-сюр-Марн и окрестностях.',
       trust2Title: 'Безопасная оплата',
       trust2Sub: 'Все платежи защищены и зашифрованы.',
       trust3Title: 'Служба заботы',
       trust3Sub: 'Всегда готовы ответить на любые вопросы.',
       currency: '€',
       undo: 'Вернуть',
+      unitPiece: '1 шт.',
+      notePrefix: 'Комментарий:',
+      decAria: 'Уменьшить количество',
+      incAria: 'Увеличить количество',
+      removeTitle: 'Удалить',
       addCutlery: 'Добавить приборы',
       mobileDeliveryFreeSub: 'Доставка бесплатно',
       mobileDeliveryPaidSub: `Бесплатная доставка от ${STORE_DETAILS.freeDeliveryThreshold} €`,
@@ -349,12 +357,13 @@ export const CartPage: React.FC = () => {
       title: 'Carrello',
       clear: 'Svuota carrello',
       deliveryFreeTitle: 'Consegna 0 €',
+      pickupFreeTitle: 'Ritiro in sede 0 €',
       deliveryOldFee: '5,00 €',
       deliverySub: 'Ed è sempre un piacere',
       emptyTitle: 'Il tuo carrello è vuoto',
-      emptySub: "Aggiungi i nostri panzerotti fritti, arancini e sfizi per completare l'ordine!",
+      emptySub: "Aggiungi i nostri smash burger, panini e specialità fatte in casa per completare l'ordine!",
       browseMenu: 'Scopri il Menù',
-      loadSample: 'Carica Esempio Mockup',
+      loadSample: 'Carica Esempio',
       addExtra: '+ Aggiungi extra',
       closeExtra: 'Chiudi opzioni extra',
       summaryTitle: 'Riepilogo Ordine',
@@ -362,6 +371,7 @@ export const CartPage: React.FC = () => {
       pickupTab: 'Asporto',
       summaryDeliveryTime: 'Consegna in 20–35 min',
       summaryPickupTime: 'Pronto in 15–20 min',
+      shortDeliveryMins: '20–35 min',
       productsTotal: (count: number) => `Totale prodotti (${count})`,
       discount: 'Sconti',
       delivery: 'Spedizione',
@@ -384,6 +394,11 @@ export const CartPage: React.FC = () => {
       trust3Sub: 'Per qualsiasi dubbio o richiesta, siamo qui per te.',
       currency: '€',
       undo: 'Ripristina',
+      unitPiece: '1 pz.',
+      notePrefix: 'Nota:',
+      decAria: 'Diminuisci quantità',
+      incAria: 'Aumenta quantità',
+      removeTitle: 'Rimuovi',
       addCutlery: 'Aggiungi posate',
       mobileDeliveryFreeSub: 'Consegna gratuita',
       mobileDeliveryPaidSub: `Consegna gratuita da ${STORE_DETAILS.freeDeliveryThreshold} €`,
@@ -400,11 +415,12 @@ export const CartPage: React.FC = () => {
       back: 'Back to catalog',
       title: 'Cart',
       clear: 'Clear cart',
-      deliveryFreeTitle: 'Delivery €0',
+      deliveryFreeTitle: 'Delivery 0 €',
+      pickupFreeTitle: 'Pickup 0 €',
       deliveryOldFee: '€5.00',
       deliverySub: 'Always a pleasure',
       emptyTitle: 'Your cart is empty',
-      emptySub: 'Add our crispy fried panzerotti, snacks and drinks to start your order!',
+      emptySub: 'Add our homemade smash burgers, sandwiches, plates and drinks to start your order!',
       browseMenu: 'Browse Menu',
       loadSample: 'Load Sample Items',
       addExtra: '+ Add extras',
@@ -414,6 +430,7 @@ export const CartPage: React.FC = () => {
       pickupTab: 'Pickup',
       summaryDeliveryTime: 'Delivery in 20–35 min',
       summaryPickupTime: 'Ready in 15–20 min',
+      shortDeliveryMins: '20–35 min',
       productsTotal: (count: number) => `Items (${count})`,
       discount: 'Discounts',
       delivery: 'Delivery',
@@ -436,6 +453,11 @@ export const CartPage: React.FC = () => {
       trust3Sub: 'Always ready to help with any questions.',
       currency: '€',
       undo: 'Undo',
+      unitPiece: '1 pc.',
+      notePrefix: 'Note:',
+      decAria: 'Decrease quantity',
+      incAria: 'Increase quantity',
+      removeTitle: 'Remove',
       addCutlery: 'Add cutlery',
       mobileDeliveryFreeSub: 'Free delivery',
       mobileDeliveryPaidSub: `Free delivery from €${STORE_DETAILS.freeDeliveryThreshold}`,
@@ -452,7 +474,8 @@ export const CartPage: React.FC = () => {
       back: 'Zurück zum Menü',
       title: 'Warenkorb',
       clear: 'Warenkorb leeren',
-      deliveryFreeTitle: 'Lieferung €0',
+      deliveryFreeTitle: 'Lieferung 0 €',
+      pickupFreeTitle: 'Abholung 0 €',
       deliveryOldFee: '€5.00',
       deliverySub: 'Immer ein Vergnügen',
       emptyTitle: 'Ihr Warenkorb ist leer',
@@ -466,6 +489,7 @@ export const CartPage: React.FC = () => {
       pickupTab: 'Abholung',
       summaryDeliveryTime: 'Lieferung in 20–35 Min',
       summaryPickupTime: 'Fertig in 15–20 Min',
+      shortDeliveryMins: '20–35 Min',
       productsTotal: (count: number) => `Artikel (${count})`,
       discount: 'Rabatte',
       delivery: 'Lieferung',
@@ -488,6 +512,11 @@ export const CartPage: React.FC = () => {
       trust3Sub: 'Wir sind jederzeit für Sie da.',
       currency: '€',
       undo: 'Wiederherstellen',
+      unitPiece: '1 Stk.',
+      notePrefix: 'Hinweis:',
+      decAria: 'Menge verringern',
+      incAria: 'Menge erhöhen',
+      removeTitle: 'Entfernen',
       addCutlery: 'Besteck hinzufügen',
       mobileDeliveryFreeSub: 'Kostenlose Lieferung',
       mobileDeliveryPaidSub: `Kostenlose Lieferung ab ${STORE_DETAILS.freeDeliveryThreshold} €`,
@@ -505,10 +534,11 @@ export const CartPage: React.FC = () => {
       title: 'Panier',
       clear: 'Vider le panier',
       deliveryFreeTitle: 'Livraison 0 €',
+      pickupFreeTitle: 'Retrait sur place 0 €',
       deliveryOldFee: '5,00 €',
       deliverySub: "C'est toujours un plaisir",
       emptyTitle: 'Votre panier est vide',
-      emptySub: 'Ajoutez nos délicieux panzerotti et spécialités pour commencer !',
+      emptySub: 'Ajoutez nos smash burgers, sandwichs et spécialités maison pour commencer !',
       browseMenu: 'Explorer le Menu',
       loadSample: "Charger l'exemple",
       addExtra: '+ Ajouter des extras',
@@ -518,6 +548,7 @@ export const CartPage: React.FC = () => {
       pickupTab: 'À emporter',
       summaryDeliveryTime: 'Livraison en 20–35 min',
       summaryPickupTime: 'Prêt en 15–20 min',
+      shortDeliveryMins: '20–35 min',
       productsTotal: (count: number) => `Articles (${count})`,
       discount: 'Réductions',
       delivery: 'Livraison',
@@ -540,6 +571,11 @@ export const CartPage: React.FC = () => {
       trust3Sub: 'Nous sommes à votre écoute pour toute question.',
       currency: '€',
       undo: 'Restaurer',
+      unitPiece: '1 pce',
+      notePrefix: 'Note :',
+      decAria: 'Diminuer la quantité',
+      incAria: 'Augmenter la quantité',
+      removeTitle: 'Retirer',
       addCutlery: 'Ajouter des couverts',
       mobileDeliveryFreeSub: 'Livraison gratuite',
       mobileDeliveryPaidSub: `Livraison gratuite dès ${STORE_DETAILS.freeDeliveryThreshold} €`,
@@ -552,58 +588,7 @@ export const CartPage: React.FC = () => {
       sheetStoreInfoTitle: 'Informations sur le restaurant',
       sheetOkBtn: 'Compris',
     },
-  }[language] || {
-    back: 'Torna al catalogo',
-    title: 'Carrello',
-    clear: 'Svuota carrello',
-    deliveryFreeTitle: 'Consegna 0 €',
-    deliveryOldFee: '5,00 €',
-    deliverySub: 'Ed è sempre un piacere',
-    emptyTitle: 'Il tuo carrello è vuoto',
-    emptySub: "Aggiungi i nostri panzerotti fritti, arancini e sfizi per completare l'ordine!",
-    browseMenu: 'Scopri il Menù',
-    loadSample: 'Carica Esempio Mockup',
-    addExtra: '+ Aggiungi extra',
-    closeExtra: 'Chiudi opzioni extra',
-    summaryTitle: 'Riepilogo Ordine',
-    deliveryTab: 'Consegna',
-    pickupTab: 'Asporto',
-    summaryDeliveryTime: 'Consegna in 20–35 min',
-    summaryPickupTime: 'Pronto in 15–20 min',
-    productsTotal: (count: number) => `Totale prodotti (${count})`,
-    discount: 'Sconti',
-    delivery: 'Spedizione',
-    free: 'Gratis',
-    toPay: 'Totale',
-    checkoutBtn: 'Procedi al pagamento',
-    promoQuestion: 'Hai un codice sconto?',
-    promoBanner: 'Hai 1 codice promo',
-    promoPlaceholder: 'Inserisci il codice',
-    apply: 'Applica',
-    removePromo: 'Rimuovi',
-    recommendedTitle: 'Consigliati per te',
-    mobileRecommendedTitle: 'Consigliati per te',
-    seeAll: 'Vedi tutti ›',
-    trust1Title: 'Consegna a domicilio',
-    trust1Sub: 'Rapida e sicura, direttamente a casa tua.',
-    trust2Title: 'Pagamento sicuro',
-    trust2Sub: 'Tutti i pagamenti sono protetti e crittografati.',
-    trust3Title: 'Assistenza sempre attiva',
-    trust3Sub: 'Per qualsiasi dubbio o richiesta, siamo qui per te.',
-    currency: '€',
-    undo: 'Ripristina',
-    addCutlery: 'Aggiungi posate',
-    mobileDeliveryFreeSub: 'Consegna gratuita',
-    mobileDeliveryPaidSub: `Consegna gratuita da ${STORE_DETAILS.freeDeliveryThreshold} €`,
-    sheetDeliveryTitle: 'Consegna',
-    sheetCourierTime: 'Il corriere arriva in 20–35 min',
-    sheetWorkingHours: `Orari di apertura: dalle ${todayHours.start} alle ${todayHours.end}`,
-    sheetConditions: 'Condizioni',
-    sheetCart: 'Carrello',
-    sheetFreeDeliveryRow: 'Consegna 0 €',
-    sheetStoreInfoTitle: 'Informazioni sul locale',
-    sheetOkBtn: 'Ho capito',
-  };
+  }[language];
 
   const hasCustomTimeSelected = Boolean(
     selectedSlot && selectedTimeSlot && selectedTimeSlot !== 'subito'
@@ -645,12 +630,7 @@ export const CartPage: React.FC = () => {
     const d = new Date();
     d.setDate(d.getDate() + selectedDayIndex);
     const dayOfWeek = d.getDay();
-    const sched = STORE_SCHEDULE[dayOfWeek];
-    let dayName = sched?.name || '';
-    if (language === 'ru') dayName = sched?.nameRu || dayName;
-    else if (language === 'en') dayName = sched?.nameEn || dayName;
-    else if (language === 'de') dayName = sched?.nameDe || dayName;
-    else if (language === 'fr') dayName = sched?.nameFr || dayName;
+    const dayName = getScheduleDayName(dayOfWeek, language);
 
     if (shortForHeadline) {
       if (language === 'ru') return `${dayName} к ${selectedSlot}`;
@@ -672,19 +652,17 @@ export const CartPage: React.FC = () => {
       if (hasCustomTimeSelected) {
         return `${getScheduledCartTimeText(true)}, 0 €`;
       }
-      return language === 'ru' ? 'Самовывоз 0 €' : 'Ritiro in sede 0 €';
+      return labels.pickupFreeTitle;
     }
     const timeText = hasCustomTimeSelected
       ? getScheduledCartTimeText(true)
-      : language === 'ru'
-      ? '15–40 мин'
-      : '20–35 min';
+      : labels.shortDeliveryMins;
     const feeText =
       deliveryFee === 0
         ? '0 €'
         : `${(Number(deliveryFee) || 0).toFixed(2).replace('.', ',')} €`;
     return `${timeText}, ${feeText}`;
-  }, [fulfillmentType, deliveryFee, language, hasCustomTimeSelected, selectedDayIndex, selectedSlot]);
+  }, [fulfillmentType, deliveryFee, language, hasCustomTimeSelected, selectedDayIndex, selectedSlot, labels]);
 
   return (
     <div className="bg-[#F5F4F2] md:bg-white text-[#21201F] md:min-h-screen">
@@ -918,7 +896,7 @@ export const CartPage: React.FC = () => {
                                 updateQuantity(item.cartItemId, -1);
                               }
                             }}
-                            aria-label="Diminuisci"
+                            aria-label={labels.decAria}
                             className="w-6 h-6 flex items-center justify-center text-[#21201F] cursor-pointer active:scale-90 transition"
                           >
                             <Minus className="w-4 h-4 stroke-[2]" />
@@ -931,7 +909,7 @@ export const CartPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.cartItemId, 1)}
-                            aria-label="Aumenta"
+                            aria-label={labels.incAria}
                             className="w-6 h-6 flex items-center justify-center text-[#21201F] cursor-pointer active:scale-90 transition"
                           >
                             <Plus className="w-4 h-4 stroke-[2]" />
@@ -1020,7 +998,7 @@ export const CartPage: React.FC = () => {
                             type="button"
                             onClick={handleRecDecrease}
                             className="w-6 h-6 rounded-full hover:bg-black/20 text-white flex items-center justify-center cursor-pointer shrink-0"
-                            aria-label="Diminuisci quantità"
+                            aria-label={labels.decAria}
                           >
                             <Minus className="w-3.5 h-3.5 stroke-[2.5]" />
                           </button>
@@ -1033,7 +1011,7 @@ export const CartPage: React.FC = () => {
                             type="button"
                             onClick={handleRecIncrease}
                             className="w-6 h-6 rounded-full hover:bg-black/20 text-white flex items-center justify-center cursor-pointer shrink-0"
-                            aria-label="Aumenta quantità"
+                            aria-label={labels.incAria}
                           >
                             <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                           </button>
@@ -1182,7 +1160,7 @@ export const CartPage: React.FC = () => {
                   </div>
                   <div className="text-[17px] font-normal text-[#21201F]">
                     {fulfillmentType === 'asporto' ? (
-                      <span>{language === 'ru' ? 'Самовывоз 0 €' : 'Ritiro in sede 0 €'}</span>
+                      <span>{labels.pickupFreeTitle}</span>
                     ) : deliveryFee === 0 ? (
                       <>
                         <span>{labels.sheetFreeDeliveryRow}</span>{' '}
@@ -1265,12 +1243,10 @@ export const CartPage: React.FC = () => {
                       {language === 'ru' ? (
                         <>
                           <p>
-                            Исполнитель (продавец): {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy,{' '}
+                            Исполнитель (продавец): {STORE_DETAILS.name} • {getLabrioutTagline(language)},{' '}
                             {STORE_DETAILS.address}. Тел.: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                           </p>
-                          <p>
-                            Режим работы: ⏰ 12h-15h 18h-22h15.
-                          </p>
+                          <p>Режим работы: ⏰ 12h-15h 18h-22h15.</p>
                           <p>
                             {fulfillmentType === 'asporto'
                               ? `Самовывоз заказов по адресу: ${STORE_DETAILS.address}.`
@@ -1280,29 +1256,49 @@ export const CartPage: React.FC = () => {
                       ) : language === 'it' ? (
                         <>
                           <p>
-                            Venditore: {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy, {STORE_DETAILS.address}. Tel: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
+                            Venditore: {STORE_DETAILS.name} • {getLabrioutTagline(language)}, {STORE_DETAILS.address}. Tel: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                           </p>
-                          <p>
-                            Orari di apertura: ⏰ 12h-15h 18h-22h15.
-                          </p>
+                          <p>Orari di apertura: ⏰ 12h-15h 18h-22h15.</p>
                           <p>
                             {fulfillmentType === 'asporto'
                               ? `Ritiro ordini in sede presso ${STORE_DETAILS.address}.`
                               : 'La consegna è effettuata dal servizio corrieri di LABRIOUT.'}
                           </p>
                         </>
+                      ) : language === 'de' ? (
+                        <>
+                          <p>
+                            Anbieter: {STORE_DETAILS.name} • {getLabrioutTagline(language)}, {STORE_DETAILS.address}. Tel.: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
+                          </p>
+                          <p>Öffnungszeiten: ⏰ 12h-15h 18h-22h15.</p>
+                          <p>
+                            {fulfillmentType === 'asporto'
+                              ? `Abholung vor Ort unter ${STORE_DETAILS.address}.`
+                              : 'Lieferung durch den Lieferservice von LABRIOUT.'}
+                          </p>
+                        </>
+                      ) : language === 'en' ? (
+                        <>
+                          <p>
+                            Seller: {STORE_DETAILS.name} • {getLabrioutTagline(language)}, {STORE_DETAILS.address}. Tel: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
+                          </p>
+                          <p>Opening hours: ⏰ 12h-15h 18h-22h15.</p>
+                          <p>
+                            {fulfillmentType === 'asporto'
+                              ? `Pickup at ${STORE_DETAILS.address}.`
+                              : 'Delivery operated by LABRIOUT courier service.'}
+                          </p>
+                        </>
                       ) : (
                         <>
                           <p>
-                            {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy • 📍 {STORE_DETAILS.address} • 📞 {STORE_DETAILS.phone} • {STORE_DETAILS.email}
+                            Établissement : {STORE_DETAILS.name} • {getLabrioutTagline(language)}, {STORE_DETAILS.address}. Tél. : {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                           </p>
-                          <p>
-                            ⏰ 12h-15h 18h-22h15
-                          </p>
+                          <p>Horaires d&apos;ouverture : ⏰ 12h-15h 18h-22h15.</p>
                           <p>
                             {fulfillmentType === 'asporto'
-                              ? `Pickup / Retrait: ${STORE_DETAILS.address}.`
-                              : 'Delivery by LABRIOUT.'}
+                              ? `Retrait sur place : ${STORE_DETAILS.address}.`
+                              : 'Livraison assurée par le service de livraison LABRIOUT.'}
                           </p>
                         </>
                       )}
@@ -1378,8 +1374,8 @@ export const CartPage: React.FC = () => {
                 <div className="flex items-baseline gap-2">
                   <span className="font-heading font-black text-sm sm:text-base text-[#21201F] leading-none">
                     {fulfillmentType === 'consegna'
-                      ? `${deliveryFee === 0 ? (language === 'ru' ? 'Доставка 0 €' : 'Consegna 0 €') : `${(Number(deliveryFee) || 0).toFixed(2).replace('.', ',')} €`}`
-                      : (language === 'ru' ? 'Самовывоз 0 €' : 'Ritiro in sede 0 €')}
+                      ? `${deliveryFee === 0 ? labels.deliveryFreeTitle : `${(Number(deliveryFee) || 0).toFixed(2).replace('.', ',')} €`}`
+                      : labels.pickupFreeTitle}
                   </span>
                   {fulfillmentType === 'consegna' && deliveryFee === 0 && (
                     <span className="text-xs text-neutral-400 line-through font-medium leading-none">
@@ -1538,12 +1534,10 @@ export const CartPage: React.FC = () => {
                               {language === 'ru' ? (
                                 <>
                                   <p>
-                                    Исполнитель (продавец): {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy,{' '}
+                                    Исполнитель (продавец): {STORE_DETAILS.name} • {getLabrioutTagline(language)},{' '}
                                     {STORE_DETAILS.address}. Тел.: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                                   </p>
-                                  <p>
-                                    Режим работы: ⏰ 12h-15h 18h-22h15.
-                                  </p>
+                                  <p>Режим работы: ⏰ 12h-15h 18h-22h15.</p>
                                   <p>
                                     {fulfillmentType === 'asporto'
                                       ? `Самовывоз заказов по адресу: ${STORE_DETAILS.address}.`
@@ -1553,29 +1547,49 @@ export const CartPage: React.FC = () => {
                               ) : language === 'it' ? (
                                 <>
                                   <p>
-                                    Venditore: {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy, {STORE_DETAILS.address}. Tel: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
+                                    Venditore: {STORE_DETAILS.name} • {getLabrioutTagline(language)}, {STORE_DETAILS.address}. Tel: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                                   </p>
-                                  <p>
-                                    Orari di apertura: ⏰ 12h-15h 18h-22h15.
-                                  </p>
+                                  <p>Orari di apertura: ⏰ 12h-15h 18h-22h15.</p>
                                   <p>
                                     {fulfillmentType === 'asporto'
                                       ? `Ritiro ordini in sede presso ${STORE_DETAILS.address}.`
                                       : 'La consegna è effettuata dal servizio corrieri di LABRIOUT.'}
                                   </p>
                                 </>
+                              ) : language === 'de' ? (
+                                <>
+                                  <p>
+                                    Anbieter: {STORE_DETAILS.name} • {getLabrioutTagline(language)}, {STORE_DETAILS.address}. Tel.: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
+                                  </p>
+                                  <p>Öffnungszeiten: ⏰ 12h-15h 18h-22h15.</p>
+                                  <p>
+                                    {fulfillmentType === 'asporto'
+                                      ? `Abholung vor Ort unter ${STORE_DETAILS.address}.`
+                                      : 'Lieferung durch den Lieferservice von LABRIOUT.'}
+                                  </p>
+                                </>
+                              ) : language === 'en' ? (
+                                <>
+                                  <p>
+                                    Seller: {STORE_DETAILS.name} • {getLabrioutTagline(language)}, {STORE_DETAILS.address}. Tel: {STORE_DETAILS.phone} • {STORE_DETAILS.email}
+                                  </p>
+                                  <p>Opening hours: ⏰ 12h-15h 18h-22h15.</p>
+                                  <p>
+                                    {fulfillmentType === 'asporto'
+                                      ? `Pickup at ${STORE_DETAILS.address}.`
+                                      : 'Delivery operated by LABRIOUT courier service.'}
+                                  </p>
+                                </>
                               ) : (
                                 <>
                                   <p>
-                                    {STORE_DETAILS.name} • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy • 📍 {STORE_DETAILS.address} • 📞 {STORE_DETAILS.phone} • {STORE_DETAILS.email}
+                                    Établissement : {STORE_DETAILS.name} • {getLabrioutTagline(language)}, {STORE_DETAILS.address}. Tél. : {STORE_DETAILS.phone} • {STORE_DETAILS.email}
                                   </p>
-                                  <p>
-                                    ⏰ 12h-15h 18h-22h15
-                                  </p>
+                                  <p>Horaires d&apos;ouverture : ⏰ 12h-15h 18h-22h15.</p>
                                   <p>
                                     {fulfillmentType === 'asporto'
-                                      ? `Pickup / Retrait: ${STORE_DETAILS.address}.`
-                                      : 'Delivery by LABRIOUT.'}
+                                      ? `Retrait sur place : ${STORE_DETAILS.address}.`
+                                      : 'Livraison assurée par le service de livraison LABRIOUT.'}
                                   </p>
                                 </>
                               )}
@@ -1699,7 +1713,7 @@ export const CartPage: React.FC = () => {
 
                             {isSoftDeleted ? (
                               <div className="text-xs sm:text-[13px] text-neutral-400 font-normal mt-0.5 truncate">
-                                {item.product?.weight || '1 pz.'}
+                                {item.product?.weight || labels.unitPiece}
                               </div>
                             ) : (
                               <>
@@ -1734,7 +1748,7 @@ export const CartPage: React.FC = () => {
 
                                 {item.specialNotes && (
                                   <p className="text-[11px] text-neutral-500 italic mt-1">
-                                    Note: &quot;{item.specialNotes}&quot;
+                                    {labels.notePrefix} &quot;{item.specialNotes}&quot;
                                   </p>
                                 )}
 
@@ -1785,8 +1799,8 @@ export const CartPage: React.FC = () => {
                                 }
                               }}
                               className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-neutral-700 hover:text-neutral-950 rounded-xl hover:bg-neutral-200/70 transition cursor-pointer active:scale-90"
-                              title={item.quantity === 1 ? 'Rimuovi' : 'Diminuisci'}
-                              aria-label="Diminuisci o rimuovi"
+                              title={item.quantity === 1 ? labels.removeTitle : labels.decAria}
+                              aria-label={labels.decAria}
                             >
                               {item.quantity === 1 ? (
                                 <Trash2 className="w-3.5 h-3.5 text-neutral-600 hover:text-red-500" />
@@ -1803,8 +1817,8 @@ export const CartPage: React.FC = () => {
                               type="button"
                               onClick={() => updateQuantity(item.cartItemId, 1)}
                               className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-neutral-900 hover:text-black rounded-xl hover:bg-neutral-200/70 transition cursor-pointer active:scale-90"
-                              title="Aumenta quantità"
-                              aria-label="Aumenta quantità"
+                              title={labels.incAria}
+                              aria-label={labels.incAria}
                             >
                               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                             </button>
@@ -1817,12 +1831,7 @@ export const CartPage: React.FC = () => {
                         <div className="mt-2.5 pt-2.5 border-t border-gray-100 space-y-1.5 w-full animate-fadeIn">
                           {availableExtras.map(extra => {
                             const isChecked = item.selectedExtras?.some(e => e.id === extra.id);
-                            const extraName =
-                              language === 'ru' && extra.nameRu
-                                ? extra.nameRu
-                                : language === 'en' && extra.nameEn
-                                ? extra.nameEn
-                                : extra.name;
+                            const extraName = getLocalizedExtraName(item.product, extra);
 
                             return (
                               <div

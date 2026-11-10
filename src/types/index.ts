@@ -27,6 +27,7 @@ export interface ExtraOption {
   nameEn?: string;
   nameDe?: string;
   nameFr?: string;
+  nameIt?: string;
   nameRu?: string;
   price: number;
 }
@@ -37,6 +38,7 @@ export interface ProductItem {
   nameEn?: string;
   nameDe?: string;
   nameFr?: string;
+  nameIt?: string;
   nameRu?: string;
   icon?: string;
   category: CategoryId;
@@ -45,11 +47,13 @@ export interface ProductItem {
   descriptionEn?: string;
   descriptionDe?: string;
   descriptionFr?: string;
+  descriptionIt?: string;
   descriptionRu?: string;
   ingredients?: string;
   ingredientsEn?: string;
   ingredientsDe?: string;
   ingredientsFr?: string;
+  ingredientsIt?: string;
   ingredientsRu?: string;
   weight?: string;
   price: number;

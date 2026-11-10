@@ -253,7 +253,7 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
                   {/* Category Image - Static without scale/zoom */}
                   <img
                     src={cat.image}
-                    alt={cat.label}
+                    alt={getCategoryLabel(cat.id, language, cat.label)}
                     referrerPolicy="no-referrer"
                     onError={(e) => {
                       const fallbacks: Record<string, string> = {
@@ -277,9 +277,7 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
                       style={{ fontFamily: 'YSText, sans-serif' }}
                       className="text-[11px] sm:text-xs font-bold text-white tracking-wider uppercase truncate"
                     >
-                      {activeTenantId === 'labriout'
-                        ? cat.label
-                        : getCategoryLabel(cat.id, language, cat.label)}
+                      {getCategoryLabel(cat.id, language, cat.label)}
                     </span>
                     <div className="w-5 h-5 rounded-full bg-[#ff5500] text-white flex items-center justify-center shrink-0 shadow-md transition-all duration-300">
                       <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-90" />

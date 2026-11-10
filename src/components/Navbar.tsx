@@ -4,7 +4,7 @@ import { ShoppingCart, MapPin, Globe, ChevronDown, Clock, Check, X, Home, Utensi
 import { useCart } from '../context/CartContext';
 import { Language } from '../types';
 import { PrenotaTimeDropdown } from './PrenotaTimeDropdown';
-import { STORE_SCHEDULE, STORE_DETAILS } from '../data/menuData';
+import { STORE_DETAILS, getScheduleDayName } from '../data/menuData';
 import { LABRIOUT_STORE_DETAILS } from '../data/labrioutMenuData';
 
 interface NavbarProps {
@@ -121,13 +121,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
       if (selectedDayIndex >= 2) {
         const d = new Date();
         d.setDate(d.getDate() + selectedDayIndex);
-        const dayOfWeek = d.getDay();
-        const sched = STORE_SCHEDULE[dayOfWeek];
-        let dayName = sched?.name || '';
-        if (language === 'ru') dayName = sched?.nameRu || dayName;
-        else if (language === 'en') dayName = sched?.nameEn || dayName;
-        else if (language === 'de') dayName = sched?.nameDe || dayName;
-        else if (language === 'fr') dayName = sched?.nameFr || dayName;
+        const dayName = getScheduleDayName(d.getDay(), language);
         return `${dayName} ${selectedSlot}`;
       }
 
@@ -198,13 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
     const d = new Date();
     d.setDate(d.getDate() + selectedDayIndex);
-    const dayOfWeek = d.getDay();
-    const sched = STORE_SCHEDULE[dayOfWeek];
-    let dayName = sched?.name || '';
-    if (language === 'ru') dayName = sched?.nameRu || dayName;
-    else if (language === 'en') dayName = sched?.nameEn || dayName;
-    else if (language === 'de') dayName = sched?.nameDe || dayName;
-    else if (language === 'fr') dayName = sched?.nameFr || dayName;
+    const dayName = getScheduleDayName(d.getDay(), language);
     const dateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1)
       .toString()
       .padStart(2, '0')}`;
@@ -315,8 +303,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
           type="button"
           onClick={() => setIsMobileMenuOpen(true)}
           className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-[#21201f] hover:text-[#ff5500] active:scale-95 transition-colors cursor-pointer select-none rounded-lg z-10"
-          aria-label="Apri menu di navigazione"
-          title="Menu"
+          aria-label={t('navMenu')}
+          title={t('navMenu')}
         >
           {/* 3 crisp horizontal bars matching Screenshot 2 */}
           <div className="flex flex-col justify-between w-[18px] h-[13px] py-[0.5px]">
@@ -332,7 +320,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             type="button"
             onClick={() => setIsMobilePrenotaOpen(!isMobilePrenotaOpen)}
             className="flex items-center justify-center gap-2 py-0 transition cursor-pointer select-none group"
-            title="Scegli orario di prenotazione"
+            title={t('chooseTimeSlot')}
           >
             <span className="text-sm select-none leading-none">
               {hasCustomTimeSelected ? '🕒' : '🌙'}
@@ -414,7 +402,27 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                   ? 'bg-emerald-100/90 text-emerald-800'
                   : 'text-neutral-800 hover:bg-neutral-200/60'
               }`}
-              title={copiedAddress ? 'Indirizzo copiato!' : 'Clicca per copiare l\'indirizzo'}
+              title={
+                copiedAddress
+                  ? language === 'ru'
+                    ? 'Адрес скопирован!'
+                    : language === 'en'
+                    ? 'Address copied!'
+                    : language === 'de'
+                    ? 'Adresse kopiert!'
+                    : language === 'it'
+                    ? 'Indirizzo copiato!'
+                    : 'Adresse copiée !'
+                  : language === 'ru'
+                  ? 'Нажмите, чтобы скопировать адрес'
+                  : language === 'en'
+                  ? 'Click to copy address'
+                  : language === 'de'
+                  ? 'Klicken zum Kopieren der Adresse'
+                  : language === 'it'
+                  ? "Clicca per copiare l'indirizzo"
+                  : "Cliquez pour copier l'adresse"
+              }
             >
               <span
                 className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
@@ -437,7 +445,13 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                 {copiedAddress
                   ? language === 'ru'
                     ? 'Скопировано!'
-                    : 'Copiato!'
+                    : language === 'en'
+                    ? 'Copied!'
+                    : language === 'de'
+                    ? 'Kopiert!'
+                    : language === 'it'
+                    ? 'Copiato!'
+                    : 'Copié !'
                   : '64 av. Simone Veil, Bonneuil-sur-Marne'}
               </span>
             </button>
@@ -452,7 +466,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                 type="button"
                 onClick={() => setIsPrenotaOpen(!isPrenotaOpen)}
                 className="flex items-center gap-2 pl-2.5 pr-3 py-1 rounded-full text-xs font-bold text-neutral-800 hover:text-[#ff5500] hover:bg-neutral-200/60 transition-colors cursor-pointer group select-none"
-                title="Scegli orario di apertura / prenotazione"
+                title={t('chooseTimeSlot')}
               >
                 <span className="w-5 h-5 rounded-full bg-neutral-900 text-white flex items-center justify-center shrink-0 group-hover:bg-[#ff5500] transition-colors">
                   <Clock className="w-3 h-3 stroke-[2.5]" />
@@ -480,8 +494,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                 : 'text-neutral-800 hover:text-[#ff5500] hover:bg-neutral-100/80'
             }`}
             id="navbar-cart-button"
-            aria-label="Carrello"
-            title="Carrello"
+            aria-label={t('navCart')}
+            title={t('navCart')}
           >
             {/* Floating Mario-style +1 indicator */}
             {isCartBouncing && (
@@ -519,8 +533,28 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                   ? 'text-[#ff5500] bg-orange-50'
                   : 'text-neutral-800 hover:text-[#ff5500] hover:bg-neutral-100/80'
               }`}
-              aria-label="Cambia lingua"
-              title="Cambia lingua"
+              aria-label={
+                language === 'ru'
+                  ? 'Сменить язык'
+                  : language === 'en'
+                  ? 'Change language'
+                  : language === 'de'
+                  ? 'Sprache ändern'
+                  : language === 'it'
+                  ? 'Cambia lingua'
+                  : 'Changer de langue'
+              }
+              title={
+                language === 'ru'
+                  ? 'Сменить язык'
+                  : language === 'en'
+                  ? 'Change language'
+                  : language === 'de'
+                  ? 'Sprache ändern'
+                  : language === 'it'
+                  ? 'Cambia lingua'
+                  : 'Changer de langue'
+              }
             >
               <Globe className="w-6 h-6 stroke-[2]" />
               <span className="text-xs font-black uppercase tracking-wider text-neutral-800">
@@ -615,7 +649,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                   type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="w-9 h-9 -mr-1.5 -mt-0.5 flex items-center justify-center text-[#171717] hover:text-[#ff5500] active:scale-90 transition cursor-pointer"
-                  aria-label="Chiudi menu"
+                  aria-label={t('close') || 'Close'}
                 >
                   <X className="w-5 h-5 stroke-[2]" />
                 </button>
@@ -624,9 +658,9 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               {/* Primary Navigation: Menu, Contact, About Us */}
               <div className="space-y-1.5">
                 {[
-                  { id: 'menu', label: t('navMenu') || 'Menu', icon: Utensils },
-                  { id: 'contatti', label: t('navContact') || (language === 'ru' ? 'Контакты' : 'Contact'), icon: Phone },
-                  { id: 'chi-siamo', label: t('navAbout') || (language === 'ru' ? 'О нас' : 'About Us'), icon: Info },
+                  { id: 'menu', label: t('navMenu'), icon: Utensils },
+                  { id: 'contatti', label: t('navContact'), icon: Phone },
+                  { id: 'chi-siamo', label: t('navAbout'), icon: Info },
                 ].map((item, idx) => {
                   const IconComponent = item.icon;
                   // Highlight active item (or Menu when on home/menu matching Screenshot 2)
@@ -821,9 +855,37 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               <div className="relative z-10">
                 <div className="w-24 h-px bg-neutral-200/90 mb-3" />
                 <p className="text-[9px] font-semibold tracking-[0.18em] text-neutral-400 uppercase leading-[1.6]">
-                  GOOD FOOD
-                  <br />
-                  BRINGS PEOPLE TOGETHER
+                  {language === 'ru' ? (
+                    <>
+                      ВКУСНАЯ ЕДА
+                      <br />
+                      ОБЪЕДИНЯЕТ ЛЮДЕЙ
+                    </>
+                  ) : language === 'fr' ? (
+                    <>
+                      LA BONNE CUISINE
+                      <br />
+                      RASSEMBLE LES GENS
+                    </>
+                  ) : language === 'de' ? (
+                    <>
+                      GUTES ESSEN
+                      <br />
+                      BRINGT MENSCHEN ZUSAMMEN
+                    </>
+                  ) : language === 'it' ? (
+                    <>
+                      IL BUON CIBO
+                      <br />
+                      UNISCE LE PERSONE
+                    </>
+                  ) : (
+                    <>
+                      GOOD FOOD
+                      <br />
+                      BRINGS PEOPLE TOGETHER
+                    </>
+                  )}
                 </p>
               </div>
             </div>

@@ -408,10 +408,7 @@ export const MenuCatalog: React.FC = () => {
 
   const renderProductGridForCategory = (config: MenuCategoryConfig) => {
     const currentSubFilter = categorySubFilters[config.id] || 'tutti';
-    const localizedCategoryTitle =
-      activeTenantId === 'labriout'
-        ? config.label
-        : getCategoryLabel(config.id, language, config.label);
+    const localizedCategoryTitle = getCategoryLabel(config.id, language, config.label);
 
     const categoryProducts = activeCatalog.filter(product => {
       if (product.category !== config.id) return false;
@@ -473,6 +470,10 @@ export const MenuCatalog: React.FC = () => {
                 ? 'В этой подкатегории товары не найдены.'
                 : language === 'en'
                 ? 'No products found in this subcategory.'
+                : language === 'de'
+                ? 'Keine Produkte in dieser Unterkategorie gefunden.'
+                : language === 'fr'
+                ? 'Aucun produit trouvé dans cette sous-catégorie.'
                 : 'Nessun prodotto trovato in questa sottocategoria.'}
             </p>
             <button
@@ -483,7 +484,11 @@ export const MenuCatalog: React.FC = () => {
                 ? `Показать все: ${localizedCategoryTitle}`
                 : language === 'en'
                 ? `Show all ${localizedCategoryTitle}`
-                : `Mostra tutti i ${localizedCategoryTitle}`}
+                : language === 'de'
+                ? `Alle anzeigen: ${localizedCategoryTitle}`
+                : language === 'fr'
+                ? `Afficher tout : ${localizedCategoryTitle}`
+                : `Mostra tutti: ${localizedCategoryTitle}`}
             </button>
           </div>
         ) : (
@@ -531,7 +536,17 @@ export const MenuCatalog: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => scrollCategories('left')}
-                    aria-label="Scorri a sinistra"
+                    aria-label={
+                      language === 'ru'
+                        ? 'Прокрутить влево'
+                        : language === 'en'
+                        ? 'Scroll left'
+                        : language === 'de'
+                        ? 'Nach links scrollen'
+                        : language === 'it'
+                        ? 'Scorri a sinistra'
+                        : 'Défiler à gauche'
+                    }
                     className="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-[#21201F] flex items-center justify-center transition cursor-pointer active:scale-95 shrink-0 shadow-2xs mr-1"
                   >
                     <ChevronLeft className="w-4 h-4 stroke-[2.2]" />
@@ -587,9 +602,7 @@ export const MenuCatalog: React.FC = () => {
                         }`}
                       >
                         <span>
-                          {activeTenantId === 'labriout'
-                            ? cat.label
-                            : getCategoryLabel(cat.id, language, cat.label)}
+                          {getCategoryLabel(cat.id, language, cat.label)}
                         </span>
                         {isActive && (
                           <span className="absolute bottom-0 left-2 right-2 h-[2.5px] bg-[#21201F] rounded-full" />
@@ -604,7 +617,17 @@ export const MenuCatalog: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => scrollCategories('right')}
-                    aria-label="Scorri a destra"
+                    aria-label={
+                      language === 'ru'
+                        ? 'Прокрутить вправо'
+                        : language === 'en'
+                        ? 'Scroll right'
+                        : language === 'de'
+                        ? 'Nach rechts scrollen'
+                        : language === 'it'
+                        ? 'Scorri a destra'
+                        : 'Défiler à droite'
+                    }
                     className="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-[#21201F] flex items-center justify-center transition cursor-pointer active:scale-95 shrink-0 shadow-2xs ml-1"
                   >
                     <ChevronRight className="w-4 h-4 stroke-[2.2]" />
@@ -628,13 +651,30 @@ export const MenuCatalog: React.FC = () => {
                       }}
                       className="tracking-tight"
                     >
-                      Risultati ricerca per: <span className="text-[#ff5500]">"{searchQuery}"</span>
+                      {language === 'ru'
+                        ? 'Результаты поиска:'
+                        : language === 'en'
+                        ? 'Search results for:'
+                        : language === 'de'
+                        ? 'Suchergebnisse für:'
+                        : language === 'it'
+                        ? 'Risultati ricerca per:'
+                        : 'Résultats de recherche pour :'}{' '}
+                      <span className="text-[#ff5500]">"{searchQuery}"</span>
                     </h2>
                     <button
                       onClick={() => setSearchQuery('')}
                       className="text-xs text-neutral-500 hover:text-neutral-900 underline cursor-pointer"
                     >
-                      Cancella ricerca
+                      {language === 'ru'
+                        ? 'Очистить поиск'
+                        : language === 'en'
+                        ? 'Clear search'
+                        : language === 'de'
+                        ? 'Suche löschen'
+                        : language === 'it'
+                        ? 'Cancella ricerca'
+                        : 'Effacer la recherche'}
                     </button>
                   </div>
                   <div className="w-full h-[1px] bg-gray-200" />
@@ -651,7 +691,15 @@ export const MenuCatalog: React.FC = () => {
                       }}
                       className="mt-4 px-4 py-2 rounded-xl bg-[#ff5500] text-white text-xs font-bold cursor-pointer"
                     >
-                      Mostra tutto il menù
+                      {language === 'ru'
+                        ? 'Показать всё меню'
+                        : language === 'en'
+                        ? 'Show full menu'
+                        : language === 'de'
+                        ? 'Gesamtes Menü anzeigen'
+                        : language === 'it'
+                        ? 'Mostra tutto il menù'
+                        : 'Afficher tout le menu'}
                     </button>
                   </div>
                 ) : (

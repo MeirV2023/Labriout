@@ -33,16 +33,16 @@ import {
   ChevronRight,
   ChevronDown,
   Eye,
-  Edit3,
   Copy,
   TrendingUp,
   Star,
   MapPin,
   Phone,
   LogOut,
+  Globe,
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { PlacedOrder } from '../types';
+import { PlacedOrder, Language } from '../types';
 import {
   fetchTenantOrders,
   updateOrderStatusOnKds,
@@ -59,7 +59,28 @@ import {
   subscribeToRealtimeStream,
   playKitchenOrderSound,
 } from '../utils/api';
-import { REVIEWS_DATA } from '../data/menuData';
+import {
+  REVIEWS_DATA,
+  getLocalizedReviewText,
+  getLocalizedReviewDate,
+} from '../data/menuData';
+import {
+  OWNER_TRANSLATIONS,
+  getLocalizedInventoryName,
+  getLocalizedInventoryUnit,
+} from '../utils/ownerTranslations';
+import {
+  getLocalizedProductName,
+  getLocalizedExtraName,
+} from '../utils/menuTranslations';
+
+const OWNER_LANG_OPTIONS: { code: Language; label: string; flag: string }[] = [
+  { code: 'fr', label: 'Français', flag: '🇫🇷' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  { code: 'it', label: 'Italiano', flag: '🇮🇹' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+];
 
 type OwnerTab = 'dashboard' | 'kds' | 'order-list' | 'menus' | 'stripe';
 
@@ -115,7 +136,12 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
     refreshCatalog,
     catalogProducts,
     openProductDetail,
+    language,
+    setLanguage,
   } = useCart();
+
+  const ot = OWNER_TRANSLATIONS[language] || OWNER_TRANSLATIONS.fr;
+  const [langMenuOpen, setLangMenuOpen] = useState<boolean>(false);
 
   // Default to KDS Kitchen screen so the chef immediately sees active orders & timers,
   // with 1-click access to Dashboard, Order List, Menus, and Stripe in the Riday sidebar.
@@ -152,7 +178,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
   const [acceptApplePay, setAcceptApplePay] = useState(true);
   const [acceptCash, setAcceptCash] = useState(true);
   const [acceptSatispay, setAcceptSatispay] = useState(true);
-  const [stripeSaveMsg, setStripeSaveMsg] = useState<string | null>(null);
+  const [stripeSaveState, setStripeSaveState] = useState<'saved' | 'reset' | null>(null);
   const [simulatingOrder, setSimulatingOrder] = useState<boolean>(false);
 
   // Live 1-second timer for Kitchen SLA stopwatches (KEPT EXACTLY AS REQUESTED)
@@ -208,9 +234,11 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
           playKitchenOrderSound('new_order');
         }
         setLastRealtimeBanner(
-          `🔔 НОВЫЙ ЗАКАЗ #${evt.data?.orderNumber || evt.data?.id} (${evt.data?.customer?.name}) — €${Number(
-            evt.data?.total || 0
-          ).toFixed(2)}`
+          ot.newOrderBanner(
+            String(evt.data?.orderNumber || evt.data?.id || ''),
+            String(evt.data?.customer?.name || ''),
+            Number(evt.data?.total || 0).toFixed(2)
+          )
         );
         setTimeout(() => setLastRealtimeBanner(null), 8000);
         loadAllOwnerData();
@@ -224,7 +252,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
       }
     });
     return unsubscribe;
-  }, [activeTenantId, soundEnabled, loadAllOwnerData]);
+  }, [activeTenantId, soundEnabled, loadAllOwnerData, ot]);
 
   // Exact dish/order SLA stopwatch timer (kept intact, styled for crisp visibility)
   const formatStopwatch = (receivedAt?: number, completedAt?: number | null) => {
@@ -269,7 +297,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
   const handleSaveStripeKeys = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStripeSaveMsg(null);
+    setStripeSaveState(null);
     await saveTenantStripeConfig(activeTenantId, {
       stripePublishableKey: pubKeyInput,
       stripeSecretKey: secKeyInput,
@@ -281,9 +309,9 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
       acceptCash: acceptCash,
       acceptSatispay: acceptSatispay,
     });
-    setStripeSaveMsg('Ключи Stripe успешно сохранены! Прямые выплаты активны (0% комиссии).');
+    setStripeSaveState('saved');
     loadAllOwnerData();
-    setTimeout(() => setStripeSaveMsg(null), 5000);
+    setTimeout(() => setStripeSaveState(null), 5000);
   };
 
   const handleFillDefaultTestStripeKeys = async () => {
@@ -313,9 +341,9 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
       acceptCash: true,
       acceptSatispay: true,
     });
-    setStripeSaveMsg('Эталонные тестовые ключи Stripe активированы и сохранены!');
+    setStripeSaveState('reset');
     loadAllOwnerData();
-    setTimeout(() => setStripeSaveMsg(null), 6000);
+    setTimeout(() => setStripeSaveState(null), 6000);
   };
 
   const handleSimulateStripeTestOrder = async () => {
@@ -384,8 +412,8 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
             fulfillmentType: 'consegna',
             deliveryZoneId: 'bonneuil-94',
             deliveryAddress: pick.address,
-            pickupTime: 'Как можно скорее (ASAP)',
-            notes: 'Оплачено онлайн (Stripe •••• 4242)',
+            pickupTime: ot.simAsap,
+            notes: ot.simOnlinePaidNote,
           },
         },
         activeTenantId
@@ -396,7 +424,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
       }
       setActiveTab('kds');
       setLastRealtimeBanner(
-        `⚡ НОВЫЙ ЗАКАЗ #${created?.order?.id || 'NEW'} (${pick.name}) ОПЛАЧЕН И ПОСТУПИЛ НА КУХНЮ!`
+        ot.simOrderBanner(String(created?.order?.id || 'NEW'), pick.name)
       );
       setTimeout(() => setLastRealtimeBanner(null), 8000);
       await loadAllOwnerData();
@@ -426,6 +454,29 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
     }
   };
 
+  const productByIdMap = useMemo(() => {
+    const map = new Map<string, any>();
+    catalogProducts.forEach(p => map.set(p.id, p));
+    stopListProducts.forEach(p => {
+      if (!map.has(p.id)) map.set(p.id, p);
+    });
+    return map;
+  }, [catalogProducts, stopListProducts]);
+
+  const resolveOrderDishName = useCallback(
+    (item: any): string => {
+      const catProd = item?.productId ? productByIdMap.get(item.productId) : undefined;
+      if (catProd) {
+        return getLocalizedProductName(catProd, language) || item.name || ot.fallbackDishName;
+      }
+      if (item?.product) {
+        return getLocalizedProductName(item.product, language) || item.name || ot.fallbackDishName;
+      }
+      return item?.name || ot.fallbackDishName;
+    },
+    [productByIdMap, language, ot.fallbackDishName]
+  );
+
   const activeOrders = useMemo(
     () => orders.filter(o => o.status !== 'completed'),
     [orders]
@@ -446,13 +497,13 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
         const matchCustomer = o.customer?.name?.toLowerCase().includes(q);
         const matchAddr = o.customer?.deliveryAddress?.toLowerCase().includes(q);
         const matchItems = o.items?.some((it: any) =>
-          (it.name || it.product?.name || '').toLowerCase().includes(q)
+          resolveOrderDishName(it).toLowerCase().includes(q)
         );
         return matchId || matchCustomer || matchAddr || matchItems;
       }
       return true;
     });
-  }, [orders, statusFilter, searchQuery]);
+  }, [orders, statusFilter, searchQuery, resolveOrderDishName]);
 
   // Filtered products for the Riday Menus view
   const mergedMenuProducts = useMemo(() => {
@@ -471,15 +522,18 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
         if (menuCategoryFilter !== 'all' && p.category !== menuCategoryFilter) return false;
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
+          const localizedName = getLocalizedProductName(p, language).toLowerCase();
           return (
+            localizedName.includes(q) ||
             p.name.toLowerCase().includes(q) ||
+            (p.nameEn && p.nameEn.toLowerCase().includes(q)) ||
             (p.nameRu && p.nameRu.toLowerCase().includes(q)) ||
             (p.description && p.description.toLowerCase().includes(q))
           );
         }
         return true;
       });
-  }, [catalogProducts, stopListProducts, menuCategoryFilter, searchQuery]);
+  }, [catalogProducts, stopListProducts, menuCategoryFilter, searchQuery, language]);
 
   // Dashboard metrics
   const totalOrdersCount = orders.length || analytics?.kpis?.totalOrders || 18;
@@ -494,46 +548,46 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
   // Monthly / Weekly chart data for Riday Area Spline Chart (Screenshot 1)
   const earningsSeries = [
-    { month: 'Пн', income: 420, expense: 145 },
-    { month: 'Вт', income: 510, expense: 170 },
-    { month: 'Ср', income: 640, expense: 210 },
-    { month: 'Чт', income: 590, expense: 185 },
-    { month: 'Пт', income: 480, expense: 150 },
-    { month: 'Сб (Вечер)', income: 760, expense: 230 },
-    { month: 'Вс', income: 890, expense: 265 },
+    { month: ot.weekdays[0], income: 420, expense: 145 },
+    { month: ot.weekdays[1], income: 510, expense: 170 },
+    { month: ot.weekdays[2], income: 640, expense: 210 },
+    { month: ot.weekdays[3], income: 590, expense: 185 },
+    { month: ot.weekdays[4], income: 480, expense: 150 },
+    { month: ot.weekdays[5], income: 760, expense: 230 },
+    { month: ot.weekdays[6], income: 890, expense: 265 },
   ];
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'received':
         return {
-          label: 'Новый заказ',
+          label: ot.statusReceived,
           cls: 'bg-[#fbe9e7] text-[#e65100]',
         };
       case 'preparing':
         return {
-          label: 'Готовится',
+          label: ot.statusPreparing,
           cls: 'bg-[#fff3e0] text-[#ef6c00]',
         };
       case 'frying':
         return {
-          label: 'На гриле / Фритюр',
+          label: ot.statusFrying,
           cls: 'bg-[#fce4ec] text-[#d81b60]',
         };
       case 'packing':
         return {
-          label: 'Сборка',
+          label: ot.statusPacking,
           cls: 'bg-[#ede7f6] text-[#5e35b1]',
         };
       case 'ready':
       case 'delivering':
         return {
-          label: 'Готов к выдаче',
+          label: ot.statusReady,
           cls: 'bg-[#e3f2fd] text-[#1e88e5]',
         };
       case 'completed':
         return {
-          label: 'Выдан',
+          label: ot.statusCompleted,
           cls: 'bg-[#e8f5e9] text-[#2e7d32]',
         };
       default:
@@ -562,7 +616,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                 type="button"
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="w-9 h-9 rounded-xl hover:bg-slate-100 text-[#4c84ff] flex items-center justify-center transition cursor-pointer"
-                title="Свернуть/развернуть меню"
+                title={ot.sidebarToggleTitle}
               >
                 <MenuIcon className="w-5 h-5" />
               </button>
@@ -581,7 +635,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                       La Briout
                     </span>
                     <span className="text-[10px] font-bold text-[#e66430] uppercase tracking-wider">
-                      Kitchen & POS
+                      {ot.brandSubtitle}
                     </span>
                   </div>
                 </div>
@@ -611,7 +665,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                 >
                   <Home className="w-4 h-4" />
                 </div>
-                {sidebarOpen && <span className="text-sm">Дашборд</span>}
+                {sidebarOpen && <span className="text-sm">{ot.navDashboard}</span>}
               </div>
               {sidebarOpen && <ChevronRight className="w-4 h-4 mr-2 opacity-60" />}
             </button>
@@ -644,7 +698,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   </div>
                   {sidebarOpen && (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm">Заказы & Кухня</span>
+                      <span className="text-sm">{ot.navOrdersKitchen}</span>
                       {activeOrders.length > 0 && (
                         <span className="px-1.5 py-0.5 text-[10px] font-black rounded-md bg-[#e66430] text-white">
                           {activeOrders.length}
@@ -675,7 +729,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   >
                     <span className="flex items-center gap-2">
                       <span className="text-[10px] opacity-70">─○─</span>
-                      <span>Экран Кухни (Таймер)</span>
+                      <span>{ot.navKdsScreen}</span>
                     </span>
                     <span className="px-1.5 py-0.5 rounded bg-[#e66430] text-white text-[9px] font-black uppercase">
                       LIVE
@@ -693,7 +747,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   >
                     <span className="flex items-center gap-2">
                       <span className="text-[10px] opacity-70">─○─</span>
-                      <span>Список заказов (Таблица)</span>
+                      <span>{ot.navOrderList}</span>
                     </span>
                   </button>
                 </div>
@@ -720,7 +774,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                 >
                   <UtensilsCrossed className="w-4 h-4" />
                 </div>
-                {sidebarOpen && <span className="text-sm">Меню & Склад (86)</span>}
+                {sidebarOpen && <span className="text-sm">{ot.navMenusStock}</span>}
               </div>
               {sidebarOpen && <ChevronRight className="w-4 h-4 mr-2 opacity-60" />}
             </button>
@@ -745,31 +799,22 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                 >
                   <CreditCard className="w-4 h-4" />
                 </div>
-                {sidebarOpen && <span className="text-sm">Касса Stripe</span>}
+                {sidebarOpen && <span className="text-sm">{ot.navStripePos}</span>}
               </div>
               {sidebarOpen && <ChevronRight className="w-4 h-4 mr-2 opacity-60" />}
             </button>
           </nav>
         </div>
 
-        {/* Bottom Quick Switchers */}
+        {/* Bottom Storefront Link (Super-Admin link removed for privacy) */}
         <div className="p-3.5 border-t border-slate-100 space-y-2">
-          <button
-            type="button"
-            onClick={() => setCurrentView('super-admin')}
-            className="w-full py-2.5 px-3 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
-          >
-            <Settings className="w-4 h-4 shrink-0" />
-            {sidebarOpen && <span>Супер-Админ (CMS)</span>}
-          </button>
-
           <button
             type="button"
             onClick={() => setCurrentView('home')}
             className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-[#e66430] shrink-0" />
-            {sidebarOpen && <span>На витрину сайта</span>}
+            {sidebarOpen && <span>{ot.backToStorefront}</span>}
           </button>
         </div>
       </aside>
@@ -786,34 +831,83 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Поиск заказов, блюд или клиентов..."
+              placeholder={ot.searchPlaceholder}
               className="w-full bg-white rounded-2xl pl-4 pr-10 py-2.5 text-xs sm:text-sm text-slate-700 placeholder:text-slate-400 shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-slate-100 focus:outline-none focus:border-[#4c84ff]"
             />
             <Search className="w-4 h-4 text-slate-500 absolute right-3.5 top-1/2 -translate-y-1/2" />
           </div>
 
-          {/* Right Pastel Action Buttons & Profile (Matching Screenshot 1-4) */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Right Pastel Action Buttons, Language Switcher & Profile */}
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             {/* Simulate Test Order Button */}
             <button
               type="button"
               onClick={handleSimulateStripeTestOrder}
               disabled={simulatingOrder}
               className="px-3.5 py-2.5 rounded-xl bg-[#e66430] hover:bg-[#d45625] text-white text-xs font-extrabold flex items-center gap-1.5 shadow-sm shadow-[#e66430]/25 transition cursor-pointer disabled:opacity-60"
-              title="Отправить тестовый заказ на кухню со звуковым сигналом"
+              title={ot.simOrderTitle}
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span className="hidden md:inline">
-                {simulatingOrder ? 'Отправка...' : '+ Тест-заказ'}
+                {simulatingOrder ? ot.simOrderSending : ot.simOrderBtn}
               </span>
             </button>
+
+            {/* Language Switcher Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setLangMenuOpen(prev => !prev)}
+                className="h-10 px-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/80 text-slate-700 text-xs font-extrabold flex items-center gap-1.5 shadow-2xs transition cursor-pointer"
+                title="Language"
+              >
+                <Globe className="w-3.5 h-3.5 text-[#4c84ff]" />
+                <span>
+                  {OWNER_LANG_OPTIONS.find(l => l.code === language)?.flag}{' '}
+                  {language.toUpperCase()}
+                </span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+
+              {langMenuOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-30"
+                    onClick={() => setLangMenuOpen(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-40 bg-white border border-slate-200/90 rounded-2xl shadow-xl py-1.5 z-40">
+                    {OWNER_LANG_OPTIONS.map(opt => (
+                      <button
+                        key={opt.code}
+                        type="button"
+                        onClick={() => {
+                          setLanguage(opt.code);
+                          setLangMenuOpen(false);
+                        }}
+                        className={`w-full px-3.5 py-2 text-xs font-bold flex items-center justify-between transition cursor-pointer ${
+                          language === opt.code
+                            ? 'bg-blue-50/80 text-[#3b76ef] font-extrabold'
+                            : 'text-slate-700 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          <span>{opt.flag}</span>
+                          <span>{opt.label}</span>
+                        </span>
+                        {language === opt.code && <Check className="w-3.5 h-3.5" />}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Fullscreen Button (Pastel Purple) */}
             <button
               type="button"
               onClick={toggleFullscreen}
               className="hidden sm:flex w-10 h-10 rounded-xl bg-[#ede7f6] hover:bg-[#e1d5f2] text-[#5e35b1] items-center justify-center transition cursor-pointer"
-              title="Полный экран (для планшета кухни)"
+              title={ot.fullscreenTitle}
             >
               <Maximize2 className="w-4 h-4" />
             </button>
@@ -830,7 +924,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   ? 'bg-[#e3f2fd] hover:bg-[#d0e8fc] text-[#1e88e5]'
                   : 'bg-slate-200 text-slate-500'
               }`}
-              title={soundEnabled ? 'Звук кухни ВКЛ (нажмите для теста)' : 'Звук кухни ВЫКЛ'}
+              title={soundEnabled ? ot.soundOnTitle : ot.soundOffTitle}
             >
               {soundEnabled ? <Bell className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
               <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#3b76ef] text-white text-[10px] font-black flex items-center justify-center shadow-xs">
@@ -843,7 +937,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               type="button"
               onClick={loadAllOwnerData}
               className="w-10 h-10 rounded-xl bg-[#e3f2fd] hover:bg-[#d0e8fc] text-[#1e88e5] flex items-center justify-center transition cursor-pointer"
-              title="Обновить данные"
+              title={ot.refreshTitle}
             >
               <RefreshCw className="w-4 h-4" />
             </button>
@@ -853,7 +947,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               type="button"
               onClick={() => setActiveTab('stripe')}
               className="relative hidden sm:flex w-10 h-10 rounded-xl bg-[#fbe9e7] hover:bg-[#f8d8d4] text-[#e65100] items-center justify-center transition cursor-pointer"
-              title="Настройки оплаты Stripe"
+              title={ot.stripeSettingsTitle}
             >
               <Settings className="w-4 h-4" />
             </button>
@@ -863,9 +957,9 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
             {/* User Greeting & Avatar */}
             <div className="flex items-center gap-2.5">
               <div className="text-right hidden sm:block">
-                <span className="text-xs text-slate-500">Hello, </span>
+                <span className="text-xs text-slate-500">{ot.greetingHello}</span>
                 <span className="text-xs font-extrabold text-slate-800">Chef Labriout</span>
-                <span className="block text-[10px] text-emerald-600 font-bold">● Online SSE</span>
+                <span className="block text-[10px] text-emerald-600 font-bold">{ot.onlineSse}</span>
               </div>
               <div className="w-10 h-10 rounded-full bg-[#fdebd0] border-2 border-white shadow-sm flex items-center justify-center text-[#e66430] font-black text-sm">
                 <ChefHat className="w-5 h-5" />
@@ -875,7 +969,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   type="button"
                   onClick={onLogout}
                   className="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 transition cursor-pointer"
-                  title="Выйти из панели"
+                  title={ot.logoutTitle}
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -898,7 +992,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
         <div className="p-4 sm:p-7 flex-1 space-y-6">
           {loading ? (
             <div className="bg-white rounded-3xl p-12 text-center text-slate-400 font-semibold shadow-xs">
-              Загрузка данных кухни и заказов...
+              {ot.loadingKitchen}
             </div>
           ) : activeTab === 'kds' ? (
             /* ================================================================= */
@@ -909,27 +1003,27 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800">
-                    Кухня KDS & Таймер блюд
+                    {ot.kdsTitle}
                   </h1>
                   <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                     <Home className="w-3.5 h-3.5 text-[#4c84ff]" />
                     <span>-</span>
-                    <span className="text-[#4c84ff]">Заказы</span>
+                    <span className="text-[#4c84ff]">{ot.kdsBreadcrumbOrders}</span>
                     <span>-</span>
-                    <span className="text-slate-600 font-semibold">Активные на кухне</span>
+                    <span className="text-slate-600 font-semibold">{ot.kdsBreadcrumbActive}</span>
                   </div>
                 </div>
 
                 {/* SLA Stopwatch Legend */}
                 <div className="flex flex-wrap items-center gap-2 text-xs">
                   <span className="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">
-                    ● Норма &lt; 6 мин
+                    {ot.slaNormal}
                   </span>
                   <span className="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 font-bold">
-                    ● Внимание 6–11 мин
+                    {ot.slaWarning}
                   </span>
                   <span className="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 font-bold">
-                    ● Просрочка &gt; 11 мин
+                    {ot.slaOverdue}
                   </span>
                 </div>
               </div>
@@ -943,10 +1037,10 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                         <CheckCircle2 className="w-9 h-9" />
                       </div>
                       <h3 className="text-lg font-extrabold text-slate-800">
-                        Все активные заказы приготовлены и выданы!
+                        {ot.kdsEmptyTitle}
                       </h3>
                       <p className="text-xs text-slate-400 max-w-md mx-auto">
-                        Новые заказы с сайта появляются здесь мгновенно со звуковым сигналом и автоматическим запуском таймера приготовления.
+                        {ot.kdsEmptySubtitle}
                       </p>
                       <button
                         type="button"
@@ -954,7 +1048,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                         className="mt-2 px-4 py-2.5 rounded-xl bg-[#e66430] hover:bg-[#d45625] text-white text-xs font-extrabold inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
                       >
                         <Sparkles className="w-4 h-4" />
-                        <span>Создать тестовый заказ для проверки таймера</span>
+                        <span>{ot.kdsEmptyTestBtn}</span>
                       </button>
                     </div>
                   ) : (
@@ -1022,7 +1116,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                       ) : (
                                         <Bike className="w-3 h-3" />
                                       )}
-                                      {isPickup ? 'Самовывоз' : 'Доставка'}
+                                      {isPickup ? ot.pickupBadge : ot.deliveryBadge}
                                     </span>
                                     <span
                                       className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold ${badge.cls}`}
@@ -1053,7 +1147,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                     <span>{sw.text}</span>
                                   </div>
                                   <p className="text-[10px] text-slate-400 font-medium mt-1">
-                                    Принят в {order.createdAt}
+                                    {ot.receivedAt(order.createdAt)}
                                   </p>
                                 </div>
                               </div>
@@ -1061,7 +1155,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                               {/* Dishes Checklist */}
                               <div className="p-5 space-y-2.5">
                                 <div className="flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-                                  <span>Блюда к приготовлению (отметьте готовые):</span>
+                                  <span>{ot.dishesToPrepare}</span>
                                   <span className="text-slate-800 text-xs font-black">
                                     €{Number(order.total).toFixed(2)}
                                   </span>
@@ -1070,7 +1164,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                 {order.items.map((item: any, idx: number) => {
                                   const itemKey = item.cartItemId || `item-${idx + 1}`;
                                   const isChecked = Boolean(checklist.itemsChecked?.[itemKey]);
-                                  const itemName = item.name || item.product?.name || 'Блюдо';
+                                  const itemName = resolveOrderDishName(item);
                                   const extras = Array.isArray(item.selectedExtras)
                                     ? item.selectedExtras
                                     : [];
@@ -1118,14 +1212,14 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                                   key={i}
                                                   className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-orange-100/80 text-[#e66430]"
                                                 >
-                                                  + {ex.name}
+                                                  + {getLocalizedExtraName(ex, language)}
                                                 </span>
                                               ))}
                                             </div>
                                           )}
                                           {item.specialNotes && (
                                             <p className="text-[11px] font-bold text-amber-700 mt-1">
-                                              ⚠️ Примечание: {item.specialNotes}
+                                              ⚠️ {ot.itemNoteLabel} {item.specialNotes}
                                             </p>
                                           )}
                                         </div>
@@ -1136,7 +1230,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
                                 {order.customer.notes && (
                                   <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs">
-                                    📝 <strong>Комментарий:</strong> {order.customer.notes}
+                                    📝 <strong>{ot.orderCommentLabel}</strong> {order.customer.notes}
                                   </div>
                                 )}
 
@@ -1145,7 +1239,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                   <div className="flex items-center justify-between">
                                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
                                       <PackageCheck className="w-4 h-4 text-[#e66430]" />
-                                      Контроль сборки пакета:
+                                      {ot.packingCheckTitle}
                                     </span>
                                     <span
                                       className={`text-[11px] font-black px-2 py-0.5 rounded-full ${
@@ -1160,10 +1254,10 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
                                   <div className="grid grid-cols-2 gap-1.5 text-[11px]">
                                     {[
-                                      { key: 'napkinsIncluded', label: 'Салфетки & приборы' },
-                                      { key: 'saucesVerified', label: 'Соусы проверены' },
-                                      { key: 'receiptAttached', label: 'Чек прикреплен' },
-                                      { key: 'thermalBagSealed', label: 'Пакет запечатан' },
+                                      { key: 'napkinsIncluded', label: ot.chkNapkins },
+                                      { key: 'saucesVerified', label: ot.chkSauces },
+                                      { key: 'receiptAttached', label: ot.chkReceipt },
+                                      { key: 'thermalBagSealed', label: ot.chkBagSealed },
                                     ].map(chk => {
                                       const val = Boolean((checklist as any)[chk.key]);
                                       return (
@@ -1195,9 +1289,9 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                             <div className="p-4 bg-[#f8f9fc] border-t border-slate-100 space-y-2">
                               <div className="grid grid-cols-3 gap-1.5">
                                 {[
-                                  { id: 'preparing', label: '1. Готовится' },
-                                  { id: 'frying', label: '2. Гриль/Фритюр' },
-                                  { id: 'packing', label: '3. Сборка' },
+                                  { id: 'preparing', label: ot.stage1Preparing },
+                                  { id: 'frying', label: ot.stage2Frying },
+                                  { id: 'packing', label: ot.stage3Packing },
                                 ].map(st => (
                                   <button
                                     key={st.id}
@@ -1227,8 +1321,8 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                   <Check className="w-4 h-4 stroke-[3]" />
                                   <span>
                                     {isFullyPacked
-                                      ? 'Выдать заказ / Готов!'
-                                      : 'Отметить готовность & Выдать'}
+                                      ? ot.btnHandOverReady
+                                      : ot.btnMarkReadyHandOver}
                                   </span>
                                 </button>
                               ) : (
@@ -1238,7 +1332,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                   className="w-full py-3 px-4 rounded-xl bg-[#4c84ff] hover:bg-[#3b76ef] text-white font-black text-xs uppercase tracking-wide flex items-center justify-center gap-2 transition cursor-pointer"
                                 >
                                   <CheckCircle2 className="w-4 h-4" />
-                                  <span>Завершить заказ (Архив)</span>
+                                  <span>{ot.btnCompleteArchive}</span>
                                 </button>
                               )}
                             </div>
@@ -1255,7 +1349,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   <div className="bg-white rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="text-xs font-bold text-slate-500">Выручка смены</p>
+                        <p className="text-xs font-bold text-slate-500">{ot.shiftRevenue}</p>
                         <p className="text-2xl font-black text-slate-800 mt-1">
                           €{totalRevenueEur.toFixed(2)}
                         </p>
@@ -1281,14 +1375,14 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                     </div>
                     <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
                       <span className="font-bold text-slate-600">
-                        {orders.length} всего заказов
+                        {ot.totalOrdersCountLabel(orders.length)}
                       </span>
                       <button
                         type="button"
                         onClick={() => setActiveTab('dashboard')}
                         className="text-[#4c84ff] font-bold hover:underline cursor-pointer"
                       >
-                        Отчет →
+                        {ot.reportLink}
                       </button>
                     </div>
                   </div>
@@ -1297,10 +1391,12 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   <div className="bg-white rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="text-xs font-bold text-slate-500">Ср. время выдачи</p>
+                        <p className="text-xs font-bold text-slate-500">{ot.avgPrepTime}</p>
                         <p className="text-2xl font-black text-slate-800 mt-1">
-                          {Math.floor((analytics?.kpis?.avgPrepSeconds || 315) / 60)}м{' '}
-                          {(analytics?.kpis?.avgPrepSeconds || 315) % 60}с
+                          {Math.floor((analytics?.kpis?.avgPrepSeconds || 315) / 60)}
+                          {ot.minShort}{' '}
+                          {(analytics?.kpis?.avgPrepSeconds || 315) % 60}
+                          {ot.secShort}
                         </p>
                       </div>
                       <svg className="w-24 h-14" viewBox="0 0 100 50">
@@ -1327,10 +1423,10 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                         Live KDS
                       </span>
                       <span className="px-2.5 py-1 rounded-lg bg-[#ede7f6] text-[#5e35b1] text-[11px] font-bold">
-                        {activeOrders.length} в работе
+                        {ot.inProgressCount(activeOrders.length)}
                       </span>
                       <span className="px-2.5 py-1 rounded-lg bg-[#e8f5e9] text-[#2e7d32] text-[11px] font-bold">
-                        {completedOrders.length} выдано
+                        {ot.completedCount(completedOrders.length)}
                       </span>
                     </div>
                   </div>
@@ -1338,7 +1434,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   {/* Widget 3: Recent Kitchen Activity Timeline (Screenshot 4) */}
                   <div className="bg-white rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 space-y-4">
                     <h3 className="text-sm font-extrabold text-slate-800">
-                      Последние события кухни
+                      {ot.recentKitchenEvents}
                     </h3>
                     <div className="space-y-3">
                       {orders.slice(0, 4).map((o, idx) => {
@@ -1360,10 +1456,10 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                             />
                             <div className="min-w-0">
                               <p className="font-semibold text-slate-600 truncate">
-                                Заказ #{o.id} • €{Number(o.total).toFixed(2)}
+                                {ot.eventOrderPrefix} #{o.id} • €{Number(o.total).toFixed(2)}
                               </p>
                               <p className="text-[11px] text-slate-400">
-                                Клиент: {o.customer.name}
+                                {ot.eventCustomerPrefix} {o.customer.name}
                               </p>
                             </div>
                           </div>
@@ -1382,21 +1478,23 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               {/* Breadcrumb Header */}
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800">Order List</h1>
+                  <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800">
+                    {ot.orderListTitle}
+                  </h1>
                   <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                     <Home className="w-3.5 h-3.5 text-[#4c84ff]" />
                     <span>-</span>
-                    <span className="text-[#4c84ff]">Order</span>
+                    <span className="text-[#4c84ff]">{ot.orderListBreadcrumbOrder}</span>
                     <span>-</span>
-                    <span className="text-slate-600 font-semibold">Order List</span>
+                    <span className="text-slate-600 font-semibold">{ot.orderListTitle}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   {[
-                    { id: 'all', label: `Все (${orders.length})` },
-                    { id: 'active', label: `Активные (${activeOrders.length})` },
-                    { id: 'completed', label: `Выданные (${completedOrders.length})` },
+                    { id: 'all', label: ot.filterAll(orders.length) },
+                    { id: 'active', label: ot.filterActive(activeOrders.length) },
+                    { id: 'completed', label: ot.filterCompleted(completedOrders.length) },
                   ].map(f => (
                     <button
                       key={f.id}
@@ -1420,14 +1518,14 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="border-b border-slate-200 text-xs font-extrabold text-slate-800">
-                        <th className="py-3.5 px-3">Order ID</th>
-                        <th className="py-3.5 px-3">Время</th>
-                        <th className="py-3.5 px-3">Клиент</th>
-                        <th className="py-3.5 px-3">Состав / Адрес</th>
-                        <th className="py-3.5 px-3">Таймер блюд</th>
-                        <th className="py-3.5 px-3">Сумма</th>
-                        <th className="py-3.5 px-3">Статус</th>
-                        <th className="py-3.5 px-3 text-right">Действие</th>
+                        <th className="py-3.5 px-3">{ot.thOrderId}</th>
+                        <th className="py-3.5 px-3">{ot.thTime}</th>
+                        <th className="py-3.5 px-3">{ot.thCustomer}</th>
+                        <th className="py-3.5 px-3">{ot.thItemsAddress}</th>
+                        <th className="py-3.5 px-3">{ot.thDishTimer}</th>
+                        <th className="py-3.5 px-3">{ot.thAmount}</th>
+                        <th className="py-3.5 px-3">{ot.thStatus}</th>
+                        <th className="py-3.5 px-3 text-right">{ot.thAction}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-xs sm:text-[13px]">
@@ -1438,7 +1536,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                         );
                         const badge = getStatusBadge(order.status);
                         const dishesText = order.items
-                          .map((i: any) => `${i.quantity}x ${i.name || i.product?.name}`)
+                          .map((i: any) => `${i.quantity}x ${resolveOrderDishName(i)}`)
                           .join(', ');
 
                         return (
@@ -1457,7 +1555,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                               <p className="font-semibold text-slate-700 truncate">{dishesText}</p>
                               <p className="text-[11px] text-slate-400 truncate">
                                 {order.customer.fulfillmentType === 'asporto'
-                                  ? 'Самовывоз (64 av. Simone Veil)'
+                                  ? ot.pickupWithAddress
                                   : order.customer.deliveryAddress}
                               </p>
                             </td>
@@ -1491,10 +1589,12 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                   }
                                   className="px-3 py-1.5 rounded-xl bg-[#e66430] hover:bg-[#d45625] text-white text-[11px] font-bold transition cursor-pointer"
                                 >
-                                  {order.status === 'ready' ? 'В архив' : 'Готов ✓'}
+                                  {order.status === 'ready' ? ot.btnToArchive : ot.btnReadyCheck}
                                 </button>
                               ) : (
-                                <span className="text-emerald-600 font-bold text-xs">✓ Выдан</span>
+                                <span className="text-emerald-600 font-bold text-xs">
+                                  {ot.completedCheck}
+                                </span>
                               )}
                             </td>
                           </tr>
@@ -1509,7 +1609,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   <div className="bg-white rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="text-xs font-bold text-slate-500">Total Sale</p>
+                        <p className="text-xs font-bold text-slate-500">{ot.totalSaleWidget}</p>
                         <p className="text-2xl font-black text-slate-800 mt-1">
                           €{totalRevenueEur.toFixed(2)}
                         </p>
@@ -1530,27 +1630,28 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                     </div>
                     <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
                       <span className="font-bold text-slate-600">
-                        {orders.length} total orders
+                        {ot.totalOrdersCountLabel(orders.length)}
                       </span>
                       <button
                         type="button"
                         onClick={() => setActiveTab('kds')}
                         className="text-[#4c84ff] font-bold hover:underline cursor-pointer"
                       >
-                        Экран KDS →
+                        {ot.kdsScreenLink}
                       </button>
                     </div>
                   </div>
 
                   <div className="bg-white rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 space-y-3">
-                    <p className="text-xs font-bold text-slate-500">Повторные клиенты</p>
+                    <p className="text-xs font-bold text-slate-500">{ot.repeatCustomers}</p>
                     <p className="text-2xl font-black text-slate-800">84.5%</p>
                     <div className="flex items-center gap-4 text-xs pt-1">
                       <span className="flex items-center gap-1.5 text-slate-600 font-semibold">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#4c84ff]" /> Новые
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#4c84ff]" /> {ot.legendNew}
                       </span>
                       <span className="flex items-center gap-1.5 text-slate-600 font-semibold">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#e66430]" /> Постоянные
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#e66430]" />{' '}
+                        {ot.legendReturning}
                       </span>
                     </div>
                   </div>
@@ -1564,23 +1665,27 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
             <div className="space-y-6">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800">Menu List</h1>
+                  <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800">
+                    {ot.menuListTitle}
+                  </h1>
                   <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                     <Home className="w-3.5 h-3.5 text-[#4c84ff]" />
                     <span>-</span>
-                    <span className="text-[#4c84ff]">Menu</span>
+                    <span className="text-[#4c84ff]">{ot.menuBreadcrumbMenu}</span>
                     <span>-</span>
-                    <span className="text-slate-600 font-semibold">Стоп-лист (86) & Склад</span>
+                    <span className="text-slate-600 font-semibold">
+                      {ot.menuBreadcrumbStopStock}
+                    </span>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
                   {[
-                    { id: 'all', label: 'Все блюда' },
-                    { id: 'panini', label: 'Burgers' },
-                    { id: 'panini_special', label: 'Pitas & Laffas' },
-                    { id: 'girarrosto', label: 'Assiettes' },
-                    { id: 'friggitoria', label: 'Entrées' },
+                    { id: 'all', label: ot.catAllDishes },
+                    { id: 'panini', label: ot.catBurgers },
+                    { id: 'panini_special', label: ot.catPitas },
+                    { id: 'girarrosto', label: ot.catPlates },
+                    { id: 'friggitoria', label: ot.catStarters },
                   ].map(cat => (
                     <button
                       key={cat.id}
@@ -1599,10 +1704,11 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               </div>
 
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-                {/* Riday Circular Dish Cards Grid (9 cols, matching Screenshot 4) */}
+                {/* Riday Circular Dish Cards Grid (8 cols, matching Screenshot 4) */}
                 <div className="xl:col-span-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-14 pt-10">
                   {mergedMenuProducts.slice(0, 18).map(prod => {
                     const isAvail = prod.isAvailable !== false;
+                    const localizedProdName = getLocalizedProductName(prod, language);
                     return (
                       <div
                         key={prod.id}
@@ -1616,25 +1722,25 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                         <div className="w-32 h-32 rounded-full mx-auto -mt-32 mb-3 p-1.5 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.12)] overflow-hidden">
                           <img
                             src={prod.image}
-                            alt={prod.name}
+                            alt={localizedProdName}
                             className="w-full h-full rounded-full object-cover"
                           />
                         </div>
 
                         <div>
                           <h3 className="font-extrabold text-sm sm:text-base text-slate-800 line-clamp-1">
-                            {prod.name}
+                            {localizedProdName}
                           </h3>
                           <p className="text-xs text-[#4c84ff] font-semibold mt-0.5">
                             €{Number(prod.price).toFixed(2)} •{' '}
                             <span className={isAvail ? 'text-emerald-600' : 'text-rose-600'}>
-                              {isAvail ? 'В продаже' : 'Стоп-лист (86)'}
+                              {isAvail ? ot.inStockBadge : ot.stopListBadge}
                             </span>
                           </p>
                         </div>
 
-                        {/* Round Pastel Action Buttons (View / Edit in CMS / Toggle Stop-List) */}
-                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center gap-4">
+                        {/* Round Pastel Action Buttons (View / Toggle Stop-List; Super-Admin Edit removed) */}
+                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center gap-6">
                           <button
                             type="button"
                             onClick={() => openProductDetail(prod, undefined, undefined, 'home')}
@@ -1643,18 +1749,9 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                             <span className="w-8 h-8 rounded-full bg-[#e8f5e9] group-hover:bg-emerald-500 text-emerald-600 group-hover:text-white flex items-center justify-center transition">
                               <Eye className="w-3.5 h-3.5" />
                             </span>
-                            <span className="text-[10px] font-semibold text-slate-500">View</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => setCurrentView('super-admin')}
-                            className="flex flex-col items-center gap-1 group cursor-pointer"
-                          >
-                            <span className="w-8 h-8 rounded-full bg-[#fbe9e7] group-hover:bg-[#e66430] text-[#e66430] group-hover:text-white flex items-center justify-center transition">
-                              <Edit3 className="w-3.5 h-3.5" />
+                            <span className="text-[10px] font-semibold text-slate-500">
+                              {ot.btnViewDish}
                             </span>
-                            <span className="text-[10px] font-semibold text-slate-500">Edit</span>
                           </button>
 
                           <button
@@ -1672,7 +1769,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                               <Power className="w-3.5 h-3.5" />
                             </span>
                             <span className="text-[10px] font-semibold text-slate-500">
-                              {isAvail ? 'В стоп' : 'Включить'}
+                              {isAvail ? ot.btnToStopList : ot.btnEnableDish}
                             </span>
                           </button>
                         </div>
@@ -1686,45 +1783,46 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-base font-extrabold text-slate-800">
-                        Складской учет сырья
+                        {ot.warehouseTitle}
                       </h3>
-                      <p className="text-xs text-slate-400">
-                        Автосписание при каждом заказе на кухне
-                      </p>
+                      <p className="text-xs text-slate-400">{ot.warehouseSubtitle}</p>
                     </div>
                     <Boxes className="w-5 h-5 text-[#e66430]" />
                   </div>
 
                   <div className="space-y-2.5">
-                    {inventory.map(item => (
-                      <div
-                        key={item.id}
-                        className={`p-3 rounded-2xl border flex items-center justify-between gap-2 ${
-                          item.isLowStock
-                            ? 'bg-rose-50 border-rose-200'
-                            : 'bg-[#f8f9fc] border-slate-200/70'
-                        }`}
-                      >
-                        <div>
-                          <p className="font-bold text-xs sm:text-sm text-slate-800">
-                            {item.name}
-                          </p>
-                          <p className="text-[11px] text-slate-400">
-                            Остаток:{' '}
-                            <strong className="text-slate-700">
-                              {item.currentStock} {item.unit}
-                            </strong>
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleRestockItem(item.id, 10)}
-                          className="px-2.5 py-1.5 rounded-xl bg-[#fbe9e7] hover:bg-[#e66430] text-[#e66430] hover:text-white text-xs font-extrabold transition cursor-pointer"
+                    {inventory.map(item => {
+                      const unitLabel = getLocalizedInventoryUnit(item.unit, language);
+                      return (
+                        <div
+                          key={item.id}
+                          className={`p-3 rounded-2xl border flex items-center justify-between gap-2 ${
+                            item.isLowStock
+                              ? 'bg-rose-50 border-rose-200'
+                              : 'bg-[#f8f9fc] border-slate-200/70'
+                          }`}
                         >
-                          +10 {item.unit}
-                        </button>
-                      </div>
-                    ))}
+                          <div>
+                            <p className="font-bold text-xs sm:text-sm text-slate-800">
+                              {getLocalizedInventoryName(item, language)}
+                            </p>
+                            <p className="text-[11px] text-slate-400">
+                              {ot.stockRemaining}{' '}
+                              <strong className="text-slate-700">
+                                {item.currentStock} {unitLabel}
+                              </strong>
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleRestockItem(item.id, 10)}
+                            className="px-2.5 py-1.5 rounded-xl bg-[#fbe9e7] hover:bg-[#e66430] text-[#e66430] hover:text-white text-xs font-extrabold transition cursor-pointer shrink-0"
+                          >
+                            +10 {unitLabel}
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -1738,10 +1836,10 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div className="bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-bold text-slate-600">Total Orders</p>
+                    <p className="text-sm font-bold text-slate-600">{ot.kpiTotalOrders}</p>
                     <p className="text-3xl font-black text-slate-900 mt-1">{totalOrdersCount}</p>
                     <p className="text-[11px] text-emerald-600 font-semibold mt-1">
-                      +12% за эту неделю
+                      {ot.kpiOrdersDelta}
                     </p>
                   </div>
                   <CircularGauge percent={72} color="#e66430">
@@ -1751,12 +1849,12 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
                 <div className="bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-bold text-slate-600">Total Customers</p>
+                    <p className="text-sm font-bold text-slate-600">{ot.kpiTotalCustomers}</p>
                     <p className="text-3xl font-black text-slate-900 mt-1">
                       {uniqueCustomersCount}
                     </p>
                     <p className="text-[11px] text-[#4c84ff] font-semibold mt-1">
-                      Постоянные гости 94
+                      {ot.kpiRegularGuests}
                     </p>
                   </div>
                   <CircularGauge percent={64} color="#e66430">
@@ -1766,12 +1864,12 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
                 <div className="bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-bold text-slate-600">Total Revenue</p>
+                    <p className="text-sm font-bold text-slate-600">{ot.kpiTotalRevenue}</p>
                     <p className="text-3xl font-black text-slate-900 mt-1">
                       €{totalRevenueEur.toFixed(2)}
                     </p>
                     <p className="text-[11px] text-emerald-600 font-semibold mt-1">
-                      0% комиссии агрегаторов
+                      {ot.kpiZeroCommission}
                     </p>
                   </div>
                   <CircularGauge percent={82} color="#e66430">
@@ -1786,7 +1884,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                 <div className="lg:col-span-8 bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col justify-between">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
-                      <p className="text-sm font-bold text-slate-600">Total Earnings</p>
+                      <p className="text-sm font-bold text-slate-600">{ot.chartTotalEarnings}</p>
                       <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
                         €{(totalRevenueEur * 18.5).toFixed(2)}
                       </p>
@@ -1794,14 +1892,16 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-3 text-xs font-bold">
                         <span className="flex items-center gap-1.5 text-slate-600">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#e66430]" /> Выручка
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#e66430]" />{' '}
+                          {ot.chartLegendRevenue}
                         </span>
                         <span className="flex items-center gap-1.5 text-slate-600">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#2f3337]" /> Фудкост
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#2f3337]" />{' '}
+                          {ot.chartLegendFoodCost}
                         </span>
                       </div>
                       <span className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
-                        Эта неделя
+                        {ot.chartThisWeek}
                       </span>
                     </div>
                   </div>
@@ -1900,9 +2000,11 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                 {/* Top Categories Donut Chart Card (Screenshot 1) */}
                 <div className="lg:col-span-4 bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 flex flex-col justify-between items-center">
                   <div className="w-full flex items-center justify-between">
-                    <h3 className="text-base font-extrabold text-slate-800">Top Categories</h3>
+                    <h3 className="text-base font-extrabold text-slate-800">
+                      {ot.topCategoriesTitle}
+                    </h3>
                     <span className="px-3 py-1 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
-                      Месяц
+                      {ot.periodMonth}
                     </span>
                   </div>
 
@@ -1956,23 +2058,29 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                     </svg>
                     <div className="absolute text-center">
                       <span className="text-xs font-bold text-slate-400 block">100%</span>
-                      <span className="text-sm font-black text-slate-800">Casher</span>
+                      <span className="text-sm font-black text-slate-800">
+                        {ot.kosherCenterBadge}
+                      </span>
                     </div>
                   </div>
 
                   {/* Legend */}
                   <div className="w-full grid grid-cols-2 gap-2 text-xs font-semibold text-slate-600">
                     <span className="flex items-center gap-2">
-                      <span className="w-3.5 h-2.5 rounded-sm bg-[#e66430]" /> Burgers (38%)
+                      <span className="w-3.5 h-2.5 rounded-sm bg-[#e66430] shrink-0" />{' '}
+                      {ot.donutBurgers}
                     </span>
                     <span className="flex items-center gap-2">
-                      <span className="w-3.5 h-2.5 rounded-sm bg-[#f6c391]" /> Pitas & Laffas (27%)
+                      <span className="w-3.5 h-2.5 rounded-sm bg-[#f6c391] shrink-0" />{' '}
+                      {ot.donutPitas}
                     </span>
                     <span className="flex items-center gap-2">
-                      <span className="w-3.5 h-2.5 rounded-sm bg-[#fae6d1]" /> Assiettes (20%)
+                      <span className="w-3.5 h-2.5 rounded-sm bg-[#fae6d1] shrink-0" />{' '}
+                      {ot.donutPlates}
                     </span>
                     <span className="flex items-center gap-2">
-                      <span className="w-3.5 h-2.5 rounded-sm bg-[#2f3337]" /> Entrées (15%)
+                      <span className="w-3.5 h-2.5 rounded-sm bg-[#2f3337] shrink-0" />{' '}
+                      {ot.donutStarters}
                     </span>
                   </div>
                 </div>
@@ -1982,14 +2090,14 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               <div className="bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-base sm:text-lg font-extrabold text-slate-800">
-                    Recently Orders
+                    {ot.recentOrdersTitle}
                   </h3>
                   <button
                     type="button"
                     onClick={() => setActiveTab('kds')}
                     className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition cursor-pointer"
                   >
-                    Открыть KDS Кухню →
+                    {ot.openKdsKitchenLink}
                   </button>
                 </div>
 
@@ -1997,13 +2105,13 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-[#eef0f8] text-slate-800 text-xs font-extrabold">
-                        <th className="py-3.5 px-4 rounded-l-xl">Order ID</th>
-                        <th className="py-3.5 px-4">Order Name</th>
-                        <th className="py-3.5 px-4">Customer Name</th>
-                        <th className="py-3.5 px-4">Location</th>
-                        <th className="py-3.5 px-4">Order Status</th>
-                        <th className="py-3.5 px-4">Delivered Time (Таймер)</th>
-                        <th className="py-3.5 px-4 rounded-r-xl">Price</th>
+                        <th className="py-3.5 px-4 rounded-l-xl">{ot.thOrderId}</th>
+                        <th className="py-3.5 px-4">{ot.thOrderName}</th>
+                        <th className="py-3.5 px-4">{ot.thCustomerName}</th>
+                        <th className="py-3.5 px-4">{ot.thLocation}</th>
+                        <th className="py-3.5 px-4">{ot.thOrderStatus}</th>
+                        <th className="py-3.5 px-4">{ot.thDeliveredTime}</th>
+                        <th className="py-3.5 px-4 rounded-r-xl">{ot.thPrice}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-xs sm:text-[13px]">
@@ -2013,10 +2121,9 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                           order.timing?.completedAt
                         );
                         const badge = getStatusBadge(order.status);
-                        const firstItem =
-                          order.items?.[0]?.name ||
-                          order.items?.[0]?.product?.name ||
-                          'Double Smash Burger';
+                        const firstItem = order.items?.[0]
+                          ? resolveOrderDishName(order.items[0])
+                          : 'Double Smash Burger';
 
                         return (
                           <tr
@@ -2035,7 +2142,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                             </td>
                             <td className="py-3.5 px-4 text-slate-500">
                               {order.customer.fulfillmentType === 'asporto'
-                                ? 'Retrait Boutique'
+                                ? ot.pickupStoreLabel
                                 : order.customer.deliveryAddress || 'Bonneuil-sur-Marne'}
                             </td>
                             <td className="py-3.5 px-4">
@@ -2062,7 +2169,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               {/* Row 4: Customer Review Cards (Screenshot 2) */}
               <div className="space-y-3">
                 <h3 className="text-base sm:text-lg font-extrabold text-slate-800">
-                  Customer Review
+                  {ot.customerReviewTitle}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {REVIEWS_DATA.slice(0, 2).map(rev => (
@@ -2078,12 +2185,12 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                           <div>
                             <p className="font-bold text-sm text-slate-800">{rev.name}</p>
                             <p className="text-[11px] text-slate-400">
-                              {rev.date} • {rev.city}
+                              {getLocalizedReviewDate(rev, language)} • {rev.city}
                             </p>
                           </div>
                         </div>
                         <p className="text-xs text-slate-600 leading-relaxed">
-                          {rev.textRu || rev.text}
+                          {getLocalizedReviewText(rev, language)}
                         </p>
                         <div className="flex items-center gap-1 text-amber-400">
                           {[...Array(rev.rating)].map((_, i) => (
@@ -2106,20 +2213,20 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   <div>
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-[11px] font-bold">
                       <Lock className="w-3 h-3" />
-                      Прямой эквайринг Stripe (0% комиссии)
+                      {ot.stripeZeroFeeBadge}
                     </span>
                     <h2 className="text-lg font-extrabold text-slate-800 mt-1.5">
-                      Настройка ключей оплаты Stripe для La Briout
+                      {ot.stripeHeading}
                     </h2>
                   </div>
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
-                    ● Подключен
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200 shrink-0">
+                    {ot.stripeConnected}
                   </span>
                 </div>
 
-                {stripeSaveMsg && (
+                {stripeSaveState && (
                   <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
-                    ✓ {stripeSaveMsg}
+                    ✓ {stripeSaveState === 'saved' ? ot.stripeSavedToast : ot.stripeResetToast}
                   </div>
                 )}
 
@@ -2134,7 +2241,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                           : 'bg-slate-50 border-slate-200 text-slate-600'
                       }`}
                     >
-                      🛠 Тестовый режим (Test)
+                      {ot.stripeTestMode}
                     </button>
                     <button
                       type="button"
@@ -2145,13 +2252,13 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                           : 'bg-slate-50 border-slate-200 text-slate-600'
                       }`}
                     >
-                      🚀 Боевой режим (Live)
+                      {ot.stripeLiveMode}
                     </button>
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">
-                      Stripe Publishable Key
+                      {ot.stripePubKeyLabel}
                     </label>
                     <input
                       type="text"
@@ -2163,7 +2270,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">
-                      Stripe Secret Key
+                      {ot.stripeSecKeyLabel}
                     </label>
                     <input
                       type="text"
@@ -2175,7 +2282,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
                   <div>
                     <label className="block text-xs font-bold text-slate-600 mb-1">
-                      IBAN счета ресторана
+                      {ot.stripeIbanLabel}
                     </label>
                     <input
                       type="text"
@@ -2190,14 +2297,14 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                       type="submit"
                       className="flex-1 py-3 px-5 rounded-xl bg-[#e66430] hover:bg-[#d45625] text-white font-extrabold text-xs uppercase tracking-wider transition cursor-pointer shadow-sm"
                     >
-                      Сохранить настройки
+                      {ot.stripeSaveBtn}
                     </button>
                     <button
                       type="button"
                       onClick={handleFillDefaultTestStripeKeys}
                       className="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer"
                     >
-                      Сбросить тест-ключи
+                      {ot.stripeResetBtn}
                     </button>
                   </div>
                 </form>
@@ -2205,7 +2312,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
 
               <div className="lg:col-span-5 bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 space-y-4">
                 <h3 className="text-base font-extrabold text-slate-800">
-                  Последние онлайн-транзакции
+                  {ot.stripeRecentTxTitle}
                 </h3>
                 <div className="space-y-2.5">
                   {(stripeTransactions?.transactions || []).map((tx: any) => (
@@ -2218,7 +2325,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                           #{tx.order_number} • {tx.customer_name}
                         </p>
                         <p className="text-[10px] font-mono text-slate-400 mt-0.5">
-                          {tx.stripe_payment_intent_id || 'CASH'}
+                          {tx.stripe_payment_intent_id || ot.cashLabel}
                         </p>
                       </div>
                       <span className="font-black text-emerald-600">

@@ -14,8 +14,11 @@ import { useCart } from '../context/CartContext';
 import { CATEGORY_CONFIGS, MENU_PRODUCTS, getAvailableExtrasForProduct } from '../data/menuData';
 import { SelectedExtra, ProductItem } from '../types';
 import { ProductCard } from './ProductCard';
+import { getLabrioutTagline } from '../data/labrioutMenuData';
 import {
+  getBadgeLabel,
   getCategoryLabel,
+  getLocalizedExtraName,
   getLocalizedProductName,
   getLocalizedProductDescription,
 } from '../utils/menuTranslations';
@@ -327,7 +330,15 @@ export const ProductDetailPage: React.FC = () => {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
         <h2 className="text-xl font-bold text-neutral-900 mb-2">
-          {language === 'ru' ? 'Товар не найден' : language === 'en' ? 'Product not found' : 'Prodotto non trovato'}
+          {language === 'ru'
+            ? 'Товар не найден'
+            : language === 'en'
+            ? 'Product not found'
+            : language === 'de'
+            ? 'Produkt nicht gefunden'
+            : language === 'it'
+            ? 'Prodotto non trovato'
+            : 'Produit introuvable'}
         </h2>
         <button
           onClick={() => setCurrentView('home')}
@@ -343,9 +354,7 @@ export const ProductDetailPage: React.FC = () => {
   const categoryConfig = CATEGORY_CONFIGS.find(c => c.id === product.category);
   const categoryLabel = categoryConfig
     ? getCategoryLabel(product.category, language, categoryConfig.label)
-    : language === 'ru'
-    ? 'Меню'
-    : 'Menu';
+    : t('navMenu');
 
   // Localized text
   const localizedName = getLocalizedProductName(product, language);
@@ -358,6 +367,8 @@ export const ProductDetailPage: React.FC = () => {
       ? product.ingredientsDe || product.ingredientsEn || description
       : language === 'fr'
       ? product.ingredientsFr || product.ingredientsEn || description
+      : language === 'it'
+      ? product.ingredientsIt || description
       : language === 'ru'
       ? product.ingredientsRu || description
       : product.ingredients || description;
@@ -774,7 +785,7 @@ export const ProductDetailPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleCloseSheet}
-                    aria-label="Chiudi"
+                    aria-label={t('close')}
                     className="absolute top-3.5 right-3.5 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white shadow-[0_2px_12px_rgba(0,0,0,0.14)] flex items-center justify-center text-[#21201F] active:scale-90 transition cursor-pointer"
                   >
                     <X className="w-5 h-5 stroke-[2.2]" />
@@ -805,7 +816,11 @@ export const ProductDetailPage: React.FC = () => {
                           ? 'Развернуть'
                           : language === 'en'
                           ? 'Full description'
-                          : 'Tutta la descrizione'}
+                          : language === 'de'
+                          ? 'Vollständige Beschreibung'
+                          : language === 'it'
+                          ? 'Tutta la descrizione'
+                          : 'Description complète'}
                       </span>
                     </button>
                   )}
@@ -825,12 +840,20 @@ export const ProductDetailPage: React.FC = () => {
                     {mobileNutritionMode === '100g'
                       ? language === 'ru'
                         ? 'На 100 г'
+                        : language === 'de'
+                        ? 'Pro 100 g'
+                        : language === 'fr'
+                        ? 'Pour 100 g'
                         : 'Per 100 g'
                       : language === 'ru'
                       ? 'Всё блюдо'
                       : language === 'en'
                       ? 'Whole dish'
-                      : 'Piatto intero'}
+                      : language === 'de'
+                      ? 'Ganzes Gericht'
+                      : language === 'it'
+                      ? 'Piatto intero'
+                      : 'Plat entier'}
                   </button>
                 </div>
 
@@ -849,7 +872,15 @@ export const ProductDetailPage: React.FC = () => {
                       {language === 'ru' ? 'г' : 'g'}
                     </div>
                     <div className="text-[12px] text-[#9E9B98] leading-tight mt-0.5">
-                      {language === 'ru' ? 'белки' : language === 'en' ? 'protein' : 'proteine'}
+                      {language === 'ru'
+                        ? 'белки'
+                        : language === 'en'
+                        ? 'protein'
+                        : language === 'de'
+                        ? 'Eiweiß'
+                        : language === 'fr'
+                        ? 'protéines'
+                        : 'proteine'}
                     </div>
                   </div>
                   <div>
@@ -858,7 +889,15 @@ export const ProductDetailPage: React.FC = () => {
                       {language === 'ru' ? 'г' : 'g'}
                     </div>
                     <div className="text-[12px] text-[#9E9B98] leading-tight mt-0.5">
-                      {language === 'ru' ? 'жиры' : language === 'en' ? 'fats' : 'grassi'}
+                      {language === 'ru'
+                        ? 'жиры'
+                        : language === 'en'
+                        ? 'fats'
+                        : language === 'de'
+                        ? 'Fett'
+                        : language === 'fr'
+                        ? 'lipides'
+                        : 'grassi'}
                     </div>
                   </div>
                   <div>
@@ -867,7 +906,15 @@ export const ProductDetailPage: React.FC = () => {
                       {language === 'ru' ? 'г' : 'g'}
                     </div>
                     <div className="text-[12px] text-[#9E9B98] leading-tight mt-0.5">
-                      {language === 'ru' ? 'углеводы' : language === 'en' ? 'carbs' : 'carboidrati'}
+                      {language === 'ru'
+                        ? 'углеводы'
+                        : language === 'en'
+                        ? 'carbs'
+                        : language === 'de'
+                        ? 'Kohlenhydrate'
+                        : language === 'fr'
+                        ? 'glucides'
+                        : 'carboidrati'}
                     </div>
                   </div>
                 </div>
@@ -887,7 +934,11 @@ export const ProductDetailPage: React.FC = () => {
                       ? 'Юридическая информация'
                       : language === 'en'
                       ? 'Legal & allergen info'
-                      : 'Informazioni legali e allergeni'}
+                      : language === 'de'
+                      ? 'Rechtliche & Allergen-Infos'
+                      : language === 'it'
+                      ? 'Informazioni legali e allergeni'
+                      : 'Mentions légales & allergènes'}
                   </span>
                   <ChevronRight
                     className={`w-3.5 h-3.5 text-[#8A8784] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
@@ -906,7 +957,7 @@ export const ProductDetailPage: React.FC = () => {
                   <div className="overflow-hidden">
                     <div className="p-3 rounded-2xl bg-[#F5F4F2] text-[12px] text-[#6E6C69] leading-relaxed">
                       <p className="font-semibold text-[#21201F] mb-0.5">
-                        LABRIOUT • 🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy
+                        LABRIOUT • {getLabrioutTagline(language)}
                       </p>
                       <p>📍 64 av. Simone Veil, Bonneuil-sur-Marne • 📞 0769774086 • ⏰ 12h-15h 18h-22h15</p>
                       <p className="mt-1">
@@ -914,7 +965,11 @@ export const ProductDetailPage: React.FC = () => {
                           ? 'Состав и возможные аллергены уточняйте у персонала при заказе.'
                           : language === 'en'
                           ? 'Ask our staff for detailed allergen and ingredient information.'
-                          : 'Per informazioni dettagliate su ingredienti e allergeni, contatta il nostro staff.'}
+                          : language === 'de'
+                          ? 'Fragen Sie unser Team für detaillierte Informationen zu Zutaten und Allergenen.'
+                          : language === 'it'
+                          ? 'Per informazioni dettagliate su ingredienti e allergeni, contatta il nostro staff.'
+                          : 'Pour toute information détaillée sur les ingrédients et allergènes, adressez-vous à notre équipe.'}
                       </p>
                     </div>
                   </div>
@@ -967,16 +1022,7 @@ export const ProductDetailPage: React.FC = () => {
                     const extraQty = selectedExtras.filter(e => e.id === extra.id).length;
                     const isChecked = extraQty > 0;
                     const isLastItem = idx === availableExtras.length - 1;
-                    const extraName =
-                      language === 'en'
-                        ? extra.nameEn || extra.name
-                        : language === 'de'
-                        ? extra.nameDe || extra.nameEn || extra.name
-                        : language === 'fr'
-                        ? extra.nameFr || extra.nameEn || extra.name
-                        : language === 'ru'
-                        ? extra.nameRu || extra.name
-                        : extra.name;
+                    const extraName = getLocalizedExtraName(extra, language);
 
                     return (
                       <div key={extra.id}>
@@ -1025,7 +1071,7 @@ export const ProductDetailPage: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => handleDecreaseExtraItem(extra.id)}
-                                aria-label="Diminuisci"
+                                aria-label="-"
                                 className="w-[38px] h-[36px] rounded-[12px] bg-[#F5F4F2] active:bg-[#E5E4E2] flex items-center justify-center text-[#21201F] cursor-pointer"
                               >
                                 <Minus className="w-4 h-4 stroke-[2]" />
@@ -1043,7 +1089,7 @@ export const ProductDetailPage: React.FC = () => {
                                     10
                                   )
                                 }
-                                aria-label="Aumenta"
+                                aria-label="+"
                                 className="w-[38px] h-[36px] rounded-[12px] bg-[#F5F4F2] active:bg-[#E5E4E2] flex items-center justify-center text-[#21201F] cursor-pointer"
                               >
                                 <Plus className="w-4 h-4 stroke-[2]" />
@@ -1070,7 +1116,11 @@ export const ProductDetailPage: React.FC = () => {
                   ? 'Вам может понравиться'
                   : language === 'en'
                   ? 'You might also like'
-                  : 'Potrebbe piacerti anche'}
+                  : language === 'de'
+                  ? 'Das könnte Ihnen auch schmecken'
+                  : language === 'it'
+                  ? 'Potrebbe piacerti anche'
+                  : 'Vous aimerez aussi'}
               </h2>
 
               <div className="grid grid-cols-3 gap-x-2 gap-y-4 justify-items-center">
@@ -1351,7 +1401,7 @@ export const ProductDetailPage: React.FC = () => {
             }}
             className="hover:text-neutral-900 transition cursor-pointer font-normal"
           >
-            {language === 'ru' ? 'Главная' : 'Home'}
+            {t('navHome')}
           </button>
           <span className="text-neutral-400">›</span>
           <button
@@ -1380,7 +1430,17 @@ export const ProductDetailPage: React.FC = () => {
           <button
             type="button"
             onClick={toggleFavorite}
-            aria-label="Aggiungi ai preferiti"
+            aria-label={
+              language === 'ru'
+                ? 'В избранное'
+                : language === 'en'
+                ? 'Add to favorites'
+                : language === 'de'
+                ? 'Zu Favoriten hinzufügen'
+                : language === 'it'
+                ? 'Aggiungi ai preferiti'
+                : 'Ajouter aux favoris'
+            }
             className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white border border-neutral-200/80 shadow-xs flex items-center justify-center cursor-pointer hover:border-neutral-400 hover:shadow-md active:scale-95 transition-all shrink-0"
           >
             <Heart
@@ -1410,7 +1470,7 @@ export const ProductDetailPage: React.FC = () => {
               {/* Badges on bottom-left of image */}
               <div className="absolute bottom-4 left-4 flex flex-col gap-1.5 z-10 pointer-events-none">
                 <span className="bg-[#ffd200] text-neutral-900 text-xs font-black uppercase px-2.5 py-0.5 rounded-lg tracking-wider shadow-sm w-fit">
-                  {language === 'ru' ? 'НОВОЕ' : 'NOVITÀ'}
+                  {getBadgeLabel('NOVITÀ', language)}
                 </span>
                 {hasDiscount && discountPercent > 0 && (
                   <span className="bg-[#e62e2e] text-white text-xs font-black uppercase px-2.5 py-0.5 rounded-lg tracking-wider shadow-sm w-fit">
@@ -1419,7 +1479,7 @@ export const ProductDetailPage: React.FC = () => {
                 )}
                 {product.isVegetarian && (
                   <span className="bg-[#00875A] text-white text-[11px] font-bold px-2 py-0.5 rounded-lg shadow-sm w-fit">
-                    Vegetariano 🍃
+                    {getBadgeLabel('VEGETARIANO', language)} 🍃
                   </span>
                 )}
               </div>
@@ -1516,12 +1576,12 @@ export const ProductDetailPage: React.FC = () => {
                         ? 'Добавлено ✓'
                         : language === 'it'
                         ? 'Aggiunto ✓'
+                        : language === 'de'
+                        ? 'Hinzugefügt ✓'
+                        : language === 'fr'
+                        ? 'Ajouté ✓'
                         : 'Added ✓'
-                      : language === 'ru'
-                      ? 'Корзина'
-                      : language === 'it'
-                      ? 'Carrello'
-                      : 'Cart'}
+                      : t('navCart')}
                   </span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5] shrink-0 text-white" />
                 </button>
@@ -1538,7 +1598,15 @@ export const ProductDetailPage: React.FC = () => {
                     nutritionMode === 'portion' ? 'text-neutral-900 font-bold' : 'hover:text-neutral-700'
                   }`}
                 >
-                  {language === 'ru' ? 'Всё блюдо' : language === 'en' ? 'Whole dish' : 'Piatto intero'}
+                  {language === 'ru'
+                    ? 'Всё блюдо'
+                    : language === 'en'
+                    ? 'Whole dish'
+                    : language === 'de'
+                    ? 'Ganzes Gericht'
+                    : language === 'it'
+                    ? 'Piatto intero'
+                    : 'Plat entier'}
                 </button>
                 <span>·</span>
                 <button
@@ -1548,7 +1616,13 @@ export const ProductDetailPage: React.FC = () => {
                     nutritionMode === '100g' ? 'text-neutral-900 font-bold' : 'hover:text-neutral-700'
                   }`}
                 >
-                  {language === 'ru' ? 'На 100 г' : language === 'en' ? 'Per 100 g' : 'Per 100 g'}
+                  {language === 'ru'
+                    ? 'На 100 г'
+                    : language === 'de'
+                    ? 'Pro 100 g'
+                    : language === 'fr'
+                    ? 'Pour 100 g'
+                    : 'Per 100 g'}
                 </button>
               </div>
 
@@ -1559,15 +1633,45 @@ export const ProductDetailPage: React.FC = () => {
                 </div>
                 <div className="shrink-0">
                   <div className="text-[20px] font-black text-neutral-900 leading-tight">{nutrition.protein}</div>
-                  <div className="text-[11px] text-neutral-500 font-medium">{language === 'ru' ? 'белки' : language === 'en' ? 'protein' : 'proteine'}</div>
+                  <div className="text-[11px] text-neutral-500 font-medium">
+                    {language === 'ru'
+                      ? 'белки'
+                      : language === 'en'
+                      ? 'protein'
+                      : language === 'de'
+                      ? 'Eiweiß'
+                      : language === 'fr'
+                      ? 'protéines'
+                      : 'proteine'}
+                  </div>
                 </div>
                 <div className="shrink-0">
                   <div className="text-[20px] font-black text-neutral-900 leading-tight">{nutrition.fat}</div>
-                  <div className="text-[11px] text-neutral-500 font-medium">{language === 'ru' ? 'жиры' : language === 'en' ? 'fats' : 'grassi'}</div>
+                  <div className="text-[11px] text-neutral-500 font-medium">
+                    {language === 'ru'
+                      ? 'жиры'
+                      : language === 'en'
+                      ? 'fats'
+                      : language === 'de'
+                      ? 'Fett'
+                      : language === 'fr'
+                      ? 'lipides'
+                      : 'grassi'}
+                  </div>
                 </div>
                 <div className="shrink-0">
                   <div className="text-[20px] font-black text-neutral-900 leading-tight">{nutrition.carbs}</div>
-                  <div className="text-[11px] text-neutral-500 font-medium">{language === 'ru' ? 'углеводы' : language === 'en' ? 'carbs' : 'carboidrati'}</div>
+                  <div className="text-[11px] text-neutral-500 font-medium">
+                    {language === 'ru'
+                      ? 'углеводы'
+                      : language === 'en'
+                      ? 'carbs'
+                      : language === 'de'
+                      ? 'Kohlenhydrate'
+                      : language === 'fr'
+                      ? 'glucides'
+                      : 'carboidrati'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1585,16 +1689,7 @@ export const ProductDetailPage: React.FC = () => {
                 <div className="space-y-0.5">
                   {availableExtras.map(extra => {
                     const isChecked = selectedExtras.some(e => e.id === extra.id);
-                    const extraName =
-                      language === 'en'
-                        ? extra.nameEn || extra.name
-                        : language === 'de'
-                        ? extra.nameDe || extra.nameEn || extra.name
-                        : language === 'fr'
-                        ? extra.nameFr || extra.nameEn || extra.name
-                        : language === 'ru'
-                        ? extra.nameRu || extra.name
-                        : extra.name;
+                    const extraName = getLocalizedExtraName(extra, language);
 
                     return (
                       <div
@@ -1640,10 +1735,22 @@ export const ProductDetailPage: React.FC = () => {
                   {showNotes
                     ? language === 'ru'
                       ? 'Скрыть пожелания для кухни'
-                      : 'Nascondi note per la cucina'
+                      : language === 'en'
+                      ? 'Hide kitchen notes'
+                      : language === 'de'
+                      ? 'Notizen für die Küche ausblenden'
+                      : language === 'it'
+                      ? 'Nascondi note per la cucina'
+                      : 'Masquer les notes pour la cuisine'
                     : language === 'ru'
                     ? '+ Добавить примечание или пожелание для кухни'
-                    : '+ Aggiungi note per la cucina'}
+                    : language === 'en'
+                    ? '+ Add notes for the kitchen'
+                    : language === 'de'
+                    ? '+ Notiz für die Küche hinzufügen'
+                    : language === 'it'
+                    ? '+ Aggiungi note per la cucina'
+                    : '+ Ajouter une note pour la cuisine'}
                 </span>
               </button>
 
@@ -1653,11 +1760,7 @@ export const ProductDetailPage: React.FC = () => {
                     rows={2}
                     value={specialNotes}
                     onChange={e => setSpecialNotes(e.target.value)}
-                    placeholder={
-                      language === 'ru'
-                        ? 'Напр., без перца, хорошо прожарить, соусы отдельно...'
-                        : 'Es. Senza pepe, ben cotto, salse a parte...'
-                    }
+                    placeholder={t('notesPlaceholder')}
                     className="w-full bg-[#f6f6f8] border border-[1px] border-[#E8E7E6] rounded-xl p-2.5 text-xs text-neutral-900 placeholder-neutral-400 focus:outline-none focus:border-neutral-900 transition"
                   />
                 </div>
@@ -1669,7 +1772,15 @@ export const ProductDetailPage: React.FC = () => {
         {/* 4. BOTTOM SECTION: "Может, ещё кое-что? / You might also like" */}
         <div className="mt-8 sm:mt-12">
           <h2 className="text-2xl sm:text-3xl font-black text-neutral-900 tracking-tight mb-5">
-            {language === 'ru' ? 'Может, ещё кое-что?' : language === 'en' ? 'You might also like' : 'Potrebbe piacerti anche'}
+            {language === 'ru'
+              ? 'Может, ещё кое-что?'
+              : language === 'en'
+              ? 'You might also like'
+              : language === 'de'
+              ? 'Das könnte Ihnen auch schmecken'
+              : language === 'it'
+              ? 'Potrebbe piacerti anche'
+              : 'Vous aimerez aussi'}
           </h2>
 
           <div className="grid grid-cols-[repeat(2,minmax(0,173.2px))] justify-center sm:justify-start sm:grid-cols-[repeat(4,232.4px)] gap-[8px] sm:gap-[27px] max-w-[1113px] w-full">

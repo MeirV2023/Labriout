@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { X, Plus, Minus, ShoppingBag, Trash2, Bike, CheckCircle2, MapPin } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { getAvailableExtrasForProduct } from '../data/menuData';
-import { getLocalizedProductName } from '../utils/menuTranslations';
+import { getLocalizedProductName, getLocalizedExtraName } from '../utils/menuTranslations';
 
 export const CartDrawer: React.FC = () => {
   const {
@@ -58,21 +58,28 @@ export const CartDrawer: React.FC = () => {
 
   // Localized Labels
   const labels = {
-    it: {
-      title: 'Cart',
-      clear: 'Clear',
-      delivery: 'Delivery',
-      pickup: 'Pickup',
-      pickupPrefix: 'Pickup at:',
+    fr: {
+      title: 'Panier',
+      clear: 'Vider',
+      delivery: 'Livraison',
+      pickup: 'À emporter',
+      pickupPrefix: 'Retrait :',
       pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-      freeDeliveryNeed: `Add €${amountToFreeDelivery.toFixed(2)} for free delivery`,
-      freeDeliveryUnlocked: 'Free delivery unlocked!',
-      checkout: 'CHECKOUT',
-      emptyTitle: 'Il tuo carrello è vuoto',
-      emptySub: 'Esplora il nostro menù e aggiungi i tuoi sfizi preferiti!',
-      browseMenu: 'Esplora il Menù',
-      each: 'cad.',
-      undo: 'Ripristina',
+      freeDeliveryNeed: `Encore €${amountToFreeDelivery.toFixed(2)} pour la livraison gratuite`,
+      freeDeliveryUnlocked: 'Livraison gratuite activée !',
+      checkout: 'COMMANDER',
+      emptyTitle: 'Votre panier est vide',
+      emptySub: 'Découvrez notre carte street food maison et ajoutez vos plats préférés !',
+      browseMenu: 'Voir la carte',
+      each: 'unité',
+      undo: 'Restaurer',
+      unitPiece: '1 pce',
+      closeAria: 'Fermer le panier',
+      closeTitle: 'Fermer (Échap)',
+      removeAria: 'Retirer le produit',
+      removeTitle: 'Retirer',
+      decAria: 'Diminuer la quantité',
+      incAria: 'Augmenter la quantité',
     },
     en: {
       title: 'Cart',
@@ -88,40 +95,85 @@ export const CartDrawer: React.FC = () => {
       emptySub: 'Explore our delicious street food menu and add your favorites!',
       browseMenu: 'Browse Menu',
       each: 'each',
-      undo: 'Вернуть',
+      undo: 'Undo',
+      unitPiece: '1 pc.',
+      closeAria: 'Close cart',
+      closeTitle: 'Close (Esc)',
+      removeAria: 'Remove item',
+      removeTitle: 'Remove',
+      decAria: 'Decrease quantity',
+      incAria: 'Increase quantity',
+    },
+    de: {
+      title: 'Warenkorb',
+      clear: 'Leeren',
+      delivery: 'Lieferung',
+      pickup: 'Abholung',
+      pickupPrefix: 'Abholung in:',
+      pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
+      freeDeliveryNeed: `Noch €${amountToFreeDelivery.toFixed(2)} für Gratis-Lieferung`,
+      freeDeliveryUnlocked: 'Kostenlose Lieferung aktiviert!',
+      checkout: 'ZUR KASSE',
+      emptyTitle: 'Ihr Warenkorb ist leer',
+      emptySub: 'Entdecken Sie unsere Speisekarte und fügen Sie Ihre Favoriten hinzu!',
+      browseMenu: 'Zur Speisekarte',
+      each: 'Stk.',
+      undo: 'Wiederherstellen',
+      unitPiece: '1 Stk.',
+      closeAria: 'Warenkorb schließen',
+      closeTitle: 'Schließen (Esc)',
+      removeAria: 'Artikel entfernen',
+      removeTitle: 'Entfernen',
+      decAria: 'Menge verringern',
+      incAria: 'Menge erhöhen',
+    },
+    it: {
+      title: 'Carrello',
+      clear: 'Svuota',
+      delivery: 'Consegna',
+      pickup: 'Asporto',
+      pickupPrefix: 'Ritiro presso:',
+      pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
+      freeDeliveryNeed: `Mancano €${amountToFreeDelivery.toFixed(2)} per la consegna gratuita`,
+      freeDeliveryUnlocked: 'Consegna gratuita sbloccata!',
+      checkout: 'ORDINA ORA',
+      emptyTitle: 'Il tuo carrello è vuoto',
+      emptySub: 'Esplora il nostro menù e aggiungi le tue specialità preferite!',
+      browseMenu: 'Esplora il Menù',
+      each: 'cad.',
+      undo: 'Ripristina',
+      unitPiece: '1 pz.',
+      closeAria: 'Chiudi carrello',
+      closeTitle: 'Chiudi (Esc)',
+      removeAria: 'Rimuovi prodotto',
+      removeTitle: 'Rimuovi',
+      decAria: 'Diminuisci quantità',
+      incAria: 'Aumenta quantità',
     },
     ru: {
-      title: 'Cart',
+      title: 'Корзина',
       clear: 'Очистить',
-      delivery: 'Delivery',
-      pickup: 'Pickup',
-      pickupPrefix: 'Pickup at:',
+      delivery: 'Доставка',
+      pickup: 'Самовывоз',
+      pickupPrefix: 'Самовывоз:',
       pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-      freeDeliveryNeed: `Еще €${amountToFreeDelivery.toFixed(2)} до бесплатной доставки`,
+      freeDeliveryNeed: `Ещё €${amountToFreeDelivery.toFixed(2)} до бесплатной доставки`,
       freeDeliveryUnlocked: 'Бесплатная доставка активна!',
       checkout: 'ОФОРМИТЬ',
       emptyTitle: 'Ваша корзина пуста',
       emptySub: 'Выберите блюда из меню и добавьте их в заказ!',
-      browseMenu: 'Открыть Меню',
+      browseMenu: 'Открыть меню',
       each: 'шт.',
       undo: 'Вернуть',
+      unitPiece: '1 шт.',
+      closeAria: 'Закрыть корзину',
+      closeTitle: 'Закрыть (Esc)',
+      removeAria: 'Удалить блюдо',
+      removeTitle: 'Удалить',
+      decAria: 'Уменьшить количество',
+      incAria: 'Увеличить количество',
     },
-  }[language] || {
-    title: 'Cart',
-    clear: 'Clear',
-    delivery: 'Delivery',
-    pickup: 'Pickup',
-    pickupPrefix: 'Pickup at:',
-    pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-    freeDeliveryNeed: `Add €${amountToFreeDelivery.toFixed(2)} for free delivery`,
-    freeDeliveryUnlocked: 'Free delivery unlocked!',
-    checkout: 'CHECKOUT',
-    emptyTitle: 'Your cart is empty',
-    emptySub: 'Explore our delicious street food menu and add your favorites!',
-    browseMenu: 'Browse Menu',
-    each: 'each',
-    undo: 'Вернуть',
-  };
+  }[language];
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/40 backdrop-blur-xs animate-fadeIn">
@@ -164,8 +216,8 @@ export const CartDrawer: React.FC = () => {
                 type="button"
                 onClick={() => setIsCartDrawerOpen(false)}
                 className="p-1.5 sm:p-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-900 transition cursor-pointer"
-                aria-label="Chiudi carrello"
-                title="Chiudi (Esc)"
+                aria-label={labels.closeAria}
+                title={labels.closeTitle}
               >
                 <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
@@ -280,7 +332,7 @@ export const CartDrawer: React.FC = () => {
 
                       {isSoftDeleted ? (
                         <div className="text-[11px] text-neutral-400 mt-0.5">
-                          {item.product.weight || '1 pz.'}
+                          {item.product.weight || labels.unitPiece}
                         </div>
                       ) : (
                         <>
@@ -290,17 +342,7 @@ export const CartDrawer: React.FC = () => {
                               {item.selectedExtras.map(extra => {
                                 const avail = getAvailableExtrasForProduct(item.product);
                                 const found = avail.find(opt => opt.id === extra.id);
-                                const extraLabel = !found
-                                  ? extra.name
-                                  : language === 'ru' && found.nameRu
-                                  ? found.nameRu
-                                  : language === 'en' && found.nameEn
-                                  ? found.nameEn
-                                  : language === 'de' && (found.nameDe || found.nameEn)
-                                  ? found.nameDe || found.nameEn || found.name
-                                  : language === 'fr' && (found.nameFr || found.nameEn)
-                                  ? found.nameFr || found.nameEn || found.name
-                                  : found.name || extra.name;
+                                const extraLabel = getLocalizedExtraName(found || extra, language);
                                 return (
                                   <span
                                     key={extra.id}
@@ -344,8 +386,8 @@ export const CartDrawer: React.FC = () => {
                             type="button"
                             onClick={() => removeItem(item.cartItemId)}
                             className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white flex items-center justify-center text-red-500 hover:bg-red-50 hover:text-red-600 shadow-2xs transition cursor-pointer"
-                            aria-label="Rimuovi prodotto"
-                            title="Rimuovi"
+                            aria-label={labels.removeAria}
+                            title={labels.removeTitle}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -354,7 +396,7 @@ export const CartDrawer: React.FC = () => {
                             type="button"
                             onClick={() => updateQuantity(item.cartItemId, -1)}
                             className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white flex items-center justify-center text-neutral-600 hover:text-neutral-900 shadow-2xs transition cursor-pointer"
-                            aria-label="Diminuisci quantità"
+                            aria-label={labels.decAria}
                           >
                             <Minus className="w-3 h-3 stroke-[2.5]" />
                           </button>
@@ -368,7 +410,7 @@ export const CartDrawer: React.FC = () => {
                           type="button"
                           onClick={() => updateQuantity(item.cartItemId, 1)}
                           className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#ff5500] hover:bg-[#e04a00] active:scale-95 text-white flex items-center justify-center font-bold shadow-2xs transition cursor-pointer"
-                          aria-label="Aumenta quantità"
+                          aria-label={labels.incAria}
                         >
                           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                         </button>

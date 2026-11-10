@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Clock, X, Check, AlertCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { STORE_SCHEDULE } from '../data/menuData';
+import { STORE_SCHEDULE, getScheduleDayName } from '../data/menuData';
 
 interface PrenotaTimeDropdownProps {
   isOpen: boolean;
@@ -120,12 +120,7 @@ export const PrenotaTimeDropdown: React.FC<PrenotaTimeDropdownProps> = ({
       d.setDate(now.getDate() + i);
       const dayOfWeek = d.getDay(); // 0 = Dom, 1 = Lun, 2 = Mar, etc.
       const sched = STORE_SCHEDULE[dayOfWeek];
-
-      let localizedDayName = sched.name;
-      if (language === 'ru') localizedDayName = sched.nameRu;
-      else if (language === 'en') localizedDayName = sched.nameEn;
-      else if (language === 'de') localizedDayName = sched.nameDe;
-      else if (language === 'fr') localizedDayName = sched.nameFr;
+      const localizedDayName = getScheduleDayName(dayOfWeek, language);
 
       const dateStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}`;
       const shortLabel = i === 0 ? todayLabel : i === 1 ? tomorrowLabel : localizedDayName;
@@ -671,7 +666,15 @@ export const PrenotaTimeDropdown: React.FC<PrenotaTimeDropdownProps> = ({
               </div>
             ) : activeDay.slots.length === 0 ? (
               <div className="p-3 text-center text-[11px] text-[#6B7280]">
-                Nessun orario disponibile per questa giornata.
+                {language === 'ru'
+                  ? 'На этот день нет доступных интервалов.'
+                  : language === 'en'
+                  ? 'No time slots available for this day.'
+                  : language === 'de'
+                  ? 'Keine Zeitfenster für diesen Tag verfügbar.'
+                  : language === 'it'
+                  ? 'Nessun orario disponibile per questa giornata.'
+                  : 'Aucun créneau disponible pour ce jour.'}
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-1.5">

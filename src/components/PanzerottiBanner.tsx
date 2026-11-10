@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
 interface PanzerottiBannerProps {
   onDiscoverAll: () => void;
@@ -10,26 +11,76 @@ export const PanzerottiBanner: React.FC<PanzerottiBannerProps> = ({
   onDiscoverAll,
   onSelectSubCategory,
 }) => {
-  const subCategories = [
-    {
-      key: 'classici' as const,
-      name: 'CLASSICI',
-      subtitle: 'I grandi intramontabili che non deludono mai.',
-      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80',
+  const { language } = useCart();
+
+  const copy = {
+    fr: {
+      title: 'SPÉCIALITÉS',
+      tagline: 'Classiques ou signatures, toujours irrésistibles.',
+      desc: 'Viandes grillées minute, pains moelleux, recettes maison et saveurs généreuses qui séduisent dès la première bouchée.',
+      cta: 'TOUT DÉCOUVRIR',
+      subs: [
+        { key: 'classici' as const, name: 'CLASSIQUES', subtitle: 'Les grands incontournables qui ne déçoivent jamais.' },
+        { key: 'speciali' as const, name: 'SPÉCIAUX', subtitle: 'Recettes signatures et saveurs inédites.' },
+        { key: 'vegetariani' as const, name: 'FRAÎCHEUR', subtitle: 'Léger, frais et toujours plein de goût.' },
+      ],
     },
-    {
-      key: 'speciali' as const,
-      name: 'SPECIALI',
-      subtitle: 'Nuove ricette, nuovi sapori.',
-      image: 'https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=400&q=80',
+    en: {
+      title: 'SPECIALTIES',
+      tagline: 'Classic or signature, always irresistible.',
+      desc: 'Freshly grilled meats, soft artisan breads, homemade recipes and bold flavors from the very first bite.',
+      cta: 'DISCOVER ALL',
+      subs: [
+        { key: 'classici' as const, name: 'CLASSICS', subtitle: 'Timeless favorites that never disappoint.' },
+        { key: 'speciali' as const, name: 'SPECIALS', subtitle: 'Signature recipes and bold new flavors.' },
+        { key: 'vegetariani' as const, name: 'FRESH & LIGHT', subtitle: 'Light, crisp and packed with flavor.' },
+      ],
     },
-    {
-      key: 'vegetariani' as const,
-      name: 'VEGETARIANI',
-      subtitle: 'Gusto leggero, sempre pieno di sapore.',
-      image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80',
+    de: {
+      title: 'SPEZIALITÄTEN',
+      tagline: 'Klassisch oder exklusiv, immer unwiderstehlich.',
+      desc: 'Frisch gegrilltes Fleisch, fluffiges Brot, hausgemachte Rezepte und voller Geschmack ab dem ersten Bissen.',
+      cta: 'ALLE ENTDECKEN',
+      subs: [
+        { key: 'classici' as const, name: 'KLASSIKER', subtitle: 'Zeitlose Favoriten, die immer überzeugen.' },
+        { key: 'speciali' as const, name: 'SPEZIAL', subtitle: 'Neue Rezepte, unvergessliche Aromen.' },
+        { key: 'vegetariani' as const, name: 'FRISCH & LEICHT', subtitle: 'Leichter Genuss voller Geschmack.' },
+      ],
     },
+    it: {
+      title: 'SPECIALITÀ',
+      tagline: 'Classici o speciali, sempre irresistibili.',
+      desc: 'Carni grigliate al momento, pane soffice, ricette fatte in casa e tutto il gusto che conquista al primo morso.',
+      cta: 'SCOPRI TUTTI',
+      subs: [
+        { key: 'classici' as const, name: 'CLASSICI', subtitle: 'I grandi intramontabili che non deludono mai.' },
+        { key: 'speciali' as const, name: 'SPECIALI', subtitle: 'Nuove ricette, nuovi sapori.' },
+        { key: 'vegetariani' as const, name: 'FRESCHEZZA', subtitle: 'Gusto leggero, sempre pieno di sapore.' },
+      ],
+    },
+    ru: {
+      title: 'ФИРМЕННОЕ',
+      tagline: 'Классика или авторские рецепты — всегда безупречно.',
+      desc: 'Сочное мясо с гриля, мягкий свежий хлеб, домашние соусы и насыщенный вкус с первого укуса.',
+      cta: 'СМОТРЕТЬ ВСЕ',
+      subs: [
+        { key: 'classici' as const, name: 'КЛАССИКА', subtitle: 'Проверенные хиты, которые никогда не подводят.' },
+        { key: 'speciali' as const, name: 'СПЕЦИАЛЬНЫЕ', subtitle: 'Авторские рецепты и яркие сочетания.' },
+        { key: 'vegetariani' as const, name: 'СВЕЖЕСТЬ', subtitle: 'Лёгкий и насыщенный вкус каждый день.' },
+      ],
+    },
+  }[language];
+
+  const images = [
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80',
+    'https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=400&q=80',
+    'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80',
   ];
+
+  const subCategories = copy.subs.map((s, i) => ({
+    ...s,
+    image: images[i],
+  }));
 
   return (
     <div
@@ -55,10 +106,10 @@ export const PanzerottiBanner: React.FC<PanzerottiBannerProps> = ({
 
           {/* Center Column: Title, Subtitles & Big CTA Button */}
           <div className="lg:col-span-4 xl:col-span-4 flex flex-col items-start justify-center space-y-3 sm:space-y-4">
-            {/* Main Category Title: PANZEROTTI */}
+            {/* Main Category Title */}
             <div>
               <h2 className="font-brush text-4xl sm:text-5xl md:text-5.5xl lg:text-6xl font-black text-white uppercase tracking-wider leading-none drop-shadow-xl">
-                PANZEROTTI
+                {copy.title}
               </h2>
               {/* Orange brush underline */}
               <div className="w-40 sm:w-52 md:w-60 h-1.5 sm:h-2 bg-[#ff5500] rounded-full mt-2 -rotate-1 origin-left shadow-md shadow-[#ff5500]/60" />
@@ -66,22 +117,22 @@ export const PanzerottiBanner: React.FC<PanzerottiBannerProps> = ({
 
             {/* Handwritten Subtitle */}
             <p className="font-brush text-base sm:text-lg md:text-xl text-[#ffaa33] italic tracking-wide drop-shadow-md leading-snug">
-              Classici o speciali, sempre irresistibili.
+              {copy.tagline}
             </p>
 
             {/* Description Text */}
             <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-medium drop-shadow-md max-w-md">
-              Impasto fragrante, ingredienti freschi, ricette della tradizione e con cuore filante che ti conquista al primo morso.
+              {copy.desc}
             </p>
 
-            {/* Orange CTA Button: SCOPRI TUTTI -> */}
+            {/* Orange CTA Button */}
             <div className="pt-2">
               <button
                 type="button"
                 onClick={onDiscoverAll}
                 className="bg-[#ff5500] hover:bg-[#ff6a1a] text-white font-black text-xs sm:text-sm md:text-base tracking-wider uppercase px-6 sm:px-7 py-3 sm:py-3.5 rounded-full shadow-xl shadow-[#ff5500]/40 transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 group cursor-pointer"
               >
-                <span>SCOPRI TUTTI</span>
+                <span>{copy.cta}</span>
                 <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 transition-transform group-hover:translate-x-1.5" />
               </button>
             </div>

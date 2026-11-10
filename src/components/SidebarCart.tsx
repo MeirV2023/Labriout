@@ -2,7 +2,7 @@ import React from 'react';
 import { Plus, Minus, Trash2, Bike, CheckCircle2, MapPin } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { getAvailableExtrasForProduct } from '../data/menuData';
-import { getLocalizedProductName } from '../utils/menuTranslations';
+import { getLocalizedProductName, getLocalizedExtraName } from '../utils/menuTranslations';
 
 interface SidebarCartProps {
   onOpenCheckout?: () => void;
@@ -108,6 +108,14 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       freeDeliveryBase: 'Consegna gratis da €25',
       proceed: 'Avanti',
       currency: '€',
+      each: 'cad.',
+      undo: 'Ripristina',
+      unitPiece: '1 pz.',
+      removeTitle: 'Rimuovi dal carrello',
+      decTitle: 'Diminuisci',
+      incTitle: 'Aumenta',
+      decAria: 'Diminuisci quantità',
+      incAria: 'Aumenta quantità',
     },
     ru: {
       title: 'Корзина',
@@ -120,10 +128,18 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       emptySub: 'Но это ненадолго — добавьте что-нибудь вкусное',
       freeDeliveryBadge: 'Бесплатная доставка',
       freeDeliverySub: 'Бесплатная доставка активирована',
-      freeDeliveryNeed: `Еще €${safeAmountToFreeDelivery.toFixed(2)} до бесплатной доставки`,
+      freeDeliveryNeed: `Ещё €${safeAmountToFreeDelivery.toFixed(2)} до бесплатной доставки`,
       freeDeliveryBase: 'Бесплатная доставка от €25',
       proceed: 'Далее',
       currency: '€',
+      each: 'шт.',
+      undo: 'Вернуть',
+      unitPiece: '1 шт.',
+      removeTitle: 'Удалить из корзины',
+      decTitle: 'Уменьшить',
+      incTitle: 'Увеличить',
+      decAria: 'Уменьшить количество',
+      incAria: 'Увеличить количество',
     },
     en: {
       title: 'Cart',
@@ -140,6 +156,14 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       freeDeliveryBase: 'Free delivery from €25',
       proceed: 'Checkout',
       currency: '€',
+      each: 'each',
+      undo: 'Undo',
+      unitPiece: '1 pc.',
+      removeTitle: 'Remove from cart',
+      decTitle: 'Decrease',
+      incTitle: 'Increase',
+      decAria: 'Decrease quantity',
+      incAria: 'Increase quantity',
     },
     de: {
       title: 'Warenkorb',
@@ -156,6 +180,14 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       freeDeliveryBase: 'Gratis-Lieferung ab €25',
       proceed: 'Weiter',
       currency: '€',
+      each: 'Stk.',
+      undo: 'Wiederherstellen',
+      unitPiece: '1 Stk.',
+      removeTitle: 'Aus dem Warenkorb entfernen',
+      decTitle: 'Verringern',
+      incTitle: 'Erhöhen',
+      decAria: 'Menge verringern',
+      incAria: 'Menge erhöhen',
     },
     fr: {
       title: 'Panier',
@@ -172,23 +204,16 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       freeDeliveryBase: 'Livraison gratuite dès €25',
       proceed: 'Commander',
       currency: '€',
+      each: 'unité',
+      undo: 'Restaurer',
+      unitPiece: '1 pce',
+      removeTitle: 'Retirer du panier',
+      decTitle: 'Diminuer',
+      incTitle: 'Augmenter',
+      decAria: 'Diminuer la quantité',
+      incAria: 'Augmenter la quantité',
     },
-  }[language] || {
-    title: 'Carrello',
-    clear: 'Svuota',
-    delivery: 'Consegna',
-    pickup: 'Asporto',
-    pickupPrefix: 'Ritiro in sede:',
-    pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-    emptyTitle: 'Vuoto, come il frigo di notte',
-    emptySub: 'Ma non per molto — aggiungi qualcosa di delizioso!',
-    freeDeliveryBadge: 'Consegna gratuita',
-    freeDeliverySub: 'Ordine qualificato per spedizione gratis',
-    freeDeliveryNeed: `Mancano €${safeAmountToFreeDelivery.toFixed(2)} per la consegna gratis`,
-    freeDeliveryBase: 'Consegna gratis da €25',
-    proceed: 'Avanti',
-    currency: '€',
-  };
+  }[language];
 
   return (
     <div
@@ -347,12 +372,7 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
               const extrasText = item.selectedExtras
                 .map((e) => {
                   const found = availExtras.find((opt) => opt.id === e.id);
-                  if (!found) return e.name;
-                  if (language === 'ru' && found.nameRu) return found.nameRu;
-                  if (language === 'en' && found.nameEn) return found.nameEn;
-                  if (language === 'de' && (found.nameDe || found.nameEn)) return found.nameDe || found.nameEn || found.name;
-                  if (language === 'fr' && (found.nameFr || found.nameEn)) return found.nameFr || found.nameEn || found.name;
-                  return found.name || e.name;
+                  return getLocalizedExtraName(found || e, language);
                 })
                 .join(', ');
               const subtitle = extrasText || item.product.weight || item.product.ingredients || '';
@@ -361,7 +381,7 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
               const itemQty = Number(item.quantity ?? 1);
               const itemTotalPrice = (isNaN(itemUnitPrice) ? 0 : itemUnitPrice) * (isNaN(itemQty) ? 1 : itemQty);
               const isSoftDeleted = isItemSoftDeleted(item.cartItemId);
-              const undoText = language === 'it' ? 'Ripristina' : language === 'de' ? 'Wiederherstellen' : language === 'fr' ? 'Restaurer' : 'Вернуть';
+              const undoText = labels.undo;
 
               return (
                 <div
@@ -423,7 +443,7 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
 
                     {isSoftDeleted ? (
                       <p className="text-[10px] sm:text-[11px] text-neutral-400 line-clamp-1 leading-tight mt-0.5">
-                        {item.product?.weight || '1 pz.'}
+                        {item.product?.weight || labels.unitPiece}
                       </p>
                     ) : (
                       <>
@@ -437,7 +457,7 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
                           €{(itemTotalPrice || 0).toFixed(2)}
                           {itemQty > 1 && (
                             <span className="text-[10px] text-neutral-400 font-normal ml-1">
-                              (€{(itemUnitPrice || 0).toFixed(2)} cad.)
+                              (€{(itemUnitPrice || 0).toFixed(2)} {labels.each})
                             </span>
                           )}
                         </div>
@@ -468,8 +488,8 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
                           }
                         }}
                         className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-neutral-700 flex items-center justify-center transition-all cursor-pointer active:scale-90"
-                        aria-label="Decrease quantity"
-                        title={item.quantity === 1 ? 'Rimuovi dal carrello' : 'Diminuisci'}
+                        aria-label={labels.decAria}
+                        title={item.quantity === 1 ? labels.removeTitle : labels.decTitle}
                       >
                         {item.quantity === 1 ? (
                           <Trash2 className="w-3.5 h-3.5 text-red-500 hover:text-red-600" />
@@ -490,8 +510,8 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
                           updateQuantity(item.cartItemId, 1);
                         }}
                         className="w-7 h-7 rounded-full bg-[#ff5500] hover:bg-[#ff6611] text-white flex items-center justify-center transition-all cursor-pointer active:scale-90 shadow-sm shadow-[#ff5500]/25"
-                        aria-label="Increase quantity"
-                        title="Aumenta"
+                        aria-label={labels.incAria}
+                        title={labels.incTitle}
                       >
                         <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                       </button>

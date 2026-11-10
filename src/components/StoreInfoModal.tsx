@@ -13,11 +13,115 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { STORE_DETAILS } from '../data/menuData';
+import { getLabrioutTagline, getLabrioutKosherBadge } from '../data/labrioutMenuData';
 
 export const StoreInfoModal: React.FC = () => {
-  const { isStoreInfoOpen, setIsStoreInfoOpen } = useCart();
+  const { isStoreInfoOpen, setIsStoreInfoOpen, language } = useCart();
 
   if (!isStoreInfoOpen) return null;
+
+  const ui = {
+    fr: {
+      closeAria: 'Fermer',
+      hoursTitle: "⏰ Horaires d'ouverture",
+      lunchDinnerLabel: 'Service Midi & Soir :',
+      sundayLabel: 'Dimanche :',
+      sundayHours: '18h30 – 22h15',
+      fridayLabel: 'Vendredi :',
+      fridayHours: '12h00 – 15h00',
+      saturdayLabel: 'Samedi (Chabbat) :',
+      saturdayHours: 'Fermé',
+      zonesTitle: 'Zones de livraison à domicile',
+      zonesSub: 'Nous livrons chaud et préparé minute dans les communes suivantes :',
+      zones: [
+        'Bonneuil-sur-Marne (94380)',
+        'Créteil (94000)',
+        'Saint-Maur-des-Fossés (94100)',
+        'Sucy-en-Brie & Maisons-Alfort',
+      ],
+      whatsappBtn: 'WhatsApp Direct',
+    },
+    en: {
+      closeAria: 'Close',
+      hoursTitle: '⏰ Opening Hours',
+      lunchDinnerLabel: 'Mon–Thu (Lunch & Dinner):',
+      sundayLabel: 'Sunday:',
+      sundayHours: '18:30 – 22:15',
+      fridayLabel: 'Friday:',
+      fridayHours: '12:00 – 15:00',
+      saturdayLabel: 'Saturday (Shabbat):',
+      saturdayHours: 'Closed',
+      zonesTitle: 'Home Delivery Coverage Areas',
+      zonesSub: 'We deliver hot, freshly prepared orders to the following areas:',
+      zones: [
+        'Bonneuil-sur-Marne (94380)',
+        'Créteil (94000)',
+        'Saint-Maur-des-Fossés (94100)',
+        'Sucy-en-Brie & Maisons-Alfort',
+      ],
+      whatsappBtn: 'Direct WhatsApp',
+    },
+    de: {
+      closeAria: 'Schließen',
+      hoursTitle: '⏰ Öffnungszeiten',
+      lunchDinnerLabel: 'Mo–Do (Mittag & Abend):',
+      sundayLabel: 'Sonntag:',
+      sundayHours: '18:30 – 22:15',
+      fridayLabel: 'Freitag:',
+      fridayHours: '12:00 – 15:00',
+      saturdayLabel: 'Samstag (Schabbat):',
+      saturdayHours: 'Geschlossen',
+      zonesTitle: 'Liefergebiete nach Hause',
+      zonesSub: 'Wir liefern heiß und frisch zubereitet in folgende Städte:',
+      zones: [
+        'Bonneuil-sur-Marne (94380)',
+        'Créteil (94000)',
+        'Saint-Maur-des-Fossés (94100)',
+        'Sucy-en-Brie & Maisons-Alfort',
+      ],
+      whatsappBtn: 'WhatsApp Direkt',
+    },
+    it: {
+      closeAria: 'Chiudi',
+      hoursTitle: '⏰ Orari di apertura',
+      lunchDinnerLabel: 'Lun–Gio (Pranzo & Cena):',
+      sundayLabel: 'Domenica:',
+      sundayHours: '18:30 – 22:15',
+      fridayLabel: 'Venerdì:',
+      fridayHours: '12:00 – 15:00',
+      saturdayLabel: 'Sabato (Shabbat):',
+      saturdayHours: 'Chiuso',
+      zonesTitle: 'Zone coperte per la consegna a domicilio',
+      zonesSub: 'Consegniamo caldo e preparato al momento nei seguenti comuni:',
+      zones: [
+        'Bonneuil-sur-Marne (94380)',
+        'Créteil (94000)',
+        'Saint-Maur-des-Fossés (94100)',
+        'Sucy-en-Brie & Maisons-Alfort',
+      ],
+      whatsappBtn: 'WhatsApp Diretto',
+    },
+    ru: {
+      closeAria: 'Закрыть',
+      hoursTitle: '⏰ Часы работы',
+      lunchDinnerLabel: 'Пн–Чт (Обед и ужин):',
+      sundayLabel: 'Воскресенье:',
+      sundayHours: '18:30 – 22:15',
+      fridayLabel: 'Пятница:',
+      fridayHours: '12:00 – 15:00',
+      saturdayLabel: 'Суббота (Шаббат):',
+      saturdayHours: 'Закрыто',
+      zonesTitle: 'Зоны доставки на дом',
+      zonesSub: 'Доставляем горячие блюда прямо с гриля в следующие города:',
+      zones: [
+        'Bonneuil-sur-Marne (94380)',
+        'Créteil (94000)',
+        'Saint-Maur-des-Fossés (94100)',
+        'Sucy-en-Brie и Maisons-Alfort',
+      ],
+      whatsappBtn: 'Написать в WhatsApp',
+    },
+  }[language];
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     'LABRIOUT 64 av. Simone Veil Bonneuil-sur-Marne'
@@ -38,12 +142,13 @@ export const StoreInfoModal: React.FC = () => {
               <h3 className="font-heading font-black text-lg text-white uppercase tracking-tight">
                 LABRIOUT
               </h3>
-              <p className="text-xs text-[#ff7722]">🥩 Street food &amp; spécialités maison • ✡️ 100% Casher • Badatz de Brunoy</p>
+              <p className="text-xs text-[#ff7722]">{getLabrioutTagline(language)}</p>
             </div>
           </div>
 
           <button
             onClick={() => setIsStoreInfoOpen(false)}
+            aria-label={ui.closeAria}
             className="p-2 rounded-full bg-[#20232c] hover:bg-[#2c313e] text-neutral-300 hover:text-white transition cursor-pointer"
           >
             <X className="w-5 h-5" />
@@ -59,7 +164,7 @@ export const StoreInfoModal: React.FC = () => {
               <div>
                 <p className="font-extrabold text-white text-sm">📍 64 av. Simone Veil, Bonneuil-sur-Marne</p>
                 <p className="text-xs text-neutral-300 mt-0.5">📞 0769774086 • labriout@eat-view.local.</p>
-                <p className="text-[11px] text-neutral-400 mt-0.5">✡️ 100% Casher • Badatz de Brunoy</p>
+                <p className="text-[11px] text-neutral-400 mt-0.5">{getLabrioutKosherBadge(language)}</p>
               </div>
             </div>
 
@@ -79,12 +184,24 @@ export const StoreInfoModal: React.FC = () => {
           <div className="bg-[#181b24] border border-[#272c3a] rounded-2xl p-4 space-y-2">
             <div className="flex items-center gap-2.5 text-white font-bold text-sm">
               <Clock className="w-4 h-4 text-[#ff5500]" />
-              <span>⏰ Horaires d&apos;ouverture</span>
+              <span>{ui.hoursTitle}</span>
             </div>
             <div className="space-y-1.5 text-xs text-neutral-300">
               <div className="flex justify-between">
-                <span>Service Midi &amp; Soir:</span>
-                <span className="font-semibold text-white">12h-15h 18h-22h15</span>
+                <span>{ui.lunchDinnerLabel}</span>
+                <span className="font-semibold text-white">12h-15h • 18h-22h15</span>
+              </div>
+              <div className="flex justify-between">
+                <span>{ui.fridayLabel}</span>
+                <span className="font-semibold text-white">{ui.fridayHours}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>{ui.saturdayLabel}</span>
+                <span className="font-semibold text-neutral-400">{ui.saturdayHours}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>{ui.sundayLabel}</span>
+                <span className="font-semibold text-white">{ui.sundayHours}</span>
               </div>
             </div>
           </div>
@@ -93,28 +210,16 @@ export const StoreInfoModal: React.FC = () => {
           <div className="bg-[#181b24] border border-[#272c3a] rounded-2xl p-4 space-y-2">
             <div className="flex items-center gap-2.5 text-white font-bold text-sm">
               <Bike className="w-4 h-4 text-[#ff5500]" />
-              <span>Zone Coperte per la Consegna a Domicilio</span>
+              <span>{ui.zonesTitle}</span>
             </div>
-            <p className="text-xs text-neutral-400">
-              Consegniamo caldo e croccante nei seguenti comuni:
-            </p>
-            <div className="grid grid-cols-2 gap-2 text-xs text-neutral-200">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Pompei Centro & Scavi</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Scafati</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Torre Annunziata</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Castellammare di Stabia</span>
-              </div>
+            <p className="text-xs text-neutral-400">{ui.zonesSub}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-neutral-200">
+              {ui.zones.map(zone => (
+                <div key={zone} className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>{zone}</span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -135,7 +240,7 @@ export const StoreInfoModal: React.FC = () => {
               className="p-3 rounded-xl bg-[#25D366]/20 hover:bg-[#25D366] border border-[#25D366]/40 text-[#25D366] hover:text-white flex items-center justify-center gap-2 font-bold text-xs transition"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>WhatsApp Diretto</span>
+              <span>{ui.whatsappBtn}</span>
             </a>
           </div>
         </div>

@@ -1,9 +1,87 @@
 import React, { useState } from 'react';
 import { MapPin, Instagram, ArrowRight } from 'lucide-react';
 import { STORE_DETAILS, CATEGORY_CONFIGS } from '../data/menuData';
+import { getLabrioutShortSpecialty, getLabrioutKosherBadge } from '../data/labrioutMenuData';
+import { getCategoryLabel } from '../utils/menuTranslations';
 import { useCart } from '../context/CartContext';
-import { CategoryId } from '../types';
-import logoImg from '../assets/panzarotto-logo.png';
+import { CategoryId, Language } from '../types';
+
+const FOOTER_UI: Record<
+  Language,
+  {
+    infoHeading: string;
+    privacyPolicy: string;
+    termsConditions: string;
+    newsletterTitle: string;
+    newsletterSub: string;
+    newsletterSuccess: string;
+    emailPlaceholder: string;
+    subscribeAria: string;
+    copyright: string;
+    countryName: string;
+  }
+> = {
+  fr: {
+    infoHeading: 'Informations',
+    privacyPolicy: 'Politique de confidentialité',
+    termsConditions: 'Conditions générales',
+    newsletterTitle: 'Inscrivez-vous à notre newsletter',
+    newsletterSub: 'Pour nos offres et nouveautés !',
+    newsletterSuccess: '✓ Merci pour votre inscription ! Vous recevrez nos coupons exclusifs.',
+    emailPlaceholder: 'Votre e-mail',
+    subscribeAria: "S'inscrire",
+    copyright: '© 2026 LABRIOUT. Tous droits réservés.',
+    countryName: 'France',
+  },
+  en: {
+    infoHeading: 'Information',
+    privacyPolicy: 'Privacy Policy',
+    termsConditions: 'Terms & Conditions',
+    newsletterTitle: 'Subscribe to our newsletter',
+    newsletterSub: 'For special offers & news!',
+    newsletterSuccess: '✓ Thanks for subscribing! We will send you special coupons.',
+    emailPlaceholder: 'Your email',
+    subscribeAria: 'Subscribe',
+    copyright: '© 2026 LABRIOUT. All rights reserved.',
+    countryName: 'France',
+  },
+  de: {
+    infoHeading: 'Informationen',
+    privacyPolicy: 'Datenschutzerklärung',
+    termsConditions: 'AGB',
+    newsletterTitle: 'Newsletter abonnieren',
+    newsletterSub: 'Für Angebote und Neuigkeiten!',
+    newsletterSuccess: '✓ Vielen Dank für deine Anmeldung! Wir senden dir exklusive Gutscheine.',
+    emailPlaceholder: 'Deine E-Mail-Adresse',
+    subscribeAria: 'Abonnieren',
+    copyright: '© 2026 LABRIOUT. Alle Rechte vorbehalten.',
+    countryName: 'Frankreich',
+  },
+  it: {
+    infoHeading: 'Informazioni',
+    privacyPolicy: 'Privacy Policy',
+    termsConditions: 'Termini e Condizioni',
+    newsletterTitle: 'Iscriviti alla nostra newsletter',
+    newsletterSub: 'Per offerte e novità!',
+    newsletterSuccess: '✓ Grazie per esserti iscritto! Ti invieremo coupon speciali.',
+    emailPlaceholder: 'La tua email',
+    subscribeAria: 'Iscriviti',
+    copyright: '© 2026 LABRIOUT. Tutti i diritti riservati.',
+    countryName: 'Francia',
+  },
+  ru: {
+    infoHeading: 'Информация',
+    privacyPolicy: 'Политика конфиденциальности',
+    termsConditions: 'Условия использования',
+    newsletterTitle: 'Подпишитесь на нашу рассылку',
+    newsletterSub: 'Акции, промокоды и новинки меню!',
+    newsletterSuccess: '✓ Спасибо за подписку! Мы отправим вам специальные промокоды.',
+    emailPlaceholder: 'Ваш email',
+    subscribeAria: 'Подписаться',
+    copyright: '© 2026 LABRIOUT. Все права защищены.',
+    countryName: 'Франция',
+  },
+};
 
 export const Footer: React.FC = () => {
   const {
@@ -19,6 +97,7 @@ export const Footer: React.FC = () => {
   } = useCart();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const ui = FOOTER_UI[language] || FOOTER_UI.fr;
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,7 +218,7 @@ export const Footer: React.FC = () => {
               </button>
               <ul className="grid grid-cols-2 md:grid-cols-1 gap-x-4 gap-y-2 text-neutral-300">
                 {CATEGORY_CONFIGS.map((cat) => {
-                  const label = t(cat.id) || cat.label;
+                  const label = getCategoryLabel(cat.id, language, cat.label);
                   return (
                     <li key={cat.id}>
                       <button
@@ -158,7 +237,7 @@ export const Footer: React.FC = () => {
             {/* Col 3: Informazioni */}
             <div className="lg:col-span-2 xl:col-span-2 space-y-3">
               <h4 className="font-extrabold text-white text-sm uppercase tracking-wider">
-                {language === 'ru' ? 'Информация' : language === 'en' ? 'Information' : 'Informazioni'}
+                {ui.infoHeading}
               </h4>
               <ul className="space-y-2 text-neutral-300">
                 <li>
@@ -185,12 +264,12 @@ export const Footer: React.FC = () => {
                 </li>
                 <li>
                   <span className="text-neutral-400 hover:text-white transition cursor-pointer text-xs sm:text-[13px]">
-                    Privacy Policy
+                    {ui.privacyPolicy}
                   </span>
                 </li>
                 <li>
                   <span className="text-neutral-400 hover:text-white transition cursor-pointer text-xs sm:text-[13px]">
-                    Termini e Condizioni
+                    {ui.termsConditions}
                   </span>
                 </li>
               </ul>
@@ -236,14 +315,14 @@ export const Footer: React.FC = () => {
               {/* Newsletter input */}
               <div className="space-y-1.5">
                 <p className="text-sm font-bold text-white leading-tight">
-                  Iscriviti alla nostra newsletter
+                  {ui.newsletterTitle}
                 </p>
                 <p className="text-xs text-neutral-300">
-                  Per offerte e novità!
+                  {ui.newsletterSub}
                 </p>
                 {subscribed ? (
                   <p className="text-xs text-emerald-400 font-semibold py-2">
-                    ✓ Grazie per esserti iscritto! Ti invieremo coupon speciali.
+                    {ui.newsletterSuccess}
                   </p>
                 ) : (
                   <form onSubmit={handleSubscribe} className="pt-1">
@@ -253,13 +332,13 @@ export const Footer: React.FC = () => {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="La tua email"
+                        placeholder={ui.emailPlaceholder}
                         className="bg-transparent px-3.5 py-2 text-xs text-white placeholder-neutral-400 flex-1 focus:outline-none"
                       />
                       <button
                         type="submit"
                         className="bg-[#ff5500] hover:bg-[#ff6a1a] text-white px-3.5 py-2 flex items-center justify-center transition cursor-pointer shrink-0"
-                        aria-label="Iscriviti"
+                        aria-label={ui.subscribeAria}
                       >
                         <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                       </button>
@@ -274,13 +353,15 @@ export const Footer: React.FC = () => {
 
       {/* Bottom copyright line */}
       <div className="max-w-7xl 2xl:max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-20 sm:pb-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-neutral-500">
-        <p>© 2025 LABRIOUT. Tous droits réservés.</p>
+        <p>{ui.copyright}</p>
         <p className="flex items-center gap-1.5">
-          <span>Street food &amp; spécialités maison • 100% Casher • Bonneuil-sur-Marne</span>
+          <span>
+            {getLabrioutShortSpecialty(language)} • {getLabrioutKosherBadge(language)} • Bonneuil-sur-Marne
+          </span>
           <span
             className="inline-flex items-center justify-center overflow-hidden rounded-[2px] border border-white/25 shadow-sm shrink-0"
-            title="France"
-            aria-label="France"
+            title={ui.countryName}
+            aria-label={ui.countryName}
           >
             <svg
               className="w-4.5 h-3 block"

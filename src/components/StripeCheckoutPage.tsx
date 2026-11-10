@@ -194,7 +194,7 @@ export const StripeCheckoutPage: React.FC = () => {
           saveCard: 'Запомнить карту для будущих заказов',
           deliveryAddressTitle: 'Адрес доставки',
           pickupLocationTitle: 'Пункт самовывоза',
-          streetPlaceholder: 'Москва, Манежная площадь, 1с2',
+          streetPlaceholder: '12 Rue Paul Vaillant-Couturier, Bonneuil-sur-Marne',
           streetLabel: 'Улица, номер дома',
           apartment: 'Квартира',
           intercom: 'Домофон',
@@ -235,7 +235,7 @@ export const StripeCheckoutPage: React.FC = () => {
           backToMenu: 'Перейти в меню',
           sslBadge: 'Stripe SSL 256-bit',
           orderSuccessTitle: 'Заказ успешно оформлен!',
-          orderSuccessSub: 'Grazie! Il tuo ordine è confermato',
+          orderSuccessSub: 'Спасибо! Ваш заказ принят на кухне',
           orderSuccessPaid: 'Оплачено:',
           orderNumber: 'Номер заказа',
           deliveryTo: 'Адрес получения',
@@ -264,7 +264,7 @@ export const StripeCheckoutPage: React.FC = () => {
           saveCard: 'Save card securely for next time',
           deliveryAddressTitle: 'Delivery address',
           pickupLocationTitle: 'Pickup location',
-          streetPlaceholder: 'Via Provinciale Ripuaria, 133',
+          streetPlaceholder: '12 Rue Paul Vaillant-Couturier, Bonneuil-sur-Marne',
           streetLabel: 'Street & house number',
           apartment: 'Apartment',
           intercom: 'Intercom code',
@@ -334,7 +334,7 @@ export const StripeCheckoutPage: React.FC = () => {
           saveCard: 'Karte sicher für später speichern',
           deliveryAddressTitle: 'Lieferadresse',
           pickupLocationTitle: 'Abholort',
-          streetPlaceholder: 'Via Provinciale Ripuaria, 133',
+          streetPlaceholder: '12 Rue Paul Vaillant-Couturier, Bonneuil-sur-Marne',
           streetLabel: 'Straße und Hausnummer',
           apartment: 'Wohnung',
           intercom: 'Gegensprechanlage',
@@ -404,7 +404,7 @@ export const StripeCheckoutPage: React.FC = () => {
           saveCard: 'Enregistrer la carte en toute sécurité',
           deliveryAddressTitle: 'Adresse de livraison',
           pickupLocationTitle: 'Point de retrait',
-          streetPlaceholder: 'Via Provinciale Ripuaria, 133',
+          streetPlaceholder: '12 Rue Paul Vaillant-Couturier, Bonneuil-sur-Marne',
           streetLabel: 'Rue et numéro',
           apartment: 'Appartement',
           intercom: 'Interphone',
@@ -474,7 +474,7 @@ export const StripeCheckoutPage: React.FC = () => {
           saveCard: 'Salva questa carta in modo sicuro',
           deliveryAddressTitle: 'Indirizzo di consegna',
           pickupLocationTitle: 'Punto di ritiro in sede',
-          streetPlaceholder: 'Via Provinciale Ripuaria, 133',
+          streetPlaceholder: '12 Rue Paul Vaillant-Couturier, Bonneuil-sur-Marne',
           streetLabel: 'Via e numero civico',
           apartment: 'Interno',
           intercom: 'Citofono',
@@ -531,20 +531,20 @@ export const StripeCheckoutPage: React.FC = () => {
   }, [language]);
 
   // Customer contact state (Pre-filled with Stripe Test Customer for instant 1-click testing)
-  const [firstName, setFirstName] = useState('Mario');
-  const [lastName, setLastName] = useState('Rossi');
-  const [phone, setPhone] = useState('+39 340 998 7766');
-  const [email, setEmail] = useState('mario.rossi@panzarotto.it');
+  const [firstName, setFirstName] = useState('David');
+  const [lastName, setLastName] = useState('Cohen');
+  const [phone, setPhone] = useState('+33 6 12 34 56 78');
+  const [email, setEmail] = useState('client@labriout.fr');
 
   // Address fields
-  const [city] = useState('Pompei');
-  const [postalCode] = useState('80045');
-  const [streetAddress, setStreetAddress] = useState('Via Plinio, 45');
+  const [city] = useState('Bonneuil-sur-Marne');
+  const [postalCode] = useState('94380');
+  const [streetAddress, setStreetAddress] = useState('12 Rue Paul Vaillant-Couturier');
   const [apartment, setApartment] = useState('12');
-  const [intercom, setIntercom] = useState('Rossi');
+  const [intercom, setIntercom] = useState('1234');
   const [entrance, setEntrance] = useState('A');
   const [floor, setFloor] = useState('2');
-  const [courierNote, setCourierNote] = useState('Salsa cheddar ben calda, grazie!');
+  const [courierNote, setCourierNote] = useState('');
 
   // Delivery options toggles
   const [leaveAtDoor, setLeaveAtDoor] = useState(false);
@@ -557,7 +557,7 @@ export const StripeCheckoutPage: React.FC = () => {
   const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvc, setCardCvc] = useState('424');
-  const [cardName, setCardName] = useState('MARIO ROSSI');
+  const [cardName, setCardName] = useState('DAVID COHEN');
   const [saveCard, setSaveCard] = useState(true);
 
   // Mobile Bottom Sheet Category Modal ('address' | 'payment' | 'personal' | 'time' | null)
@@ -941,39 +941,120 @@ export const StripeCheckoutPage: React.FC = () => {
     setCardCvc(value);
   };
 
+  const validationTexts = {
+    fr: {
+      errFirstName: 'Veuillez saisir votre prénom',
+      errPhone: 'Veuillez saisir un numéro de téléphone valide',
+      errStreet: 'Veuillez saisir la rue et le numéro pour la livraison',
+      errClosed: 'Le restaurant est fermé le jour sélectionné',
+      errCardNumber: 'Veuillez saisir un numéro de carte valide (16 chiffres)',
+      errExpiry: "Veuillez saisir la date d'expiration (MM/AA)",
+      errCvc: 'Veuillez saisir le code CVC',
+      errCardName: 'Veuillez saisir le nom du titulaire de la carte',
+      stepEncrypt: 'Chiffrement des données via Stripe Elements...',
+      step3ds: 'Authentification 3D Secure auprès de votre banque...',
+      stepCreateOrder: 'Création et confirmation de la commande...',
+      aptPrefix: 'appt.',
+      entPrefix: 'bât.',
+      floorPrefix: 'étage',
+      intercomPrefix: 'interphone',
+      kdsBtn: '👨‍🍳 Ouvrir la Cuisine KDS (/owner)',
+    },
+    en: {
+      errFirstName: 'Please enter your first name',
+      errPhone: 'Please enter a valid phone number',
+      errStreet: 'Please enter your street and house number for delivery',
+      errClosed: 'The restaurant is closed on the selected day',
+      errCardNumber: 'Please enter a valid 16-digit card number',
+      errExpiry: 'Please enter the card expiry date (MM/YY)',
+      errCvc: 'Please enter the CVC code',
+      errCardName: 'Please enter the cardholder name',
+      stepEncrypt: 'Encrypting card details via Stripe Elements...',
+      step3ds: 'Verifying 3D Secure with your bank...',
+      stepCreateOrder: 'Creating and confirming your order...',
+      aptPrefix: 'apt.',
+      entPrefix: 'bldg.',
+      floorPrefix: 'floor',
+      intercomPrefix: 'intercom',
+      kdsBtn: '👨‍🍳 Open Kitchen KDS (/owner)',
+    },
+    de: {
+      errFirstName: 'Bitte geben Sie Ihren Vornamen ein',
+      errPhone: 'Bitte geben Sie eine gültige Telefonnummer ein',
+      errStreet: 'Bitte geben Sie Straße und Hausnummer für die Lieferung ein',
+      errClosed: 'Das Restaurant ist am gewählten Tag geschlossen',
+      errCardNumber: 'Bitte geben Sie eine gültige 16-stellige Kartennummer ein',
+      errExpiry: 'Bitte geben Sie das Ablaufdatum der Karte ein (MM/JJ)',
+      errCvc: 'Bitte geben Sie den CVC-Code ein',
+      errCardName: 'Bitte geben Sie den Namen des Karteninhabers ein',
+      stepEncrypt: 'Kartendaten werden über Stripe Elements verschlüsselt...',
+      step3ds: '3D-Secure-Authentifizierung mit Ihrer Bank...',
+      stepCreateOrder: 'Bestellung wird erstellt und bestätigt...',
+      aptPrefix: 'Whg.',
+      entPrefix: 'Eingang',
+      floorPrefix: 'Etage',
+      intercomPrefix: 'Klingel',
+      kdsBtn: '👨‍🍳 Küche KDS öffnen (/owner)',
+    },
+    it: {
+      errFirstName: 'Inserisci il tuo nome',
+      errPhone: 'Inserisci un numero di telefono valido',
+      errStreet: 'Inserisci la via e il numero civico per la consegna',
+      errClosed: 'Il locale è chiuso nel giorno selezionato',
+      errCardNumber: 'Inserisci un numero di carta valido a 16 cifre',
+      errExpiry: 'Inserisci la scadenza della carta (MM/AA)',
+      errCvc: 'Inserisci il codice CVC',
+      errCardName: 'Inserisci il nome del titolare della carta',
+      stepEncrypt: 'Crittografia dati carta tramite Stripe Elements...',
+      step3ds: 'Autenticazione 3D Secure con la tua banca...',
+      stepCreateOrder: 'Creazione e conferma della comanda...',
+      aptPrefix: 'int.',
+      entPrefix: 'scala',
+      floorPrefix: 'piano',
+      intercomPrefix: 'citofono',
+      kdsBtn: '👨‍🍳 Apri Cucina KDS (/owner)',
+    },
+    ru: {
+      errFirstName: 'Пожалуйста, укажите ваше имя',
+      errPhone: 'Укажите контактный номер телефона',
+      errStreet: 'Укажите улицу и номер дома для доставки',
+      errClosed: 'Ресторан закрыт в выбранный день',
+      errCardNumber: 'Введите корректный номер карты (16 цифр)',
+      errExpiry: 'Укажите срок действия карты (ММ/ГГ)',
+      errCvc: 'Укажите код CVC',
+      errCardName: 'Укажите имя держателя карты',
+      stepEncrypt: 'Шифрование данных карты через Stripe Elements...',
+      step3ds: 'Подтверждение 3D Secure с банком...',
+      stepCreateOrder: 'Создание и подтверждение заказа...',
+      aptPrefix: 'кв.',
+      entPrefix: 'подъезд',
+      floorPrefix: 'этаж',
+      intercomPrefix: 'домофон',
+      kdsBtn: '👨‍🍳 Открыть KDS Кухню (/owner)',
+    },
+  }[language];
+
   const validateForm = () => {
     setErrorMessage('');
     if (!firstName.trim()) {
-      setErrorMessage(language === 'ru' ? 'Пожалуйста, укажите ваше имя' : 'Inserisci il tuo nome');
+      setErrorMessage(validationTexts.errFirstName);
       setActiveMobileSheet('personal');
       return false;
     }
     if (!phone.trim() || phone.trim().length < 6) {
-      setErrorMessage(
-        language === 'ru'
-          ? 'Укажите контактный номер телефона'
-          : 'Inserisci un numero di telefono valido'
-      );
+      setErrorMessage(validationTexts.errPhone);
       setActiveMobileSheet('personal');
       return false;
     }
     if (fulfillmentType === 'consegna') {
       if (!streetAddress.trim()) {
-        setErrorMessage(
-          language === 'ru'
-            ? 'Укажите улицу и номер дома для доставки'
-            : 'Inserisci la via e il numero civico per la consegna'
-        );
+        setErrorMessage(validationTexts.errStreet);
         setActiveMobileSheet('address');
         return false;
       }
     }
     if (!isAsap && isSelectedDayClosed) {
-      setErrorMessage(
-        language === 'ru'
-          ? 'Ресторан закрыт в выбранный день'
-          : 'Il locale è chiuso nel giorno selezionato'
-      );
+      setErrorMessage(validationTexts.errClosed);
       setActiveMobileSheet('time');
       return false;
     }
@@ -981,34 +1062,22 @@ export const StripeCheckoutPage: React.FC = () => {
     if (paymentMethod === 'card') {
       const cleanCard = cardNumber.replace(/\s+/g, '');
       if (cleanCard.length < 15) {
-        setErrorMessage(
-          language === 'ru'
-            ? 'Введите корректный номер карты (16 цифр)'
-            : 'Inserisci un numero di carta valido a 16 cifre'
-        );
+        setErrorMessage(validationTexts.errCardNumber);
         setActiveMobileSheet('payment');
         return false;
       }
       if (cardExpiry.length < 5) {
-        setErrorMessage(
-          language === 'ru'
-            ? 'Укажите срок действия карты (ММ/ГГ)'
-            : 'Inserisci la scadenza della carta (MM/AA)'
-        );
+        setErrorMessage(validationTexts.errExpiry);
         setActiveMobileSheet('payment');
         return false;
       }
       if (cardCvc.length < 3) {
-        setErrorMessage(language === 'ru' ? 'Укажите код CVC' : 'Inserisci il codice CVC');
+        setErrorMessage(validationTexts.errCvc);
         setActiveMobileSheet('payment');
         return false;
       }
       if (!cardName.trim()) {
-        setErrorMessage(
-          language === 'ru'
-            ? 'Укажите имя держателя карты'
-            : 'Inserisci il nome del titolare della carta'
-        );
+        setErrorMessage(validationTexts.errCardName);
         setActiveMobileSheet('payment');
         return false;
       }
@@ -1025,22 +1094,12 @@ export const StripeCheckoutPage: React.FC = () => {
     setErrorMessage('');
 
     if (paymentMethod === 'card') {
-      setProcessingStep(
-        language === 'ru'
-          ? 'Шифрование данных карты через Stripe Elements...'
-          : 'Crittografia dati carta tramite Stripe Elements...'
-      );
+      setProcessingStep(validationTexts.stepEncrypt);
       await new Promise(r => setTimeout(r, 600));
-      setProcessingStep(
-        language === 'ru'
-          ? 'Подтверждение 3D Secure с банком...'
-          : 'Autenticazione 3D Secure con la tua banca...'
-      );
+      setProcessingStep(validationTexts.step3ds);
       await new Promise(r => setTimeout(r, 700));
     } else {
-      setProcessingStep(
-        language === 'ru' ? 'Создание и подтверждение заказа...' : 'Creazione comanda...'
-      );
+      setProcessingStep(validationTexts.stepCreateOrder);
       await new Promise(r => setTimeout(r, 600));
     }
 
@@ -1053,10 +1112,10 @@ export const StripeCheckoutPage: React.FC = () => {
 
     const addressParts = [
       streetAddress.trim(),
-      apartment.trim() ? `${language === 'ru' ? 'кв.' : 'int.'} ${apartment.trim()}` : null,
-      entrance.trim() ? `${language === 'ru' ? 'подъезд' : 'scala'} ${entrance.trim()}` : null,
-      floor.trim() ? `${language === 'ru' ? 'этаж' : 'piano'} ${floor.trim()}` : null,
-      intercom.trim() ? `${language === 'ru' ? 'домофон' : 'citofono'} ${intercom.trim()}` : null,
+      apartment.trim() ? `${validationTexts.aptPrefix} ${apartment.trim()}` : null,
+      entrance.trim() ? `${validationTexts.entPrefix} ${entrance.trim()}` : null,
+      floor.trim() ? `${validationTexts.floorPrefix} ${floor.trim()}` : null,
+      intercom.trim() ? `${validationTexts.intercomPrefix} ${intercom.trim()}` : null,
       city,
     ].filter(Boolean);
 
@@ -1169,7 +1228,7 @@ export const StripeCheckoutPage: React.FC = () => {
               }}
               className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-[#12151f] hover:bg-[#1c2233] text-white font-bold text-sm transition cursor-pointer flex items-center justify-center gap-2"
             >
-              <span>👨‍🍳 Открыть KDS Кухню (/owner)</span>
+              <span>{validationTexts.kdsBtn}</span>
             </button>
 
             <button
@@ -1716,7 +1775,7 @@ export const StripeCheckoutPage: React.FC = () => {
                         type="text"
                         value={cardName}
                         onChange={e => setCardName(e.target.value)}
-                        placeholder="MARCO ROSSI"
+                        placeholder="DAVID COHEN"
                         className="w-full bg-transparent text-[16px] text-[#21201F] uppercase placeholder-[#B5B2AF] focus:outline-none"
                       />
                     </div>
@@ -2038,7 +2097,7 @@ export const StripeCheckoutPage: React.FC = () => {
                           type="text"
                           value={cardName}
                           onChange={e => setCardName(e.target.value)}
-                          placeholder="MARCO ROSSI"
+                          placeholder="DAVID COHEN"
                           style={{ height: '56px' }}
                           className="w-full h-[56px] min-h-[56px] bg-white border border-[1px] border-[#E8E7E6] rounded-2xl px-3.5 text-sm sm:text-base text-[#21201F] font-semibold uppercase placeholder-neutral-400 focus:outline-none focus:border-[#ff5500] transition"
                         />

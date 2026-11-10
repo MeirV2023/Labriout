@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Star, Heart } from 'lucide-react';
-import { REVIEWS_DATA } from '../data/menuData';
+import { REVIEWS_DATA, getLocalizedReviewText } from '../data/menuData';
+import { getLabrioutKosherBadge } from '../data/labrioutMenuData';
 import { useCart } from '../context/CartContext';
 
 export const Testimonials: React.FC = () => {
@@ -115,11 +116,7 @@ export const Testimonials: React.FC = () => {
   };
 
   const getReviewText = (review: typeof REVIEWS_DATA[number]) =>
-    language === 'en'
-      ? review.textEn
-      : language === 'ru'
-      ? review.textRu
-      : review.text;
+    getLocalizedReviewText(review, language);
 
   return (
     <section className="py-12 bg-[#0c0d10] border-t border-[#1c1f28] relative overflow-hidden">
@@ -230,13 +227,17 @@ export const Testimonials: React.FC = () => {
           <div className="lg:col-span-4 bg-gradient-to-br from-[#1c1512] to-[#14161f] border border-[#ff5500]/30 rounded-3xl p-5 sm:p-6 text-center relative overflow-hidden flex flex-col justify-center h-full">
             <div className="relative z-10 space-y-2.5">
               <span className="text-[11px] font-black tracking-widest text-[#ff7722] uppercase">
-                ✡️ 100% Casher • Badatz de Brunoy
+                {getLabrioutKosherBadge(language)}
               </span>
               <h4 className="font-heading font-black text-xl lg:text-2xl text-white uppercase tracking-tight leading-tight">
                 {language === 'ru'
                   ? 'НАСТОЯЩИЙ КОШЕРНЫЙ ВКУС LABRIOUT'
                   : language === 'en'
                   ? 'AUTHENTIC KOSHER TASTE AT LABRIOUT'
+                  : language === 'de'
+                  ? 'AUTHENTISCHER KOSCHERER GESCHMACK BEI LABRIOUT'
+                  : language === 'it'
+                  ? 'IL GUSTO KOSHER AUTENTICO DI LABRIOUT'
                   : 'LE GOÛT AUTHENTIQUE DE LABRIOUT'}
               </h4>
               <p className="font-handwriting text-xl text-[#ff8833] flex items-center justify-center gap-1">
@@ -244,6 +245,10 @@ export const Testimonials: React.FC = () => {
                   ? 'Готовим с душой — Лабриут! '
                   : language === 'en'
                   ? 'Homemade with passion — Labriout! '
+                  : language === 'de'
+                  ? 'Hausgemacht mit Leidenschaft — Labriout! '
+                  : language === 'it'
+                  ? 'Fatto in casa con passione — Labriout! '
                   : 'Fait maison avec générosité '}
                 <Heart className="w-4 h-4 text-red-500 fill-red-500 inline" />
               </p>
@@ -252,6 +257,10 @@ export const Testimonials: React.FC = () => {
                   ? 'Мясо Халак на гриле • Горячие Лаффы и Питы • Смэш Бургеры'
                   : language === 'en'
                   ? 'Flame-grilled Halak meats • Warm Laffas & Pitas • Smash Burgers'
+                  : language === 'de'
+                  ? 'Flammgegrilltes Halak-Fleisch • Hausgemachte Pitas & Laffas • Smash Burger'
+                  : language === 'it'
+                  ? 'Carni Halak alla brace • Pita & Laffa fatte in casa • Smash Burger'
                   : 'Viandes grillées à la flamme • Pitas & Laffas maison • Smash Burgers'}
               </div>
             </div>

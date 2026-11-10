@@ -9,7 +9,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { openProductDetail, addToCart, updateQuantity, removeItem, items, language, isItemSoftDeleted } = useCart();
+  const { openProductDetail, addToCart, updateQuantity, removeItem, items, language, isItemSoftDeleted, t } = useCart();
 
   const cartItemsForProduct = items.filter(
     (item) => (item.product?.id === product.id || item.productId === product.id) && !isItemSoftDeleted(item.cartItemId)
@@ -172,7 +172,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   type="button"
                   onClick={handleDecrease}
                   className="w-7 h-7 sm:w-8 sm:h-8 rounded-full hover:bg-black/20 active:scale-90 text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
-                  aria-label="Diminuisci quantità"
+                  aria-label="-"
                 >
                   <Minus className="w-3.5 sm:w-3.5 h-3.5 sm:h-3.5 stroke-[2.5]" />
                 </button>
@@ -185,7 +185,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   type="button"
                   onClick={handleIncrease}
                   className="w-7 h-7 sm:w-8 sm:h-8 rounded-full hover:bg-black/20 active:scale-90 text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
-                  aria-label="Aumenta quantità"
+                  aria-label="+"
                 >
                   <Plus className="w-3.5 sm:w-3.5 h-3.5 sm:h-3.5 stroke-[2.5]" />
                 </button>
@@ -195,8 +195,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 type="button"
                 onClick={handleIncrease}
                 className="w-full h-full rounded-full flex items-center justify-center cursor-pointer"
-                title="Aggiungi al carrello"
-                aria-label={`Aggiungi ${product.name}`}
+                title={t('addToCart')}
+                aria-label={`${t('addToCart')} — ${localizedName}`}
               >
                 <Plus className="w-5 h-5 sm:w-5 sm:h-5 stroke-[2.5]" />
               </button>
