@@ -19,6 +19,8 @@ export const ProductModal: React.FC = () => {
     addToCart,
     updateCartItemExtras,
     language,
+    currency,
+    formatMoney,
     t,
   } = useCart();
 
@@ -166,7 +168,11 @@ export const ProductModal: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-[16px]">{extraLabel}</span>
-                        <span className="text-[16px] font-light text-[#908F8F]">+{((Number(extra.price) || 0)).toFixed(2)} €</span>
+                        <span className="text-[16px] font-light text-[#908F8F]">
+                          {currency === 'USD'
+                            ? formatMoney(extra.price, { withPlus: true })
+                            : `+${(Number(extra.price) || 0).toFixed(2)} €`}
+                        </span>
                       </div>
                     </button>
                   );
@@ -217,7 +223,7 @@ export const ProductModal: React.FC = () => {
             className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#ff5500] to-[#ff6a00] hover:from-[#e04a00] hover:to-[#ff5500] text-white font-extrabold text-sm flex items-center justify-between shadow-lg shadow-[#ff5500]/25 transition active:scale-98 cursor-pointer"
           >
             <span>{editingCartItemId ? t('updateChanges') : t('addToCart')}</span>
-            <span className="text-white/95">€{(Number(totalPrice) || 0).toFixed(2)}</span>
+            <span className="text-white/95">{formatMoney(totalPrice)}</span>
           </button>
         </div>
       </div>

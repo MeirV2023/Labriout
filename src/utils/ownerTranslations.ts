@@ -196,7 +196,7 @@ export const OWNER_TRANSLATIONS: Record<Language, OwnerTranslations> = {
     logoutTitle: 'Se déconnecter',
 
     newOrderBanner: (id, customer, total) =>
-      `🔔 NOUVELLE COMMANDE #${id} (${customer}) — €${total}`,
+      `🔔 NOUVELLE COMMANDE #${id} (${customer}) — ${total}`,
     simOrderBanner: (id, customer) =>
       `⚡ NOUVELLE COMMANDE #${id} (${customer}) PAYÉE ET ENVOYÉE EN CUISINE !`,
     simAsap: 'Dès que possible (ASAP)',
@@ -363,7 +363,7 @@ export const OWNER_TRANSLATIONS: Record<Language, OwnerTranslations> = {
     logoutTitle: 'Sign out',
 
     newOrderBanner: (id, customer, total) =>
-      `🔔 NEW ORDER #${id} (${customer}) — €${total}`,
+      `🔔 NEW ORDER #${id} (${customer}) — ${total}`,
     simOrderBanner: (id, customer) =>
       `⚡ NEW ORDER #${id} (${customer}) PAID & SENT TO KITCHEN!`,
     simAsap: 'As soon as possible (ASAP)',
@@ -529,7 +529,7 @@ export const OWNER_TRANSLATIONS: Record<Language, OwnerTranslations> = {
     logoutTitle: 'Abmelden',
 
     newOrderBanner: (id, customer, total) =>
-      `🔔 NEUE BESTELLUNG #${id} (${customer}) — €${total}`,
+      `🔔 NEUE BESTELLUNG #${id} (${customer}) — ${total}`,
     simOrderBanner: (id, customer) =>
       `⚡ NEUE BESTELLUNG #${id} (${customer}) BEZAHLT & AN DIE KÜCHE GESENDET!`,
     simAsap: 'So schnell wie möglich (ASAP)',
@@ -696,7 +696,7 @@ export const OWNER_TRANSLATIONS: Record<Language, OwnerTranslations> = {
     logoutTitle: 'Esci dal pannello',
 
     newOrderBanner: (id, customer, total) =>
-      `🔔 NUOVO ORDINE #${id} (${customer}) — €${total}`,
+      `🔔 NUOVO ORDINE #${id} (${customer}) — ${total}`,
     simOrderBanner: (id, customer) =>
       `⚡ NUOVO ORDINE #${id} (${customer}) PAGATO E INVIATO IN CUCINA!`,
     simAsap: 'Il prima possibile (ASAP)',
@@ -863,7 +863,7 @@ export const OWNER_TRANSLATIONS: Record<Language, OwnerTranslations> = {
     logoutTitle: 'Выйти из панели',
 
     newOrderBanner: (id, customer, total) =>
-      `🔔 НОВЫЙ ЗАКАЗ #${id} (${customer}) — €${total}`,
+      `🔔 НОВЫЙ ЗАКАЗ #${id} (${customer}) — ${total}`,
     simOrderBanner: (id, customer) =>
       `⚡ НОВЫЙ ЗАКАЗ #${id} (${customer}) ОПЛАЧЕН И ПОСТУПИЛ НА КУХНЮ!`,
     simAsap: 'Как можно скорее (ASAP)',

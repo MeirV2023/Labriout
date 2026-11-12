@@ -138,6 +138,9 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
     openProductDetail,
     language,
     setLanguage,
+    currency,
+    setCurrency,
+    formatMoney,
   } = useCart();
 
   const ot = OWNER_TRANSLATIONS[language] || OWNER_TRANSLATIONS.fr;
@@ -237,7 +240,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
           ot.newOrderBanner(
             String(evt.data?.orderNumber || evt.data?.id || ''),
             String(evt.data?.customer?.name || ''),
-            Number(evt.data?.total || 0).toFixed(2)
+            formatMoney(evt.data?.total || 0)
           )
         );
         setTimeout(() => setLastRealtimeBanner(null), 8000);
@@ -252,7 +255,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
       }
     });
     return unsubscribe;
-  }, [activeTenantId, soundEnabled, loadAllOwnerData, ot]);
+  }, [activeTenantId, soundEnabled, loadAllOwnerData, ot, formatMoney]);
 
   // Exact dish/order SLA stopwatch timer (kept intact, styled for crisp visibility)
   const formatStopwatch = (receivedAt?: number, completedAt?: number | null) => {
@@ -902,6 +905,40 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
               )}
             </div>
 
+            {/* Currency Switcher ($ / €) */}
+            <div
+              className="h-10 p-1 rounded-xl bg-white border border-slate-200/80 inline-flex items-center shadow-2xs"
+              role="group"
+              aria-label="Currency switcher"
+            >
+              <button
+                type="button"
+                aria-pressed={currency === 'USD'}
+                onClick={() => setCurrency('USD')}
+                title="USD ($)"
+                className={`h-full px-2.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  currency === 'USD'
+                    ? 'bg-[#e66430] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                $
+              </button>
+              <button
+                type="button"
+                aria-pressed={currency === 'EUR'}
+                onClick={() => setCurrency('EUR')}
+                title="EUR (€)"
+                className={`h-full px-2.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  currency === 'EUR'
+                    ? 'bg-[#e66430] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                €
+              </button>
+            </div>
+
             {/* Fullscreen Button (Pastel Purple) */}
             <button
               type="button"
@@ -1157,7 +1194,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                                 <div className="flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
                                   <span>{ot.dishesToPrepare}</span>
                                   <span className="text-slate-800 text-xs font-black">
-                                    €{Number(order.total).toFixed(2)}
+                                    {formatMoney(order.total)}
                                   </span>
                                 </div>
 
@@ -1351,7 +1388,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                       <div>
                         <p className="text-xs font-bold text-slate-500">{ot.shiftRevenue}</p>
                         <p className="text-2xl font-black text-slate-800 mt-1">
-                          €{totalRevenueEur.toFixed(2)}
+                          {formatMoney(totalRevenueEur)}
                         </p>
                       </div>
                       <svg className="w-24 h-14" viewBox="0 0 100 50">
@@ -1456,7 +1493,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                             />
                             <div className="min-w-0">
                               <p className="font-semibold text-slate-600 truncate">
-                                {ot.eventOrderPrefix} #{o.id} • €{Number(o.total).toFixed(2)}
+                                {ot.eventOrderPrefix} #{o.id} • {formatMoney(o.total)}
                               </p>
                               <p className="text-[11px] text-slate-400">
                                 {ot.eventCustomerPrefix} {o.customer.name}
@@ -1568,7 +1605,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                               </span>
                             </td>
                             <td className="py-4 px-3 font-extrabold text-slate-800">
-                              €{Number(order.total).toFixed(2)}
+                              {formatMoney(order.total)}
                             </td>
                             <td className="py-4 px-3">
                               <span
@@ -1611,7 +1648,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                       <div>
                         <p className="text-xs font-bold text-slate-500">{ot.totalSaleWidget}</p>
                         <p className="text-2xl font-black text-slate-800 mt-1">
-                          €{totalRevenueEur.toFixed(2)}
+                          {formatMoney(totalRevenueEur)}
                         </p>
                       </div>
                       <svg className="w-24 h-14" viewBox="0 0 100 50">
@@ -1732,7 +1769,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                             {localizedProdName}
                           </h3>
                           <p className="text-xs text-[#4c84ff] font-semibold mt-0.5">
-                            €{Number(prod.price).toFixed(2)} •{' '}
+                            {formatMoney(prod.price)} •{' '}
                             <span className={isAvail ? 'text-emerald-600' : 'text-rose-600'}>
                               {isAvail ? ot.inStockBadge : ot.stopListBadge}
                             </span>
@@ -1866,7 +1903,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                   <div>
                     <p className="text-sm font-bold text-slate-600">{ot.kpiTotalRevenue}</p>
                     <p className="text-3xl font-black text-slate-900 mt-1">
-                      €{totalRevenueEur.toFixed(2)}
+                      {formatMoney(totalRevenueEur)}
                     </p>
                     <p className="text-[11px] text-emerald-600 font-semibold mt-1">
                       {ot.kpiZeroCommission}
@@ -1886,7 +1923,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                     <div>
                       <p className="text-sm font-bold text-slate-600">{ot.chartTotalEarnings}</p>
                       <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
-                        €{(totalRevenueEur * 18.5).toFixed(2)}
+                        {formatMoney(totalRevenueEur * 18.5)}
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
@@ -2156,7 +2193,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                               {sw.text} min
                             </td>
                             <td className="py-3.5 px-4 font-extrabold text-slate-800">
-                              €{Number(order.total).toFixed(2)}
+                              {formatMoney(order.total)}
                             </td>
                           </tr>
                         );
@@ -2329,7 +2366,7 @@ export const OwnerPortalPage: React.FC<{ onLogout?: () => void }> = ({ onLogout 
                         </p>
                       </div>
                       <span className="font-black text-emerald-600">
-                        €{Number(tx.total).toFixed(2)}
+                        {formatMoney(tx.total)}
                       </span>
                     </div>
                   ))}

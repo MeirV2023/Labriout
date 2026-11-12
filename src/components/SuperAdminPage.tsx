@@ -99,6 +99,10 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
     refreshCatalog,
     setCurrentView,
     openProductDetail,
+    currency,
+    setCurrency,
+    currencySymbol,
+    formatMoney,
   } = useCart();
 
   const [activeTab, setActiveTab] = useState<AdminTab>('menu-cms');
@@ -288,9 +292,9 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
     await refreshCatalog();
     await loadAdminEverything();
     showToast(
-      `✅ Блюдо «${editingProduct.nameRu || editingProduct.name}» (€${Number(
-        editingProduct.price
-      ).toFixed(2)}) и все добавки (${
+      `✅ Блюдо «${editingProduct.nameRu || editingProduct.name}» (${formatMoney(
+        editingProduct.price || 0
+      )}) и все добавки (${
         editingProduct.availableExtras?.length || 0
       } шт.) сохранены на сайте!`
     );
@@ -634,6 +638,40 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
               <span className="hidden md:inline">Добавить блюдо</span>
             </button>
 
+            {/* Currency Switcher ($ / €) */}
+            <div
+              className="h-10 p-1 rounded-xl bg-white border border-slate-200/80 inline-flex items-center shadow-2xs"
+              role="group"
+              aria-label="Currency switcher"
+            >
+              <button
+                type="button"
+                aria-pressed={currency === 'USD'}
+                onClick={() => setCurrency('USD')}
+                title="USD ($)"
+                className={`h-full px-2.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  currency === 'USD'
+                    ? 'bg-[#e66430] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                $
+              </button>
+              <button
+                type="button"
+                aria-pressed={currency === 'EUR'}
+                onClick={() => setCurrency('EUR')}
+                title="EUR (€)"
+                className={`h-full px-2.5 rounded-lg text-xs font-black transition cursor-pointer ${
+                  currency === 'EUR'
+                    ? 'bg-[#e66430] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                €
+              </button>
+            </div>
+
             <button
               type="button"
               onClick={toggleFullscreen}
@@ -807,7 +845,7 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
                                 {catConfig?.label || prod.category}
                               </p>
                               <p className="text-sm font-black text-[#e66430] mt-1">
-                                €{Number(prod.price).toFixed(2)}
+                                {formatMoney(prod.price)}
                               </p>
                             </div>
 
@@ -905,7 +943,7 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
                                   {prod.name}
                                 </p>
                                 <p className="text-xs text-slate-500">
-                                  €{Number(prod.price).toFixed(2)} • Добавок: {prodExtrasCount}
+                                  {formatMoney(prod.price)} • Добавок: {prodExtrasCount}
                                 </p>
                               </div>
                             </div>
@@ -981,7 +1019,7 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
                         <div className="grid grid-cols-3 gap-2.5">
                           <div>
                             <label className="block text-[10px] font-extrabold text-emerald-700 uppercase mb-1">
-                              Цена (€) *
+                              Цена ({currencySymbol}) *
                             </label>
                             <input
                               type="number"
@@ -1000,7 +1038,7 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
 
                           <div>
                             <label className="block text-[10px] font-extrabold text-amber-700 uppercase mb-1">
-                              Старая цена (€)
+                              Старая цена ({currencySymbol})
                             </label>
                             <input
                               type="number"
@@ -1018,7 +1056,7 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
 
                           <div>
                             <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Фудкост (€)
+                              Фудкост ({currencySymbol})
                             </label>
                             <input
                               type="number"
@@ -1225,7 +1263,9 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
                                 className="flex-1 bg-transparent text-slate-700 font-semibold text-xs focus:outline-none"
                               />
                               <div className="flex items-center gap-1.5 shrink-0">
-                                <span className="text-[11px] text-emerald-600 font-bold">+€</span>
+                                <span className="text-[11px] text-emerald-600 font-bold">
+                                  +{currencySymbol}
+                                </span>
                                 <input
                                   type="number"
                                   step="0.10"
@@ -1318,7 +1358,7 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
                   <div>
                     <p className="text-sm font-bold text-slate-600">Подписки MRR</p>
                     <p className="text-3xl font-black text-slate-900 mt-1">
-                      €{tenantsData?.saasMetrics?.mrrEur?.toFixed(0) || '248'}
+                      {formatMoney(tenantsData?.saasMetrics?.mrrEur ?? 248, { decimals: 0 })}
                     </p>
                   </div>
                   <CircularGauge percent={90} color="#e66430">
@@ -1349,7 +1389,7 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
                               {t.country} • {t.city}
                             </span>
                             <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black">
-                              Тариф €{t.monthlyFeeEur || 99}/мес
+                              Тариф {formatMoney(t.monthlyFeeEur || 99, { decimals: 0 })}/мес
                             </span>
                           </div>
                           <h3 className="text-lg font-extrabold text-slate-800 mt-1.5">{t.name}</h3>
@@ -1442,7 +1482,7 @@ export const SuperAdminPage: React.FC<{ onLogout?: () => void }> = ({ onLogout }
                       </div>
                       <div className="text-right">
                         <p className="font-black text-sm text-slate-800">
-                          €{Number(c.revenue_generated || 0).toFixed(2)}
+                          {formatMoney(c.revenue_generated || 0)}
                         </p>
                         <p className="text-[11px] text-slate-400">Заказов: {c.usage_count}</p>
                       </div>

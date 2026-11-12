@@ -16,7 +16,15 @@ import { STORE_DETAILS } from '../data/menuData';
 import { getLocalizedProductName, getLocalizedExtraName } from '../utils/menuTranslations';
 
 export const OrderTrackerModal: React.FC = () => {
-  const { activePlacedOrder, setActivePlacedOrder, setCurrentView, t, language } = useCart();
+  const {
+    activePlacedOrder,
+    setActivePlacedOrder,
+    setCurrentView,
+    t,
+    language,
+    currency,
+    formatMoney,
+  } = useCart();
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [minutesRemaining, setMinutesRemaining] = useState<number>(20);
 
@@ -384,14 +392,28 @@ export const OrderTrackerModal: React.FC = () => {
                     )}
                   </div>
                   <span className="font-bold text-white shrink-0">
-                    {((Number(item.totalUnitPrice ?? item.product?.price ?? 0)) * (Number(item.quantity) || 1)).toFixed(2).replace('.', ',')} €
+                    {currency === 'USD'
+                      ? formatMoney(
+                          Number(item.totalUnitPrice ?? item.product?.price ?? 0) *
+                            (Number(item.quantity) || 1)
+                        )
+                      : `${(
+                          Number(item.totalUnitPrice ?? item.product?.price ?? 0) *
+                          (Number(item.quantity) || 1)
+                        )
+                          .toFixed(2)
+                          .replace('.', ',')} €`}
                   </span>
                 </div>
               );
             })}
             <div className="pt-2 flex justify-between font-black text-sm text-[#ff6611]">
               <span>{t('total')}</span>
-              <span>{(Number(activePlacedOrder.total) || 0).toFixed(2).replace('.', ',')} €</span>
+              <span>
+                {currency === 'USD'
+                  ? formatMoney(activePlacedOrder.total)
+                  : `${(Number(activePlacedOrder.total) || 0).toFixed(2).replace('.', ',')} €`}
+              </span>
             </div>
           </div>
         </div>

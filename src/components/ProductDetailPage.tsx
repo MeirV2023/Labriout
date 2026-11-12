@@ -42,6 +42,8 @@ export const ProductDetailPage: React.FC = () => {
     triggerCartBounce,
     catalogProducts,
     language,
+    currency,
+    formatMoney,
     t,
   } = useCart();
 
@@ -1057,7 +1059,9 @@ export const ProductDetailPage: React.FC = () => {
                                 {extraName}
                               </span>
                               <span className="text-[15px] font-normal text-[#9E9B98] leading-none whitespace-nowrap shrink-0">
-                                +{(Number(extra.price) || 0).toFixed(2).replace('.', ',')} €
+                                {currency === 'USD'
+                                  ? formatMoney(extra.price, { withPlus: true })
+                                  : `+${(Number(extra.price) || 0).toFixed(2).replace('.', ',')} €`}
                               </span>
                             </div>
                           </div>
@@ -1252,7 +1256,9 @@ export const ProductDetailPage: React.FC = () => {
 
                       <div className="pt-1.5 px-0.5">
                         <div className="text-[14px] font-bold text-[#21201F] leading-tight">
-                          €{(Number(rec.price) || 0).toFixed(2).replace('.', ',')}
+                          {currency === 'USD'
+                            ? formatMoney(rec.price)
+                            : `€${(Number(rec.price) || 0).toFixed(2).replace('.', ',')}`}
                         </div>
                         <div className="text-[12px] font-normal text-[#21201F] line-clamp-2 leading-[1.25] mt-0.5">
                           <span>{recName}</span>{' '}
@@ -1280,11 +1286,17 @@ export const ProductDetailPage: React.FC = () => {
               </div>
               <div className="flex items-baseline gap-2 shrink-0">
                 <span className="text-[17px] font-bold text-[#21201F]">
-                  €{(Number(mobileSheetTotalPrice) || 0).toFixed(2).replace('.', ',')}
+                  {currency === 'USD'
+                    ? formatMoney(mobileSheetTotalPrice)
+                    : `€${(Number(mobileSheetTotalPrice) || 0).toFixed(2).replace('.', ',')}`}
                 </span>
                 {hasDiscount && (
                   <span className="text-[13px] text-[#9E9B98] line-through font-normal">
-                    €{(Number(oldPrice * quantity + mobileRecommendedAddedTotal) || 0).toFixed(2).replace('.', ',')}
+                    {currency === 'USD'
+                      ? formatMoney(oldPrice * quantity + mobileRecommendedAddedTotal)
+                      : `€${(Number(oldPrice * quantity + mobileRecommendedAddedTotal) || 0)
+                          .toFixed(2)
+                          .replace('.', ',')}`}
                   </span>
                 )}
               </div>
@@ -1527,11 +1539,15 @@ export const ProductDetailPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-3 sm:gap-4 pb-[15px] border-b border-neutral-100">
               <div className="flex items-baseline gap-2">
                 <span className="font-heading font-black text-[32px] text-[#21201F] tracking-tight leading-none">
-                  {(Number(totalPrice) || 0).toFixed(2).replace('.', ',')} €
+                  {currency === 'USD'
+                    ? formatMoney(totalPrice)
+                    : `${(Number(totalPrice) || 0).toFixed(2).replace('.', ',')} €`}
                 </span>
                 {hasDiscount && (
                   <span className="text-neutral-400 font-semibold text-base sm:text-lg line-through">
-                    {(Number(oldPrice * quantity) || 0).toFixed(2).replace('.', ',')} €
+                    {currency === 'USD'
+                      ? formatMoney(oldPrice * quantity)
+                      : `${(Number(oldPrice * quantity) || 0).toFixed(2).replace('.', ',')} €`}
                   </span>
                 )}
               </div>
@@ -1713,7 +1729,9 @@ export const ProductDetailPage: React.FC = () => {
                             {extraName}
                           </span>
                           <span className="text-[16px] font-light text-[#908F8F] shrink-0 leading-tight">
-                            +{(Number(extra.price) || 0).toFixed(2).replace('.', ',')} €
+                            {currency === 'USD'
+                              ? formatMoney(extra.price, { withPlus: true })
+                              : `+${(Number(extra.price) || 0).toFixed(2).replace('.', ',')} €`}
                           </span>
                         </div>
                       </div>

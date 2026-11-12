@@ -60,6 +60,9 @@ export const CartPage: React.FC = () => {
     setCurrentView,
     addToCart,
     language,
+    currency,
+    currencySymbol,
+    formatMoney,
   } = useCart();
 
   const [inputCoupon, setInputCoupon] = useState('');
@@ -292,14 +295,35 @@ export const CartPage: React.FC = () => {
   const todayHours = getTodayHours();
 
   // Multilingual UI texts matching Screenshot 2 design
+  const zeroMoney = currency === 'USD' ? '$0' : '0 €';
+  const fiveFeeStr = currency === 'USD' ? '$5.00' : '5,00 €';
+  const fiveFeeEnDe = currency === 'USD' ? '$5.00' : '€5.00';
+  const freeFrom25Str = currency === 'USD' ? '$25' : '25 €';
+  const freeThresholdStr =
+    currency === 'USD'
+      ? `$${STORE_DETAILS.freeDeliveryThreshold}`
+      : `${STORE_DETAILS.freeDeliveryThreshold} €`;
+  const freeThresholdEn =
+    currency === 'USD'
+      ? `$${STORE_DETAILS.freeDeliveryThreshold}`
+      : `€${STORE_DETAILS.freeDeliveryThreshold}`;
+  const fmtCartPrice = (val: number) =>
+    currency === 'USD'
+      ? formatMoney(val)
+      : `${(Number(val) || 0).toFixed(2).replace('.', ',')} €`;
+  const fmtCartPricePrefix = (val: number) =>
+    currency === 'USD'
+      ? formatMoney(val)
+      : `€${(Number(val) || 0).toFixed(2).replace('.', ',')}`;
+
   const labels = {
     ru: {
       back: 'Вернуться в каталог',
       title: 'Корзина',
       clear: 'Очистить корзину',
-      deliveryFreeTitle: 'Доставка 0 €',
-      pickupFreeTitle: 'Самовывоз 0 €',
-      deliveryOldFee: '5,00 €',
+      deliveryFreeTitle: `Доставка ${zeroMoney}`,
+      pickupFreeTitle: `Самовывоз ${zeroMoney}`,
+      deliveryOldFee: fiveFeeStr,
       deliverySub: 'А это всегда приятно',
       emptyTitle: 'Корзина пуста',
       emptySub: 'Добавьте фирменные бургеры, сэндвичи и блюда из нашего меню!',
@@ -316,7 +340,7 @@ export const CartPage: React.FC = () => {
       productsTotal: (count: number) => `Товары (${count})`,
       discount: 'Скидки',
       delivery: 'Доставка',
-      free: '0 €',
+      free: zeroMoney,
       toPay: 'К оплате',
       checkoutBtn: 'Перейти к оплате',
       promoQuestion: 'Есть промокод?',
@@ -333,7 +357,7 @@ export const CartPage: React.FC = () => {
       trust2Sub: 'Все платежи защищены и зашифрованы.',
       trust3Title: 'Служба заботы',
       trust3Sub: 'Всегда готовы ответить на любые вопросы.',
-      currency: '€',
+      currency: currencySymbol,
       undo: 'Вернуть',
       unitPiece: '1 шт.',
       notePrefix: 'Комментарий:',
@@ -342,13 +366,13 @@ export const CartPage: React.FC = () => {
       removeTitle: 'Удалить',
       addCutlery: 'Добавить приборы',
       mobileDeliveryFreeSub: 'Доставка бесплатно',
-      mobileDeliveryPaidSub: `Бесплатная доставка от ${STORE_DETAILS.freeDeliveryThreshold} €`,
+      mobileDeliveryPaidSub: `Бесплатная доставка от ${freeThresholdStr}`,
       sheetDeliveryTitle: 'Доставка',
       sheetCourierTime: 'Курьер приедет за 20–35 мин',
       sheetWorkingHours: `Режим работы: с ${todayHours.start} до ${todayHours.end}`,
       sheetConditions: 'Условия',
       sheetCart: 'Корзина',
-      sheetFreeDeliveryRow: 'Доставка 0 €',
+      sheetFreeDeliveryRow: `Доставка ${zeroMoney}`,
       sheetStoreInfoTitle: 'Информация о ресторане',
       sheetOkBtn: 'Хорошо',
     },
@@ -356,9 +380,9 @@ export const CartPage: React.FC = () => {
       back: 'Torna al catalogo',
       title: 'Carrello',
       clear: 'Svuota carrello',
-      deliveryFreeTitle: 'Consegna 0 €',
-      pickupFreeTitle: 'Ritiro in sede 0 €',
-      deliveryOldFee: '5,00 €',
+      deliveryFreeTitle: `Consegna ${zeroMoney}`,
+      pickupFreeTitle: `Ritiro in sede ${zeroMoney}`,
+      deliveryOldFee: fiveFeeStr,
       deliverySub: 'Ed è sempre un piacere',
       emptyTitle: 'Il tuo carrello è vuoto',
       emptySub: "Aggiungi i nostri smash burger, panini e specialità fatte in casa per completare l'ordine!",
@@ -392,7 +416,7 @@ export const CartPage: React.FC = () => {
       trust2Sub: 'Tutti i pagamenti sono protetti e crittografati.',
       trust3Title: 'Assistenza sempre attiva',
       trust3Sub: 'Per qualsiasi dubbio o richiesta, siamo qui per te.',
-      currency: '€',
+      currency: currencySymbol,
       undo: 'Ripristina',
       unitPiece: '1 pz.',
       notePrefix: 'Nota:',
@@ -401,13 +425,13 @@ export const CartPage: React.FC = () => {
       removeTitle: 'Rimuovi',
       addCutlery: 'Aggiungi posate',
       mobileDeliveryFreeSub: 'Consegna gratuita',
-      mobileDeliveryPaidSub: `Consegna gratuita da ${STORE_DETAILS.freeDeliveryThreshold} €`,
+      mobileDeliveryPaidSub: `Consegna gratuita da ${freeThresholdStr}`,
       sheetDeliveryTitle: 'Consegna',
       sheetCourierTime: 'Il corriere arriva in 20–35 min',
       sheetWorkingHours: `Orari di apertura: dalle ${todayHours.start} alle ${todayHours.end}`,
       sheetConditions: 'Condizioni',
       sheetCart: 'Carrello',
-      sheetFreeDeliveryRow: 'Consegna 0 €',
+      sheetFreeDeliveryRow: `Consegna ${zeroMoney}`,
       sheetStoreInfoTitle: 'Informazioni sul locale',
       sheetOkBtn: 'Ho capito',
     },
@@ -415,9 +439,9 @@ export const CartPage: React.FC = () => {
       back: 'Back to catalog',
       title: 'Cart',
       clear: 'Clear cart',
-      deliveryFreeTitle: 'Delivery 0 €',
-      pickupFreeTitle: 'Pickup 0 €',
-      deliveryOldFee: '€5.00',
+      deliveryFreeTitle: `Delivery ${zeroMoney}`,
+      pickupFreeTitle: `Pickup ${zeroMoney}`,
+      deliveryOldFee: fiveFeeEnDe,
       deliverySub: 'Always a pleasure',
       emptyTitle: 'Your cart is empty',
       emptySub: 'Add our homemade smash burgers, sandwiches, plates and drinks to start your order!',
@@ -451,7 +475,7 @@ export const CartPage: React.FC = () => {
       trust2Sub: 'All payments are encrypted and secure.',
       trust3Title: 'Customer support',
       trust3Sub: 'Always ready to help with any questions.',
-      currency: '€',
+      currency: currencySymbol,
       undo: 'Undo',
       unitPiece: '1 pc.',
       notePrefix: 'Note:',
@@ -460,13 +484,13 @@ export const CartPage: React.FC = () => {
       removeTitle: 'Remove',
       addCutlery: 'Add cutlery',
       mobileDeliveryFreeSub: 'Free delivery',
-      mobileDeliveryPaidSub: `Free delivery from €${STORE_DETAILS.freeDeliveryThreshold}`,
+      mobileDeliveryPaidSub: `Free delivery from ${freeThresholdEn}`,
       sheetDeliveryTitle: 'Delivery',
       sheetCourierTime: 'Courier arrives in 20–35 min',
       sheetWorkingHours: `Opening hours: ${todayHours.start} – ${todayHours.end}`,
       sheetConditions: 'Conditions',
       sheetCart: 'Cart',
-      sheetFreeDeliveryRow: 'Delivery 0 €',
+      sheetFreeDeliveryRow: `Delivery ${zeroMoney}`,
       sheetStoreInfoTitle: 'Store information',
       sheetOkBtn: 'Got it',
     },
@@ -474,9 +498,9 @@ export const CartPage: React.FC = () => {
       back: 'Zurück zum Menü',
       title: 'Warenkorb',
       clear: 'Warenkorb leeren',
-      deliveryFreeTitle: 'Lieferung 0 €',
-      pickupFreeTitle: 'Abholung 0 €',
-      deliveryOldFee: '€5.00',
+      deliveryFreeTitle: `Lieferung ${zeroMoney}`,
+      pickupFreeTitle: `Abholung ${zeroMoney}`,
+      deliveryOldFee: fiveFeeEnDe,
       deliverySub: 'Immer ein Vergnügen',
       emptyTitle: 'Ihr Warenkorb ist leer',
       emptySub: 'Fügen Sie etwas Leckeres aus unserer Speisekarte hinzu!',
@@ -510,7 +534,7 @@ export const CartPage: React.FC = () => {
       trust2Sub: 'Alle Zahlungen sind geschützt.',
       trust3Title: 'Kundenservice',
       trust3Sub: 'Wir sind jederzeit für Sie da.',
-      currency: '€',
+      currency: currencySymbol,
       undo: 'Wiederherstellen',
       unitPiece: '1 Stk.',
       notePrefix: 'Hinweis:',
@@ -519,13 +543,13 @@ export const CartPage: React.FC = () => {
       removeTitle: 'Entfernen',
       addCutlery: 'Besteck hinzufügen',
       mobileDeliveryFreeSub: 'Kostenlose Lieferung',
-      mobileDeliveryPaidSub: `Kostenlose Lieferung ab ${STORE_DETAILS.freeDeliveryThreshold} €`,
+      mobileDeliveryPaidSub: `Kostenlose Lieferung ab ${freeThresholdStr}`,
       sheetDeliveryTitle: 'Lieferung',
       sheetCourierTime: 'Kurier kommt in 20–35 Min',
       sheetWorkingHours: `Öffnungszeiten: ${todayHours.start} – ${todayHours.end}`,
       sheetConditions: 'Bedingungen',
       sheetCart: 'Warenkorb',
-      sheetFreeDeliveryRow: 'Lieferung 0 €',
+      sheetFreeDeliveryRow: `Lieferung ${zeroMoney}`,
       sheetStoreInfoTitle: 'Restaurant-Informationen',
       sheetOkBtn: 'Verstanden',
     },
@@ -533,9 +557,9 @@ export const CartPage: React.FC = () => {
       back: 'Retour au catalogue',
       title: 'Panier',
       clear: 'Vider le panier',
-      deliveryFreeTitle: 'Livraison 0 €',
-      pickupFreeTitle: 'Retrait sur place 0 €',
-      deliveryOldFee: '5,00 €',
+      deliveryFreeTitle: `Livraison ${zeroMoney}`,
+      pickupFreeTitle: `Retrait sur place ${zeroMoney}`,
+      deliveryOldFee: fiveFeeStr,
       deliverySub: "C'est toujours un plaisir",
       emptyTitle: 'Votre panier est vide',
       emptySub: 'Ajoutez nos smash burgers, sandwichs et spécialités maison pour commencer !',
@@ -569,7 +593,7 @@ export const CartPage: React.FC = () => {
       trust2Sub: 'Tous les paiements sont cryptés et sécurisés.',
       trust3Title: 'Service client',
       trust3Sub: 'Nous sommes à votre écoute pour toute question.',
-      currency: '€',
+      currency: currencySymbol,
       undo: 'Restaurer',
       unitPiece: '1 pce',
       notePrefix: 'Note :',
@@ -578,13 +602,13 @@ export const CartPage: React.FC = () => {
       removeTitle: 'Retirer',
       addCutlery: 'Ajouter des couverts',
       mobileDeliveryFreeSub: 'Livraison gratuite',
-      mobileDeliveryPaidSub: `Livraison gratuite dès ${STORE_DETAILS.freeDeliveryThreshold} €`,
+      mobileDeliveryPaidSub: `Livraison gratuite dès ${freeThresholdStr}`,
       sheetDeliveryTitle: 'Livraison',
       sheetCourierTime: 'Le livreur arrive en 20–35 min',
       sheetWorkingHours: `Horaires d'ouverture : ${todayHours.start} – ${todayHours.end}`,
       sheetConditions: 'Conditions',
       sheetCart: 'Panier',
-      sheetFreeDeliveryRow: 'Livraison 0 €',
+      sheetFreeDeliveryRow: `Livraison ${zeroMoney}`,
       sheetStoreInfoTitle: 'Informations sur le restaurant',
       sheetOkBtn: 'Compris',
     },
@@ -646,23 +670,30 @@ export const CartPage: React.FC = () => {
     return `${isPickup ? 'Pickup' : 'Delivery'} ${dayName} at ${selectedSlot}`;
   };
 
-  // Mobile headline string: matches Screen 1 ("Ritiro in sede 0 €") when Pickup is active, or shows scheduled time
+  // Mobile headline string: matches Screen 1 ("Ritiro in sede 0 €" / "Pickup $0") when Pickup is active, or shows scheduled time
   const mobileDeliveryHeadline = useMemo(() => {
     if (fulfillmentType === 'asporto') {
       if (hasCustomTimeSelected) {
-        return `${getScheduledCartTimeText(true)}, 0 €`;
+        return `${getScheduledCartTimeText(true)}, ${zeroMoney}`;
       }
       return labels.pickupFreeTitle;
     }
     const timeText = hasCustomTimeSelected
       ? getScheduledCartTimeText(true)
       : labels.shortDeliveryMins;
-    const feeText =
-      deliveryFee === 0
-        ? '0 €'
-        : `${(Number(deliveryFee) || 0).toFixed(2).replace('.', ',')} €`;
+    const feeText = deliveryFee === 0 ? zeroMoney : fmtCartPrice(deliveryFee);
     return `${timeText}, ${feeText}`;
-  }, [fulfillmentType, deliveryFee, language, hasCustomTimeSelected, selectedDayIndex, selectedSlot, labels]);
+  }, [
+    fulfillmentType,
+    deliveryFee,
+    language,
+    currency,
+    zeroMoney,
+    hasCustomTimeSelected,
+    selectedDayIndex,
+    selectedSlot,
+    labels,
+  ]);
 
   return (
     <div className="bg-[#F5F4F2] md:bg-white text-[#21201F] md:min-h-screen">
@@ -849,10 +880,10 @@ export const CartPage: React.FC = () => {
                             <>
                               <div className="flex items-baseline gap-1.5 mt-1 flex-wrap">
                                 <span className="text-[14px] font-medium text-[#FF4A00] leading-none">
-                                  {itemTotalPrice.toFixed(2).replace('.', ',')} €
+                                  {fmtCartPrice(itemTotalPrice)}
                                 </span>
                                 <span className="text-[13px] text-[#9E9B98] line-through decoration-[#FF4A00] leading-none">
-                                  {oldItemPrice} €
+                                  {fmtCartPrice(itemTotalPrice * 1.18)}
                                 </span>
                                 <span className="text-[13px] text-[#9E9B98] leading-none">
                                   · {itemWeight}
@@ -1052,7 +1083,7 @@ export const CartPage: React.FC = () => {
 
                   <div className="pt-1.5 px-0.5">
                     <div className="text-[14px] font-bold text-[#21201F] leading-tight">
-                      €{(Number(rec.price) || 0).toFixed(2).replace('.', ',')}
+                      {fmtCartPricePrefix(rec.price)}
                     </div>
                     <div className="text-[12px] font-normal text-[#21201F] line-clamp-2 leading-[1.25] mt-0.5">
                       <span>{recName}</span>{' '}
@@ -1165,20 +1196,20 @@ export const CartPage: React.FC = () => {
                       <>
                         <span>{labels.sheetFreeDeliveryRow}</span>{' '}
                         <span className="text-[#9E9B98] line-through decoration-[#FF4A00] ml-1">
-                          5,00 €
+                          {fiveFeeStr}
                         </span>
                       </>
                     ) : (
                       <span>
                         {language === 'ru'
-                          ? 'Доставка 5,00 €'
+                          ? `Доставка ${fiveFeeStr}`
                           : language === 'it'
-                          ? 'Consegna 5,00 €'
+                          ? `Consegna ${fiveFeeStr}`
                           : language === 'de'
-                          ? 'Lieferung 5,00 €'
+                          ? `Lieferung ${fiveFeeStr}`
                           : language === 'fr'
-                          ? 'Livraison 5,00 €'
-                          : 'Delivery 5,00 €'}
+                          ? `Livraison ${fiveFeeStr}`
+                          : `Delivery ${fiveFeeStr}`}
                       </span>
                     )}
                   </div>
@@ -1187,23 +1218,23 @@ export const CartPage: React.FC = () => {
                 <div className="text-[17px] font-normal text-[#21201F] shrink-0">
                   {fulfillmentType === 'asporto' || deliveryFee > 0
                     ? language === 'ru'
-                      ? 'от 0 €'
+                      ? `от ${zeroMoney}`
                       : language === 'it'
-                      ? 'da 0 €'
+                      ? `da ${zeroMoney}`
                       : language === 'de'
-                      ? 'ab 0 €'
+                      ? `ab ${zeroMoney}`
                       : language === 'fr'
-                      ? 'dès 0 €'
-                      : 'from 0 €'
+                      ? `dès ${zeroMoney}`
+                      : `from ${zeroMoney}`
                     : language === 'ru'
-                    ? 'от 25 €'
+                    ? `от ${freeFrom25Str}`
                     : language === 'it'
-                    ? 'da 25 €'
+                    ? `da ${freeFrom25Str}`
                     : language === 'de'
-                    ? 'ab 25 €'
+                    ? `ab ${freeFrom25Str}`
                     : language === 'fr'
-                    ? 'dès 25 €'
-                    : 'from 25 €'}
+                    ? `dès ${freeFrom25Str}`
+                    : `from ${freeFrom25Str}`}
                 </div>
               </div>
             </div>
@@ -1374,12 +1405,12 @@ export const CartPage: React.FC = () => {
                 <div className="flex items-baseline gap-2">
                   <span className="font-heading font-black text-sm sm:text-base text-[#21201F] leading-none">
                     {fulfillmentType === 'consegna'
-                      ? `${deliveryFee === 0 ? labels.deliveryFreeTitle : `${(Number(deliveryFee) || 0).toFixed(2).replace('.', ',')} €`}`
+                      ? `${deliveryFee === 0 ? labels.deliveryFreeTitle : fmtCartPrice(deliveryFee)}`
                       : labels.pickupFreeTitle}
                   </span>
                   {fulfillmentType === 'consegna' && deliveryFee === 0 && (
                     <span className="text-xs text-neutral-400 line-through font-medium leading-none">
-                      5,00 €
+                      {fiveFeeStr}
                     </span>
                   )}
                 </div>
@@ -1452,25 +1483,25 @@ export const CartPage: React.FC = () => {
                           </div>
                           <div className="text-[15px] font-normal text-[#21201F]">
                             {fulfillmentType === 'asporto' ? (
-                              <span>{language === 'ru' ? 'Самовывоз 0 €' : 'Ritiro in sede 0 €'}</span>
+                              <span>{labels.pickupFreeTitle}</span>
                             ) : deliveryFee === 0 ? (
                               <>
                                 <span>{labels.sheetFreeDeliveryRow}</span>{' '}
                                 <span className="text-[#9E9B98] line-through decoration-[#FF4A00] ml-1">
-                                  5,00 €
+                                  {fiveFeeStr}
                                 </span>
                               </>
                             ) : (
                               <span>
                                 {language === 'ru'
-                                  ? 'Доставка 5,00 €'
+                                  ? `Доставка ${fiveFeeStr}`
                                   : language === 'it'
-                                  ? 'Consegna 5,00 €'
+                                  ? `Consegna ${fiveFeeStr}`
                                   : language === 'de'
-                                  ? 'Lieferung 5,00 €'
+                                  ? `Lieferung ${fiveFeeStr}`
                                   : language === 'fr'
-                                  ? 'Livraison 5,00 €'
-                                  : 'Delivery 5,00 €'}
+                                  ? `Livraison ${fiveFeeStr}`
+                                  : `Delivery ${fiveFeeStr}`}
                               </span>
                             )}
                           </div>
@@ -1479,23 +1510,23 @@ export const CartPage: React.FC = () => {
                         <div className="text-[15px] font-normal text-[#21201F] shrink-0">
                           {fulfillmentType === 'asporto' || deliveryFee > 0
                             ? language === 'ru'
-                              ? 'от 0 €'
+                              ? `от ${zeroMoney}`
                               : language === 'it'
-                              ? 'da 0 €'
+                              ? `da ${zeroMoney}`
                               : language === 'de'
-                              ? 'ab 0 €'
+                              ? `ab ${zeroMoney}`
                               : language === 'fr'
-                              ? 'dès 0 €'
-                              : 'from 0 €'
+                              ? `dès ${zeroMoney}`
+                              : `from ${zeroMoney}`
                             : language === 'ru'
-                            ? 'от 25 €'
+                            ? `от ${freeFrom25Str}`
                             : language === 'it'
-                            ? 'da 25 €'
+                            ? `da ${freeFrom25Str}`
                             : language === 'de'
-                            ? 'ab 25 €'
+                            ? `ab ${freeFrom25Str}`
                             : language === 'fr'
-                            ? 'dès 25 €'
-                            : 'from 25 €'}
+                            ? `dès ${freeFrom25Str}`
+                            : `from ${freeFrom25Str}`}
                         </div>
                       </div>
                     </div>
@@ -1720,10 +1751,10 @@ export const CartPage: React.FC = () => {
                                 {/* Price line (Screenshot 1: 1,50 € 1,95 €) */}
                                 <div className="flex items-baseline gap-1.5 mt-1 flex-wrap">
                                   <span className="font-heading font-black text-sm sm:text-base text-[#21201F] tracking-tight">
-                                    {itemTotalPrice.toFixed(2).replace('.', ',')} €
+                                    {fmtCartPrice(itemTotalPrice)}
                                   </span>
                                   <span className="text-xs text-neutral-400 line-through font-medium">
-                                    {oldItemPrice} €
+                                    {fmtCartPrice(itemTotalPrice * 1.3)}
                                   </span>
                                   {item.product?.weight && (
                                     <span className="text-xs text-neutral-400 font-medium">
@@ -1861,7 +1892,9 @@ export const CartPage: React.FC = () => {
                                 </div>
 
                                 <span className="text-[14px] font-light text-[#908F8F] shrink-0">
-                                  +{(Number(extra.price) || 0).toFixed(2).replace('.', ',')} €
+                                  {currency === 'USD'
+                                    ? formatMoney(extra.price, { withPlus: true })
+                                    : `+${(Number(extra.price) || 0).toFixed(2).replace('.', ',')} €`}
                                 </span>
                               </div>
                             );
@@ -1930,7 +1963,7 @@ export const CartPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-[16px] text-neutral-700">{labels.productsTotal(itemsCount)}</span>
                   <span className="font-bold text-[16px] text-neutral-900">
-                    {(Number(subtotal) || 0).toFixed(2).replace('.', ',')} €
+                    {fmtCartPrice(subtotal)}
                   </span>
                 </div>
 
@@ -1941,7 +1974,7 @@ export const CartPage: React.FC = () => {
                       {labels.discount} ({appliedCoupon})
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold">-{(Number(discountAmount) || 0).toFixed(2).replace('.', ',')} €</span>
+                      <span className="font-bold">-{fmtCartPrice(discountAmount)}</span>
                       <button
                         onClick={removeCoupon}
                         className="text-xs text-neutral-400 hover:text-red-500 underline cursor-pointer"
@@ -1955,7 +1988,7 @@ export const CartPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-[16px] text-neutral-700">{labels.delivery}</span>
                   <span className="font-bold text-[16px] text-neutral-900">
-                    {deliveryFee === 0 ? labels.free : `${(Number(deliveryFee) || 0).toFixed(2).replace('.', ',')} €`}
+                    {deliveryFee === 0 ? labels.free : fmtCartPrice(deliveryFee)}
                   </span>
                 </div>
 
@@ -1968,7 +2001,7 @@ export const CartPage: React.FC = () => {
                     {labels.toPay}
                   </span>
                   <span className="font-heading font-black text-[20px] text-[#21201F] tracking-tight">
-                    {(Number(total) || 0).toFixed(2).replace('.', ',')} €
+                    {fmtCartPrice(total)}
                   </span>
                 </div>
               </div>

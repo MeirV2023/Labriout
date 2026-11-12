@@ -24,6 +24,8 @@ export type AppView =
   | 'owner'
   | 'super-admin';
 
+export type CurrencyCode = 'EUR' | 'USD';
+
 interface CartContextType {
   currentView: AppView;
   setCurrentView: (view: AppView, pushHistory?: boolean, resetScroll?: boolean) => void;
@@ -97,6 +99,12 @@ interface CartContextType {
   setLanguage: (lang: Language) => void;
   t: (key: string, replacements?: Record<string, string | number>) => string;
 
+  // Currency
+  currency: CurrencyCode;
+  setCurrency: (c: CurrencyCode) => void;
+  currencySymbol: '€' | '$';
+  formatMoney: (value: number | string, opts?: { decimals?: number; withPlus?: boolean }) => string;
+
   // Order creation & Multi-Tenant Backend Sync
   submitOrder: (customer: CustomerOrderInfo) => PlacedOrder;
   activeTenantId: string;
@@ -110,6 +118,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_STORAGE_KEY = 'labriout_cart_v3';
 const LANG_STORAGE_KEY = 'labriout_lang_v1';
+const CURRENCY_STORAGE_KEY = 'labriout_currency_v1';
 const FULFILLMENT_STORAGE_KEY = 'labriout_fulfillment_v3';
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -404,9 +413,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   });
 
-  // Language
+  // Language (URL ?lang=en|fr|de|it|ru > localStorage > tenant default)
   const [language, setLanguageState] = useState<Language>(() => {
     try {
+      if (typeof window !== 'undefined' && window.location.search) {
+        const urlLang = new URLSearchParams(window.location.search).get('lang')?.toLowerCase();
+        if (urlLang && ['it', 'en', 'ru', 'de', 'fr'].includes(urlLang)) {
+          localStorage.setItem(LANG_STORAGE_KEY, urlLang);
+          return urlLang as Language;
+        }
+      }
       const savedLang = localStorage.getItem(LANG_STORAGE_KEY) as Language;
       if (savedLang && ['it', 'en', 'ru', 'de', 'fr'].includes(savedLang)) return savedLang;
       return initialTenant === 'labriout' ? 'fr' : 'it';
@@ -419,10 +435,83 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setLanguageState(lang);
     try {
       localStorage.setItem(LANG_STORAGE_KEY, lang);
+      if (typeof window !== 'undefined' && window.location.search) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('lang')) {
+          params.set('lang', lang);
+          const qs = params.toString();
+          window.history.replaceState(
+            window.history.state,
+            '',
+            `${window.location.pathname}${qs ? `?${qs}` : ''}${window.location.hash}`
+          );
+        }
+      }
     } catch {
       // ignore
     }
   };
+
+  // Currency (URL ?currency=usd|eur > localStorage > America/* timezone -> USD, else EUR)
+  const [currency, setCurrencyState] = useState<CurrencyCode>(() => {
+    try {
+      if (typeof window !== 'undefined' && window.location.search) {
+        const urlCurr = new URLSearchParams(window.location.search).get('currency')?.toUpperCase();
+        if (urlCurr === 'USD' || urlCurr === 'EUR') {
+          localStorage.setItem(CURRENCY_STORAGE_KEY, urlCurr);
+          return urlCurr;
+        }
+      }
+      const savedCurr = localStorage.getItem(CURRENCY_STORAGE_KEY)?.toUpperCase();
+      if (savedCurr === 'USD' || savedCurr === 'EUR') {
+        return savedCurr;
+      }
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      if (tz.startsWith('America/')) {
+        return 'USD';
+      }
+      return 'EUR';
+    } catch {
+      return 'EUR';
+    }
+  });
+
+  const setCurrency = useCallback((c: CurrencyCode) => {
+    setCurrencyState(c);
+    try {
+      localStorage.setItem(CURRENCY_STORAGE_KEY, c);
+      if (typeof window !== 'undefined' && window.location.search) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('currency')) {
+          params.set('currency', c.toLowerCase());
+          const qs = params.toString();
+          window.history.replaceState(
+            window.history.state,
+            '',
+            `${window.location.pathname}${qs ? `?${qs}` : ''}${window.location.hash}`
+          );
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const currencySymbol: '€' | '$' = currency === 'USD' ? '$' : '€';
+
+  const formatMoney = useCallback(
+    (value: number | string, opts?: { decimals?: number; withPlus?: boolean }): string => {
+      const n = Number(value) || 0;
+      const decimals = opts?.decimals ?? 2;
+      const sign = opts?.withPlus && n > 0 ? '+' : n < 0 ? '-' : '';
+      const formatted = Math.abs(n).toFixed(decimals);
+      if (currency === 'USD') {
+        return `${sign}$${formatted}`;
+      }
+      return `${sign}€${formatted}`;
+    },
+    [currency]
+  );
 
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -604,6 +693,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const t = (key: string, replacements?: Record<string, string | number>): string => {
     const dict = TRANSLATIONS[language] || TRANSLATIONS.it;
     let text = dict[key] || TRANSLATIONS.it[key] || key;
+    if (text.includes('{threshold}') && (!replacements || replacements.threshold === undefined)) {
+      const defaultThreshold =
+        currency === 'USD' ? '$30' : language === 'en' ? '€30' : '30 €';
+      text = text.replace(/\{threshold\}/g, defaultThreshold);
+    }
     if (replacements) {
       Object.entries(replacements).forEach(([rKey, rVal]) => {
         text = text.replace(new RegExp(`\\{${rKey}\\}`, 'g'), String(rVal));
@@ -1057,6 +1151,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         language,
         setLanguage,
         t,
+        currency,
+        setCurrency,
+        currencySymbol,
+        formatMoney,
         submitOrder,
         activeTenantId,
         setActiveTenantId,

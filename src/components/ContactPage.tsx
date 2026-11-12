@@ -9,7 +9,10 @@ import { STORE_DETAILS } from '../data/menuData';
 import { getLabrioutTagline } from '../data/labrioutMenuData';
 
 export const ContactPage: React.FC = () => {
-  const { language } = useCart();
+  const { language, currency } = useCart();
+  const freeThresholdFrItRu = currency === 'USD' ? '$30' : '30€';
+  const freeThresholdEn = currency === 'USD' ? '$30' : '€30';
+  const freeThresholdDe = currency === 'USD' ? '$30' : '30 €';
 
   // Form states
   const [firstName, setFirstName] = useState('');
@@ -96,7 +99,7 @@ export const ContactPage: React.FC = () => {
         },
         {
           q: 'Proposez-vous la livraison à domicile ?',
-          a: 'Oui ! Nous livrons vos commandes bien chaudes à Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort et dans les villes voisines du 94. Livraison offerte dès 30€ de commande !',
+          a: `Oui ! Nous livrons vos commandes bien chaudes à Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort et dans les villes voisines du 94. Livraison offerte dès ${freeThresholdFrItRu} de commande !`,
         },
         {
           q: 'Quelle est votre certification Casher ?',
@@ -158,7 +161,7 @@ export const ContactPage: React.FC = () => {
         },
         {
           q: 'Do you offer delivery?',
-          a: 'Yes! We deliver hot, freshly grilled orders across Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort and surrounding areas in 94. Delivery is free for orders over €30!',
+          a: `Yes! We deliver hot, freshly grilled orders across Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort and surrounding areas in 94. Delivery is free for orders over ${freeThresholdEn}!`,
         },
         {
           q: 'What is your Kosher certification?',
@@ -220,7 +223,7 @@ export const ContactPage: React.FC = () => {
         },
         {
           q: 'Bieten Sie Lieferung nach Hause an?',
-          a: 'Ja! Wir liefern heiß und frisch nach Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort und in die umliegenden Städte im Département 94. Kostenlose Lieferung ab 30 €!',
+          a: `Ja! Wir liefern heiß und frisch nach Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort und in die umliegenden Städte im Département 94. Kostenlose Lieferung ab ${freeThresholdDe}!`,
         },
         {
           q: 'Welche Koscher-Zertifizierung haben Sie?',
@@ -282,7 +285,7 @@ export const ContactPage: React.FC = () => {
         },
         {
           q: 'Effettuate consegne a domicilio?',
-          a: 'Sì! Consegniamo piatti caldi appena grigliati a Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort e nei comuni limitrofi del 94. Consegna gratuita oltre i 30€!',
+          a: `Sì! Consegniamo piatti caldi appena grigliati a Bonneuil-sur-Marne, Créteil, Saint-Maur-des-Fossés, Maisons-Alfort e nei comuni limitrofi del 94. Consegna gratuita oltre i ${freeThresholdFrItRu}!`,
         },
         {
           q: 'Qual è la vostra certificazione Kosher?',
@@ -344,7 +347,7 @@ export const ContactPage: React.FC = () => {
         },
         {
           q: 'Есть ли у вас доставка?',
-          a: 'Да! Мы доставляем горячие блюда с огня по Бонёй-сюр-Марн, Кретею, Сен-Мор-де-Фоссе и соседним городам департамента 94. Бесплатная доставка от 30€!',
+          a: `Да! Мы доставляем горячие блюда с огня по Бонёй-сюр-Марн, Кретею, Сен-Мор-де-Фоссе и соседним городам департамента 94. Бесплатная доставка от ${freeThresholdFrItRu}!`,
         },
         {
           q: 'Какой у вас сертификат кашрута?',

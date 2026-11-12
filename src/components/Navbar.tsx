@@ -22,6 +22,8 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
     cartBounceKey,
     language,
     setLanguage,
+    currency,
+    setCurrency,
     fulfillmentType,
     selectedTimeSlot,
     selectedSlot,
@@ -337,6 +339,38 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             align="left"
           />
         </div>
+
+        {/* Right: Compact Currency Toggle ($ / €) on Mobile Header */}
+        <div
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 inline-flex items-center bg-neutral-100 border border-neutral-200/80 rounded-full p-0.5 z-10"
+          role="group"
+          aria-label="Currency"
+        >
+          <button
+            type="button"
+            aria-pressed={currency === 'USD'}
+            onClick={() => setCurrency('USD')}
+            className={`px-2 py-0.5 rounded-full text-[11px] font-black leading-none transition cursor-pointer ${
+              currency === 'USD'
+                ? 'bg-[#ff5500] text-white shadow-xs'
+                : 'text-neutral-600 hover:text-neutral-900'
+            }`}
+          >
+            $
+          </button>
+          <button
+            type="button"
+            aria-pressed={currency === 'EUR'}
+            onClick={() => setCurrency('EUR')}
+            className={`px-2 py-0.5 rounded-full text-[11px] font-black leading-none transition cursor-pointer ${
+              currency === 'EUR'
+                ? 'bg-[#ff5500] text-white shadow-xs'
+                : 'text-neutral-600 hover:text-neutral-900'
+            }`}
+          >
+            €
+          </button>
+        </div>
       </div>
 
       {/* Desktop Single Level Header: Logo on the left, Menu items on the same level, Actions on the right */}
@@ -597,6 +631,40 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               </div>
             )}
           </div>
+
+          {/* Currency Switcher ($ / €) */}
+          <div
+            className="inline-flex items-center bg-neutral-100/90 border border-neutral-200/80 rounded-xl p-0.5"
+            role="group"
+            aria-label="Currency switcher"
+          >
+            <button
+              type="button"
+              aria-pressed={currency === 'USD'}
+              onClick={() => setCurrency('USD')}
+              title="USD ($)"
+              className={`px-2.5 py-1.5 rounded-[10px] text-xs font-black leading-none transition cursor-pointer ${
+                currency === 'USD'
+                  ? 'bg-[#ff5500] text-white shadow-sm'
+                  : 'text-neutral-700 hover:text-[#ff5500]'
+              }`}
+            >
+              $
+            </button>
+            <button
+              type="button"
+              aria-pressed={currency === 'EUR'}
+              onClick={() => setCurrency('EUR')}
+              title="EUR (€)"
+              className={`px-2.5 py-1.5 rounded-[10px] text-xs font-black leading-none transition cursor-pointer ${
+                currency === 'EUR'
+                  ? 'bg-[#ff5500] text-white shadow-sm'
+                  : 'text-neutral-700 hover:text-[#ff5500]'
+              }`}
+            >
+              €
+            </button>
+          </div>
         </div>
         </div>
       </div>
@@ -762,6 +830,51 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                         );
                       })}
                     </div>
+                  </div>
+                </div>
+
+                {/* Currency Toggle Row inside Mobile Drawer */}
+                <div className="mt-2 px-3 py-2.5 rounded-2xl bg-[#F3F1EC] flex items-center justify-between">
+                  <span className="text-[14px] font-medium text-[#171717]">
+                    {language === 'ru'
+                      ? 'Валюта'
+                      : language === 'fr'
+                      ? 'Devise'
+                      : language === 'de'
+                      ? 'Währung'
+                      : language === 'it'
+                      ? 'Valuta'
+                      : 'Currency'}
+                  </span>
+                  <div
+                    className="inline-flex items-center bg-white border border-neutral-200/80 rounded-xl p-0.5 shadow-2xs"
+                    role="group"
+                    aria-label="Currency"
+                  >
+                    <button
+                      type="button"
+                      aria-pressed={currency === 'USD'}
+                      onClick={() => setCurrency('USD')}
+                      className={`px-3 py-1 rounded-[9px] text-xs font-black transition cursor-pointer ${
+                        currency === 'USD'
+                          ? 'bg-[#ff5500] text-white shadow-xs'
+                          : 'text-neutral-700 hover:text-[#ff5500]'
+                      }`}
+                    >
+                      USD $
+                    </button>
+                    <button
+                      type="button"
+                      aria-pressed={currency === 'EUR'}
+                      onClick={() => setCurrency('EUR')}
+                      className={`px-3 py-1 rounded-[9px] text-xs font-black transition cursor-pointer ${
+                        currency === 'EUR'
+                          ? 'bg-[#ff5500] text-white shadow-xs'
+                          : 'text-neutral-700 hover:text-[#ff5500]'
+                      }`}
+                    >
+                      EUR €
+                    </button>
                   </div>
                 </div>
               </div>

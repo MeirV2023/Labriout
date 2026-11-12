@@ -9,7 +9,18 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { openProductDetail, addToCart, updateQuantity, removeItem, items, language, isItemSoftDeleted, t } = useCart();
+  const {
+    openProductDetail,
+    addToCart,
+    updateQuantity,
+    removeItem,
+    items,
+    language,
+    currency,
+    formatMoney,
+    isItemSoftDeleted,
+    t,
+  } = useCart();
 
   const cartItemsForProduct = items.filter(
     (item) => (item.product?.id === product.id || item.productId === product.id) && !isItemSoftDeleted(item.cartItemId)
@@ -209,7 +220,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="pt-2 sm:pt-2.5 px-0.5 flex flex-col min-h-[58px] sm:min-h-[66px]">
         {/* Price */}
         <div className="font-black text-[15px] sm:text-lg text-neutral-900 tracking-tight leading-none">
-          € {(Number(product.price) || 0).toFixed(2).replace('.', ',')}
+          {currency === 'USD'
+            ? formatMoney(product.price)
+            : `€ ${(Number(product.price) || 0).toFixed(2).replace('.', ',')}`}
         </div>
 
         {/* Title */}

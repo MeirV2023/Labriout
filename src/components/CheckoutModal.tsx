@@ -33,6 +33,7 @@ export const CheckoutModal: React.FC = () => {
     setSelectedTimeSlot,
     submitOrder,
     language,
+    formatMoney,
     t,
   } = useCart();
 
@@ -316,7 +317,7 @@ export const CheckoutModal: React.FC = () => {
     items.forEach((item, idx) => {
       const itemTotal = (Number(item.totalUnitPrice ?? item.product?.price ?? 0)) * (Number(item.quantity) || 1);
       const itemName = getLocalizedProductName(item.product, language);
-      message += `${idx + 1}. *${item.quantity}x ${itemName}* (€${itemTotal.toFixed(2)})%0A`;
+      message += `${idx + 1}. *${item.quantity}x ${itemName}* (${formatMoney(itemTotal)})%0A`;
       if (item.selectedExtras.length > 0) {
         message += `   + ${ui.waExtras}: ${item.selectedExtras.map(e => getLocalizedExtraName(e, language)).join(', ')}%0A`;
       }
@@ -325,7 +326,7 @@ export const CheckoutModal: React.FC = () => {
       }
     });
 
-    message += `%0A💰 *${ui.waTotal}: €${(Number(total) || 0).toFixed(2)}*%0A`;
+    message += `%0A💰 *${ui.waTotal}: ${formatMoney(total)}*%0A`;
     if (notes) {
       message += `📝 *${ui.waOrderNotes}:* ${notes}%0A`;
     }
@@ -611,7 +612,7 @@ export const CheckoutModal: React.FC = () => {
             <div className="text-right">
               <span className="text-xs text-neutral-400 block">{ui.totalToPay}</span>
               <span className="font-heading font-black text-xl text-[#ff6611]">
-                €{(Number(total) || 0).toFixed(2)}
+                {formatMoney(total)}
               </span>
             </div>
           </div>

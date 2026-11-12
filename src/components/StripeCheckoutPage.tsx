@@ -172,7 +172,14 @@ export const StripeCheckoutPage: React.FC = () => {
     selectedSlot,
     setSelectedSlot,
     language,
+    currency,
+    formatMoney,
   } = useCart();
+
+  const fmtCheckoutMoney = (val: number | string) =>
+    currency === 'USD'
+      ? formatMoney(val)
+      : `${(Number(val) || 0).toFixed(2).replace('.', ',')} €`;
 
   // Multi-language text dictionary
   const labels = useMemo(() => {
@@ -226,9 +233,9 @@ export const StripeCheckoutPage: React.FC = () => {
           discount: 'Скидки',
           removePromo: 'Удалить',
           delivery: 'Доставка',
-          free: '0 €',
+          free: currency === 'USD' ? '$0' : '0 €',
           toPay: 'К оплате',
-          payBtn: (val: string) => `Оплатить ${val} €`,
+          payBtn: (val: string) => `Оплатить ${val}`,
           processing: 'Обработка платежа...',
           emptyCart: 'Корзина пуста',
           emptyCartSub: 'Добавьте вкусные блюда в меню, чтобы оформить заказ',
@@ -298,7 +305,7 @@ export const StripeCheckoutPage: React.FC = () => {
           delivery: 'Delivery',
           free: 'Free',
           toPay: 'Total',
-          payBtn: (val: string) => `Pay ${val} €`,
+          payBtn: (val: string) => `Pay ${val}`,
           processing: 'Processing payment...',
           emptyCart: 'Your basket is empty',
           emptyCartSub: 'Add dishes from our menu to place an order',
@@ -368,7 +375,7 @@ export const StripeCheckoutPage: React.FC = () => {
           delivery: 'Lieferung',
           free: 'Kostenlos',
           toPay: 'Gesamtbetrag',
-          payBtn: (val: string) => `Bezahlen ${val} €`,
+          payBtn: (val: string) => `Bezahlen ${val}`,
           processing: 'Zahlung wird verarbeitet...',
           emptyCart: 'Warenkorb ist leer',
           emptyCartSub: 'Fügen Sie leckere Speisen hinzu',
@@ -438,7 +445,7 @@ export const StripeCheckoutPage: React.FC = () => {
           delivery: 'Livraison',
           free: 'Gratuit',
           toPay: 'Total',
-          payBtn: (val: string) => `Payer ${val} €`,
+          payBtn: (val: string) => `Payer ${val}`,
           processing: 'Paiement en cours...',
           emptyCart: 'Panier vide',
           emptyCartSub: 'Ajoutez des plats délicieux à votre commande',
@@ -508,7 +515,7 @@ export const StripeCheckoutPage: React.FC = () => {
           delivery: 'Spedizione',
           free: 'Gratis',
           toPay: 'Totale',
-          payBtn: (val: string) => `Paga ${val} €`,
+          payBtn: (val: string) => `Paga ${val}`,
           processing: 'Elaborazione pagamento in corso...',
           emptyCart: 'Il tuo carrello è vuoto',
           emptyCartSub: 'Aggiungi qualcosa di delizioso dal menu',
@@ -528,7 +535,7 @@ export const StripeCheckoutPage: React.FC = () => {
           addCardSheetTitle: 'Carta di credito / debito online',
         };
     }
-  }, [language]);
+  }, [language, currency]);
 
   // Customer contact state (Pre-filled with Stripe Test Customer for instant 1-click testing)
   const [firstName, setFirstName] = useState('David');
@@ -1184,7 +1191,7 @@ export const StripeCheckoutPage: React.FC = () => {
             <p className="text-sm text-neutral-500 max-w-md mx-auto">
               {labels.orderSuccessPaid}{' '}
               <strong className="text-[#21201F] font-bold text-base">
-                {completedOrder.total.toFixed(2).replace('.', ',')} €
+                {fmtCheckoutMoney(completedOrder.total)}
               </strong>
             </p>
           </div>
@@ -1527,7 +1534,7 @@ export const StripeCheckoutPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-[#8A8784]">{labels.productsTotal(itemsCount)}</span>
               <span className="font-semibold">
-                {(Number(subtotal) || 0).toFixed(2).replace('.', ',')} €
+                {fmtCheckoutMoney(subtotal)}
               </span>
             </div>
 
@@ -1539,7 +1546,7 @@ export const StripeCheckoutPage: React.FC = () => {
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="font-bold">
-                    -{(Number(discountAmount) || 0).toFixed(2).replace('.', ',')} €
+                    -{fmtCheckoutMoney(discountAmount)}
                   </span>
                   <button
                     type="button"
@@ -1557,7 +1564,7 @@ export const StripeCheckoutPage: React.FC = () => {
               <span className="font-semibold">
                 {deliveryFee === 0
                   ? labels.free
-                  : `${(Number(deliveryFee) || 0).toFixed(2).replace('.', ',')} €`}
+                  : fmtCheckoutMoney(deliveryFee)}
               </span>
             </div>
 
@@ -1566,7 +1573,7 @@ export const StripeCheckoutPage: React.FC = () => {
             <div className="flex items-baseline justify-between pt-0.5">
               <span className="font-bold text-[18px] text-[#21201F]">{labels.toPay}</span>
               <span className="font-bold text-[20px] text-[#21201F] tracking-tight">
-                {(Number(total) || 0).toFixed(2).replace('.', ',')} €
+                {fmtCheckoutMoney(total)}
               </span>
             </div>
           </div>
@@ -1591,7 +1598,7 @@ export const StripeCheckoutPage: React.FC = () => {
             disabled={isProcessing || items.length === 0}
             className="w-full h-[54px] rounded-[18px] bg-[#FF4A00] hover:bg-[#ff5500] active:scale-[0.99] disabled:opacity-50 text-white font-semibold text-[16px] shadow-md shadow-[#FF4A00]/25 transition flex items-center justify-center gap-2 cursor-pointer select-none"
           >
-            <span>{labels.payBtn((Number(total) || 0).toFixed(2).replace('.', ','))}</span>
+            <span>{labels.payBtn(fmtCheckoutMoney(total))}</span>
             <ArrowRight className="w-5 h-5 stroke-[2.2] text-white" />
           </button>
         </div>
@@ -2438,7 +2445,7 @@ export const StripeCheckoutPage: React.FC = () => {
                     {labels.productsTotal(itemsCount)}
                   </span>
                   <span className="font-bold text-[16px] text-neutral-900">
-                    {(Number(subtotal) || 0).toFixed(2).replace('.', ',')} €
+                    {fmtCheckoutMoney(subtotal)}
                   </span>
                 </div>
 
@@ -2450,7 +2457,7 @@ export const StripeCheckoutPage: React.FC = () => {
                     </span>
                     <div className="flex items-center gap-2">
                       <span className="font-bold">
-                        -{(Number(discountAmount) || 0).toFixed(2).replace('.', ',')} €
+                        -{fmtCheckoutMoney(discountAmount)}
                       </span>
                       <button
                         onClick={removeCoupon}
@@ -2467,7 +2474,7 @@ export const StripeCheckoutPage: React.FC = () => {
                   <span className="font-bold text-[16px] text-neutral-900">
                     {deliveryFee === 0
                       ? labels.free
-                      : `${(Number(deliveryFee) || 0).toFixed(2).replace('.', ',')} €`}
+                      : fmtCheckoutMoney(deliveryFee)}
                   </span>
                 </div>
 
@@ -2478,7 +2485,7 @@ export const StripeCheckoutPage: React.FC = () => {
                 <div className="flex items-baseline justify-between pt-0.5">
                   <span className="font-bold text-[20px] text-neutral-900">{labels.toPay}</span>
                   <span className="font-heading font-black text-[20px] text-[#21201F] tracking-tight">
-                    {(Number(total) || 0).toFixed(2).replace('.', ',')} €
+                    {fmtCheckoutMoney(total)}
                   </span>
                 </div>
               </div>
@@ -2492,7 +2499,7 @@ export const StripeCheckoutPage: React.FC = () => {
                 className="w-[328px] max-w-full h-[56px] min-h-[56px] rounded-2xl bg-[#ff5500] hover:bg-[#ff6611] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none text-white font-heading font-black text-base shadow-md shadow-[#ff5500]/25 hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer select-none"
                 id="checkout-page-submit-btn"
               >
-                <span>{labels.payBtn((Number(total) || 0).toFixed(2).replace('.', ','))}</span>
+                <span>{labels.payBtn(fmtCheckoutMoney(total))}</span>
                 <ArrowRight className="w-5 h-5 stroke-[2.5] text-white" />
               </button>
 

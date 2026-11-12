@@ -27,6 +27,8 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
     setCurrentView,
     setIsCartDrawerOpen,
     language,
+    currencySymbol,
+    formatMoney,
     fulfillmentType,
     setFulfillmentType,
   } = useCart();
@@ -91,6 +93,9 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
     }
   };
 
+  const needMoreStr = formatMoney(safeAmountToFreeDelivery);
+  const freeBaseStr = formatMoney(FREE_DELIVERY_THRESHOLD, { decimals: 0 });
+
   // Translations localized
   const labels = {
     it: {
@@ -104,10 +109,10 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       emptySub: 'Ma non per molto — aggiungi qualcosa di delizioso!',
       freeDeliveryBadge: 'Consegna gratuita',
       freeDeliverySub: 'Ordine qualificato per spedizione gratis',
-      freeDeliveryNeed: `Mancano €${safeAmountToFreeDelivery.toFixed(2)} per la consegna gratis`,
-      freeDeliveryBase: 'Consegna gratis da €25',
+      freeDeliveryNeed: `Mancano ${needMoreStr} per la consegna gratis`,
+      freeDeliveryBase: `Consegna gratis da ${freeBaseStr}`,
       proceed: 'Avanti',
-      currency: '€',
+      currency: currencySymbol,
       each: 'cad.',
       undo: 'Ripristina',
       unitPiece: '1 pz.',
@@ -128,10 +133,10 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       emptySub: 'Но это ненадолго — добавьте что-нибудь вкусное',
       freeDeliveryBadge: 'Бесплатная доставка',
       freeDeliverySub: 'Бесплатная доставка активирована',
-      freeDeliveryNeed: `Ещё €${safeAmountToFreeDelivery.toFixed(2)} до бесплатной доставки`,
-      freeDeliveryBase: 'Бесплатная доставка от €25',
+      freeDeliveryNeed: `Ещё ${needMoreStr} до бесплатной доставки`,
+      freeDeliveryBase: `Бесплатная доставка от ${freeBaseStr}`,
       proceed: 'Далее',
-      currency: '€',
+      currency: currencySymbol,
       each: 'шт.',
       undo: 'Вернуть',
       unitPiece: '1 шт.',
@@ -152,10 +157,10 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       emptySub: 'Not for long — add something delicious!',
       freeDeliveryBadge: 'Free Delivery',
       freeDeliverySub: 'Order qualifies for free delivery',
-      freeDeliveryNeed: `Add €${safeAmountToFreeDelivery.toFixed(2)} for free delivery`,
-      freeDeliveryBase: 'Free delivery from €25',
+      freeDeliveryNeed: `Add ${needMoreStr} for free delivery`,
+      freeDeliveryBase: `Free delivery from ${freeBaseStr}`,
       proceed: 'Checkout',
-      currency: '€',
+      currency: currencySymbol,
       each: 'each',
       undo: 'Undo',
       unitPiece: '1 pc.',
@@ -176,10 +181,10 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       emptySub: 'Fügen Sie etwas Leckeres hinzu!',
       freeDeliveryBadge: 'Kostenlose Lieferung',
       freeDeliverySub: 'Qualifiziert für Gratis-Lieferung',
-      freeDeliveryNeed: `Noch €${safeAmountToFreeDelivery.toFixed(2)} für Gratis-Lieferung`,
-      freeDeliveryBase: 'Gratis-Lieferung ab €25',
+      freeDeliveryNeed: `Noch ${needMoreStr} für Gratis-Lieferung`,
+      freeDeliveryBase: `Gratis-Lieferung ab ${freeBaseStr}`,
       proceed: 'Weiter',
-      currency: '€',
+      currency: currencySymbol,
       each: 'Stk.',
       undo: 'Wiederherstellen',
       unitPiece: '1 Stk.',
@@ -200,10 +205,10 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
       emptySub: 'Ajoutez quelque chose de délicieux !',
       freeDeliveryBadge: 'Livraison gratuite',
       freeDeliverySub: 'Qualifié pour la livraison gratuite',
-      freeDeliveryNeed: `Encore €${safeAmountToFreeDelivery.toFixed(2)} pour la livraison gratuite`,
-      freeDeliveryBase: 'Livraison gratuite dès €25',
+      freeDeliveryNeed: `Encore ${needMoreStr} pour la livraison gratuite`,
+      freeDeliveryBase: `Livraison gratuite dès ${freeBaseStr}`,
       proceed: 'Commander',
-      currency: '€',
+      currency: currencySymbol,
       each: 'unité',
       undo: 'Restaurer',
       unitPiece: '1 pce',
@@ -340,7 +345,7 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
                     <Bike className="w-3.5 h-3.5 text-[#ff5500]" />
                     {labels.freeDeliveryBase}
                   </span>
-                  <span className="text-[#ff5500] font-bold">€0.00</span>
+                  <span className="text-[#ff5500] font-bold">{formatMoney(0)}</span>
                 </div>
                 <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div className="w-0 h-full bg-[#ff5500] rounded-full" />
@@ -454,10 +459,10 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
                         )}
 
                         <div className="text-xs font-black text-neutral-900 mt-1">
-                          €{(itemTotalPrice || 0).toFixed(2)}
+                          {formatMoney(itemTotalPrice)}
                           {itemQty > 1 && (
                             <span className="text-[10px] text-neutral-400 font-normal ml-1">
-                              (€{(itemUnitPrice || 0).toFixed(2)} {labels.each})
+                              ({formatMoney(itemUnitPrice)} {labels.each})
                             </span>
                           )}
                         </div>
@@ -584,7 +589,7 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({ onOpenCheckout }) => {
             className="w-full py-3 sm:py-3.5 px-5 rounded-2xl bg-gradient-to-r from-[#ff5500] to-[#ff3300] hover:from-[#ff6611] hover:to-[#ff4400] text-white font-black text-sm tracking-wide shadow-lg shadow-[#ff5500]/25 transition-all transform active:scale-[0.98] flex items-center justify-between cursor-pointer shrink-0 mt-auto"
           >
             <span className="uppercase">{labels.proceed}</span>
-            <span className="text-base font-black">€{(safeTotal || 0).toFixed(2)}</span>
+            <span className="text-base font-black">{formatMoney(safeTotal)}</span>
           </button>
         </div>
       )}

@@ -13,6 +13,8 @@ export const MobileBottomNav: React.FC = () => {
     isCartBouncing,
     cartBounceKey,
     language,
+    currency,
+    formatMoney,
     t,
   } = useCart();
 
@@ -71,42 +73,45 @@ export const MobileBottomNav: React.FC = () => {
   const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD - safeSubtotal);
   const deliveryProgress = Math.min(100, Math.round((safeSubtotal / FREE_DELIVERY_THRESHOLD) * 100));
 
+  const needMoreFormatted = formatMoney(amountToFreeDelivery);
+  const freeBaseFormatted = formatMoney(FREE_DELIVERY_THRESHOLD, { decimals: 0 });
+
   const deliveryLabels = {
     ru: {
       freeDelivery: 'Бесплатная доставка',
       freeUnlocked: 'Бесплатная доставка активна',
-      needMore: `Еще €${amountToFreeDelivery.toFixed(2)} до бесплатной доставки`,
-      base: 'Бесплатная доставка от €25',
+      needMore: `Еще ${needMoreFormatted} до бесплатной доставки`,
+      base: `Бесплатная доставка от ${freeBaseFormatted}`,
     },
     it: {
       freeDelivery: 'Consegna gratuita',
       freeUnlocked: 'Consegna gratuita attiva',
-      needMore: `Mancano €${amountToFreeDelivery.toFixed(2)} per la consegna gratis`,
-      base: 'Consegna gratis da €25',
+      needMore: `Mancano ${needMoreFormatted} per la consegna gratis`,
+      base: `Consegna gratis da ${freeBaseFormatted}`,
     },
     en: {
       freeDelivery: 'Free delivery',
       freeUnlocked: 'Free delivery unlocked',
-      needMore: `Add €${amountToFreeDelivery.toFixed(2)} for free delivery`,
-      base: 'Free delivery from €25',
+      needMore: `Add ${needMoreFormatted} for free delivery`,
+      base: `Free delivery from ${freeBaseFormatted}`,
     },
     de: {
       freeDelivery: 'Kostenlose Lieferung',
       freeUnlocked: 'Kostenlose Lieferung aktiv',
-      needMore: `Noch €${amountToFreeDelivery.toFixed(2)} bis zur kostenlosen Lieferung`,
-      base: 'Kostenlose Lieferung ab €25',
+      needMore: `Noch ${needMoreFormatted} bis zur kostenlosen Lieferung`,
+      base: `Kostenlose Lieferung ab ${freeBaseFormatted}`,
     },
     fr: {
       freeDelivery: 'Livraison gratuite',
       freeUnlocked: 'Livraison gratuite activée',
-      needMore: `Encore €${amountToFreeDelivery.toFixed(2)} pour la livraison gratuite`,
-      base: 'Livraison gratuite dès €25',
+      needMore: `Encore ${needMoreFormatted} pour la livraison gratuite`,
+      base: `Livraison gratuite dès ${freeBaseFormatted}`,
     },
   }[language] || {
     freeDelivery: 'Free delivery',
     freeUnlocked: 'Free delivery unlocked',
-    needMore: `Add €${amountToFreeDelivery.toFixed(2)} for free delivery`,
-    base: 'Free delivery from €25',
+    needMore: `Add ${needMoreFormatted} for free delivery`,
+    base: `Free delivery from ${freeBaseFormatted}`,
   };
 
   // Show free delivery counter at the top of the bottom dock ONLY when items are in cart
@@ -151,7 +156,9 @@ export const MobileBottomNav: React.FC = () => {
               aria-label={labels.cart}
             >
               <span className="text-[20px] font-black tracking-tight leading-none">
-                €{(Number(total) || 0).toFixed(2).replace('.', ',')}
+                {currency === 'USD'
+                  ? formatMoney(total)
+                  : `€${(Number(total) || 0).toFixed(2).replace('.', ',')}`}
               </span>
               <img
                 width="20"

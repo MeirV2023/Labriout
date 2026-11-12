@@ -20,6 +20,8 @@ export const MenuPage: React.FC = () => {
     setCurrentView,
     openProductDetail,
     language,
+    currency,
+    formatMoney,
     pendingScrollCategory,
     setPendingScrollCategory,
     navigateToCategory,
@@ -53,8 +55,11 @@ export const MenuPage: React.FC = () => {
   const isFr = language === 'fr';
   const isIt = language === 'it';
 
-  // Format price matching the user specification: "4,50 EURO"
-  const formatPrice = (price: number) => `${price.toFixed(2).replace('.', ',')} EURO`;
+  // Format price matching currency ("$4.50" in USD, "4,50 EURO" in EUR)
+  const formatPrice = (price: number) =>
+    currency === 'USD'
+      ? formatMoney(price)
+      : `${(Number(price) || 0).toFixed(2).replace('.', ',')} EURO`;
 
   const handlePrint = () => {
     window.print();

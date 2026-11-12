@@ -22,6 +22,7 @@ export const CartDrawer: React.FC = () => {
     fulfillmentType,
     setFulfillmentType,
     language,
+    formatMoney,
     t,
   } = useCart();
 
@@ -56,6 +57,8 @@ export const CartDrawer: React.FC = () => {
   const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD - safeTotal);
   const deliveryProgress = Math.min(100, Math.round((safeTotal / FREE_DELIVERY_THRESHOLD) * 100));
 
+  const needMoreStr = formatMoney(amountToFreeDelivery);
+
   // Localized Labels
   const labels = {
     fr: {
@@ -65,7 +68,7 @@ export const CartDrawer: React.FC = () => {
       pickup: 'À emporter',
       pickupPrefix: 'Retrait :',
       pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-      freeDeliveryNeed: `Encore €${amountToFreeDelivery.toFixed(2)} pour la livraison gratuite`,
+      freeDeliveryNeed: `Encore ${needMoreStr} pour la livraison gratuite`,
       freeDeliveryUnlocked: 'Livraison gratuite activée !',
       checkout: 'COMMANDER',
       emptyTitle: 'Votre panier est vide',
@@ -88,7 +91,7 @@ export const CartDrawer: React.FC = () => {
       pickup: 'Pickup',
       pickupPrefix: 'Pickup at:',
       pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-      freeDeliveryNeed: `Add €${amountToFreeDelivery.toFixed(2)} for free delivery`,
+      freeDeliveryNeed: `Add ${needMoreStr} for free delivery`,
       freeDeliveryUnlocked: 'Free delivery unlocked!',
       checkout: 'CHECKOUT',
       emptyTitle: 'Your cart is empty',
@@ -111,7 +114,7 @@ export const CartDrawer: React.FC = () => {
       pickup: 'Abholung',
       pickupPrefix: 'Abholung in:',
       pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-      freeDeliveryNeed: `Noch €${amountToFreeDelivery.toFixed(2)} für Gratis-Lieferung`,
+      freeDeliveryNeed: `Noch ${needMoreStr} für Gratis-Lieferung`,
       freeDeliveryUnlocked: 'Kostenlose Lieferung aktiviert!',
       checkout: 'ZUR KASSE',
       emptyTitle: 'Ihr Warenkorb ist leer',
@@ -134,7 +137,7 @@ export const CartDrawer: React.FC = () => {
       pickup: 'Asporto',
       pickupPrefix: 'Ritiro presso:',
       pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-      freeDeliveryNeed: `Mancano €${amountToFreeDelivery.toFixed(2)} per la consegna gratuita`,
+      freeDeliveryNeed: `Mancano ${needMoreStr} per la consegna gratuita`,
       freeDeliveryUnlocked: 'Consegna gratuita sbloccata!',
       checkout: 'ORDINA ORA',
       emptyTitle: 'Il tuo carrello è vuoto',
@@ -157,7 +160,7 @@ export const CartDrawer: React.FC = () => {
       pickup: 'Самовывоз',
       pickupPrefix: 'Самовывоз:',
       pickupAddress: '64 av. Simone Veil, Bonneuil-sur-Marne',
-      freeDeliveryNeed: `Ещё €${amountToFreeDelivery.toFixed(2)} до бесплатной доставки`,
+      freeDeliveryNeed: `Ещё ${needMoreStr} до бесплатной доставки`,
       freeDeliveryUnlocked: 'Бесплатная доставка активна!',
       checkout: 'ОФОРМИТЬ',
       emptyTitle: 'Ваша корзина пуста',
@@ -358,11 +361,11 @@ export const CartDrawer: React.FC = () => {
                           {/* Price Row: €2.00 (€1.00 cad.) */}
                           <div className="mt-1 flex items-baseline gap-1.5">
                             <span className="font-extrabold text-xs sm:text-sm text-neutral-900">
-                              €{itemTotalPrice.toFixed(2)}
+                              {formatMoney(itemTotalPrice)}
                             </span>
                             {item.quantity > 1 && (
                               <span className="text-[11px] text-neutral-400 font-medium">
-                                (€{itemUnitPrice.toFixed(2)} {labels.each})
+                                ({formatMoney(itemUnitPrice)} {labels.each})
                               </span>
                             )}
                           </div>
@@ -475,7 +478,7 @@ export const CartDrawer: React.FC = () => {
                   {labels.checkout}
                 </span>
                 <span className="font-heading font-black text-base sm:text-lg">
-                  €{safeTotal.toFixed(2)}
+                  {formatMoney(safeTotal)}
                 </span>
               </button>
             </div>
