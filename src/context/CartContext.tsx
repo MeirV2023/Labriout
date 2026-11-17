@@ -425,6 +425,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       const savedLang = localStorage.getItem(LANG_STORAGE_KEY) as Language;
       if (savedLang && ['it', 'en', 'ru', 'de', 'fr'].includes(savedLang)) return savedLang;
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      const navLang = (navigator.language || '').split('-')[0]?.toLowerCase();
+      if (tz.startsWith('America/') || navLang === 'en') return 'en';
+      if (navLang && ['it', 'en', 'ru', 'de', 'fr'].includes(navLang)) return navLang as Language;
       return initialTenant === 'labriout' ? 'fr' : 'it';
     } catch {
       return initialTenant === 'labriout' ? 'fr' : 'it';
